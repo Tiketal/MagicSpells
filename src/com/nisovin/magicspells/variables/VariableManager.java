@@ -75,8 +75,8 @@ public class VariableManager implements Listener {
 				}
 				
 				String bossBar = section.getString(var + ".boss-bar", null);
-				String barColor = section.getString(var + ".bar-color", null);
-				String barStyle = section.getString(var + ".bar-style", null);
+				String barColor = section.getString(var + ".bar-color", "PURPLE");
+				String barStyle = section.getString(var + ".bar-style", "SOLID");
 				
 				boolean expBar = section.getBoolean(var + ".exp-bar", false);
 				variable.init(def, min, max, perm, objective, bossBar, barColor, barStyle, expBar);
