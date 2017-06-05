@@ -50,7 +50,6 @@ import com.nisovin.magicspells.materials.MagicItemNameResolver;
 import com.nisovin.magicspells.spells.PassiveSpell;
 import com.nisovin.magicspells.spells.passive.PassiveManager;
 import com.nisovin.magicspells.util.BossBarManager;
-import com.nisovin.magicspells.util.BossBarManager_V1_8;
 import com.nisovin.magicspells.util.BossBarManager_V1_9;
 import com.nisovin.magicspells.util.ExperienceBarManager;
 import com.nisovin.magicspells.util.MagicConfig;
@@ -182,32 +181,22 @@ public class MagicSpells extends JavaPlugin {
 			return;
 		}
 		
-		boolean v1_9 = false;
+		boolean v1_11 = false;
 		if (config.getBoolean("general.enable-volatile-features", true)) {
 			try {
-				Class.forName("net.minecraft.server.v1_9_R1.MinecraftServer");
+				Class.forName("net.minecraft.server.v1_11_R1.MinecraftServer");
 				volatileCodeHandle = new VolatileCodeEnabled_1_9_R1();
-				v1_9 = true;
+				v1_11 = true;
 			} catch (ClassNotFoundException e_1_9_r1) {
-				try {
-					Class.forName("net.minecraft.server.v1_8_R3.MinecraftServer");
-					volatileCodeHandle = new VolatileCodeEnabled_1_8_R3();
-				} catch (ClassNotFoundException e_1_8_r3) {
-					try {
-						Class.forName("net.minecraft.server.v1_8_R1.MinecraftServer");
-						volatileCodeHandle = new VolatileCodeEnabled_1_8_R1();
-					} catch (ClassNotFoundException e_1_8_r1) {
-						error("This MagicSpells version is not fully compatible with this server version.");
-						error("Some features have been disabled.");
-						error("See http://nisovin.com/magicspells/volatilefeatures for more information.");
-						if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-							error("ProtocolLib found: some compatibility re-enabled");
-							volatileCodeHandle = new VolatileCodeProtocolLib();
-						} else {
-							volatileCodeHandle = new VolatileCodeDisabled();
-						}
+				error("This MagicSpells version is not fully compatible with this server version.");
+				error("Some features have been disabled.");
+				error("See http://nisovin.com/magicspells/volatilefeatures for more information.");
+					if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+						error("ProtocolLib found: some compatibility re-enabled");
+						volatileCodeHandle = new VolatileCodeProtocolLib();
+					} else {
+						volatileCodeHandle = new VolatileCodeDisabled();
 					}
-				}
 			}
 		} else {
 			volatileCodeHandle = new VolatileCodeDisabled();
@@ -285,10 +274,8 @@ public class MagicSpells extends JavaPlugin {
 		noMagicZones = new NoMagicZoneManager();
 		buffManager = new BuffManager(config.getInt("general.buff-check-interval", 0));
 		expBarManager = new ExperienceBarManager();
-		if (v1_9) {
+		if (v1_11) {
 			bossBarManager = new BossBarManager_V1_9();
-		} else {
-			bossBarManager = new BossBarManager_V1_8();
 		}
 		itemNameResolver = new MagicItemNameResolver();
 		if (getServer().getPluginManager().isPluginEnabled("Vault")) {

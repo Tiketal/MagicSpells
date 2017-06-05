@@ -18,7 +18,7 @@ public class VolatileCodeProtocolLib extends VolatileCodeDisabled {
 	}
 
 	@Override
-	public void playSound(Location location, String sound, float volume, float pitch) {
+	public void playSound(Location location, String sound, float volume, float pitch, String category) {
 		PacketContainer packet = protocolManager.createPacket(62);
 		packet.getStrings().write(0, sound);
 		int p = (int)(pitch * 63D);
@@ -34,7 +34,7 @@ public class VolatileCodeProtocolLib extends VolatileCodeDisabled {
 	}
 
 	@Override
-	public void playSound(Player player, String sound, float volume, float pitch) {
+	public void playSound(Player player, String sound, float volume, float pitch, String category) {
 		Location loc = player.getLocation();
 		PacketContainer packet = protocolManager.createPacket(62);
 		packet.getStrings().write(0, sound);

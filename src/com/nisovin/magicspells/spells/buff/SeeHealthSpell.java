@@ -131,8 +131,8 @@ public class SeeHealthSpell extends BuffSpell {
 			resetHealthBar(event.getPlayer(), event.getPreviousSlot());
 		}
 	}
-	
-	@SuppressWarnings("deprecation")
+
+
 	@Override
 	public void turnOffBuff(Player player) {
 		Integer i = bars.remove(player.getName());
@@ -145,7 +145,7 @@ public class SeeHealthSpell extends BuffSpell {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+
 	@Override
 	protected void turnOff() {
 		for (String playerName : bars.keySet()) {

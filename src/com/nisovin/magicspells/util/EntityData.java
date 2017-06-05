@@ -42,7 +42,7 @@ public class EntityData {
 				var1 = 5;
 			} else {
 				try {
-					var1 = Villager.Profession.valueOf(prof.toUpperCase()).getId();
+					var1 = getProfessionID(Villager.Profession.valueOf(prof.toUpperCase()));
 				} catch (Exception e) {
 					MagicSpells.error("Invalid villager profession: " + prof);
 				}
@@ -54,7 +54,7 @@ public class EntityData {
 				var1 = 5;
 			} else {
 				try {
-					var1 = Villager.Profession.valueOf(prof.toUpperCase()).getId();
+					var1 = getProfessionID(Villager.Profession.valueOf(prof.toUpperCase()));
 				} catch (Exception e) {
 					MagicSpells.error("Invalid villager profession: " + prof);
 				}
@@ -314,4 +314,21 @@ public class EntityData {
 		return entity;
 	}
 	
+	private int getProfessionID(Villager.Profession prof) {
+		switch (prof) {
+		case FARMER:
+			return 0;
+		case LIBRARIAN:
+			return 1;
+		case PRIEST:
+			return 2;
+		case BLACKSMITH:
+			return 3;
+		case BUTCHER:
+			return 4;
+		default:
+			return 0;
+		}
+		
+	}
 }

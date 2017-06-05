@@ -73,9 +73,13 @@ public class VariableManager implements Listener {
 						objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 					}
 				}
+				
 				String bossBar = section.getString(var + ".boss-bar", null);
+				String barColor = section.getString(var + ".bar-color", null);
+				String barStyle = section.getString(var + ".bar-style", null);
+				
 				boolean expBar = section.getBoolean(var + ".exp-bar", false);
-				variable.init(def, min, max, perm, objective, bossBar, expBar);
+				variable.init(def, min, max, perm, objective, bossBar, barColor, barStyle, expBar);
 				variables.put(var, variable);
 				MagicSpells.debug(2, "Loaded variable " + var);
 			}
@@ -187,12 +191,12 @@ public class VariableManager implements Listener {
 			if (var instanceof GlobalVariable) {
 				double pct = var.getValue("") / var.maxValue;
 				for (Player p : Bukkit.getOnlinePlayers()) {
-					MagicSpells.getBossBarManager().setPlayerBar(p, var.bossBar, pct);
+					MagicSpells.getBossBarManager().setPlayerBar(p, var.bossBar, pct, var.barColor, var.barStyle);
 				}
 			} else if (var instanceof PlayerVariable) {
 				Player p = Bukkit.getPlayerExact(player);
 				if (p != null) {
-					MagicSpells.getBossBarManager().setPlayerBar(p, var.bossBar, var.getValue(p) / var.maxValue);
+					MagicSpells.getBossBarManager().setPlayerBar(p, var.bossBar, var.getValue(p) / var.maxValue, var.barColor, var.barStyle);
 				}
 			}
 		}
@@ -362,7 +366,7 @@ public class VariableManager implements Listener {
 	private void loadBossBar(Player player) {
 		for (Variable var : variables.values()) {
 			if (var.bossBar != null) {
-				MagicSpells.getBossBarManager().setPlayerBar(player, var.bossBar, var.getValue(player) / var.maxValue);
+				MagicSpells.getBossBarManager().setPlayerBar(player, var.bossBar, var.getValue(player) / var.maxValue, var.barColor, var.barStyle);
 				break;
 			}
 		}

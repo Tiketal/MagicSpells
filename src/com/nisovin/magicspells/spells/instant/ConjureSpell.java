@@ -10,11 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -168,8 +166,8 @@ public class ConjureSpell extends InstantSpell implements TargetedEntitySpell, T
 		return PostCastAction.HANDLE_NORMALLY;
 		
 	}
-	
-	@SuppressWarnings("deprecation")
+
+
 	private void conjureItems(Player player, float power) {
 		// get items to drop
 		List<ItemStack> items = new ArrayList<ItemStack>();

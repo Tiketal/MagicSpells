@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_9_R1.*;
-import net.minecraft.server.v1_9_R1.PacketPlayOutTitle.EnumTitleAction;
+import net.minecraft.server.v1_11_R1.*;
+import net.minecraft.server.v1_11_R1.PacketPlayOutTitle.EnumTitleAction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,13 +21,13 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftFallingSand;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftTNTPrimed;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_11_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftTNTPrimed;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -57,7 +57,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 			try {
 				Field field = CraftItemStack.class.getDeclaredField("handle");
 				field.setAccessible(true);
-				return ((net.minecraft.server.v1_9_R1.ItemStack)field.get(item)).getTag();
+				return ((net.minecraft.server.v1_11_R1.ItemStack)field.get(item)).getTag();
 			} catch (Exception e) {
 			}
 		}
@@ -72,11 +72,11 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 			craftItem = CraftItemStack.asCraftCopy(item);
 		}
 		
-		net.minecraft.server.v1_9_R1.ItemStack nmsItem = null;
+		net.minecraft.server.v1_11_R1.ItemStack nmsItem = null;
 		try {
 			Field field = CraftItemStack.class.getDeclaredField("handle");
 			field.setAccessible(true);
-			nmsItem = ((net.minecraft.server.v1_9_R1.ItemStack)field.get(item));
+			nmsItem = ((net.minecraft.server.v1_11_R1.ItemStack)field.get(item));
 		} catch (Exception e) {
 		}
 		if (nmsItem == null) {
@@ -151,7 +151,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 
 	@Override
 	public void sendFakeSlotUpdate(Player player, int slot, ItemStack item) {
-		net.minecraft.server.v1_9_R1.ItemStack nmsItem;
+		net.minecraft.server.v1_11_R1.ItemStack nmsItem;
 		if (item != null) {
 			nmsItem = CraftItemStack.asNMSCopy(item);
 		} else {
@@ -209,7 +209,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 
 	@Override
 	public Fireball shootSmallFireball(Player player) {
-		net.minecraft.server.v1_9_R1.World w = ((CraftWorld)player.getWorld()).getHandle();
+		net.minecraft.server.v1_11_R1.World w = ((CraftWorld)player.getWorld()).getHandle();
 		Location playerLoc = player.getLocation();
 		Vector loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(10));
 		
@@ -233,20 +233,45 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 	}
 
 	@Override
-	public void playSound(Location location, String sound, float volume, float pitch) {
+	public void playSound(Location location, String sound, float volume, float pitch, String category) {
 		for (Player player : location.getWorld().getPlayers()) {
-			playSound(player, location, sound, volume, pitch);
+			playSound(player, location, sound, volume, pitch, category);
 		}
 	}
 
 	@Override
-	public void playSound(Player player, String sound, float volume, float pitch) {
-		playSound(player, player.getLocation(), sound, volume, pitch);
+	public void playSound(Player player, String sound, float volume, float pitch, String category) {
+		playSound(player, player.getLocation(), sound, volume, pitch, category);
 	}
 	
-	private void playSound(Player player, Location loc, String sound, float volume, float pitch) {
-		PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(sound, SoundCategory.MASTER, loc.getX(), loc.getY(), loc.getZ(), volume, pitch);
+	private void playSound(Player player, Location loc, String sound, float volume, float pitch, String category) {
+		PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(sound, getSoundCategory(category) , loc.getX(), loc.getY(), loc.getZ(), volume, pitch);
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+	}
+	
+	private SoundCategory getSoundCategory(String category) {
+		category = category.toUpperCase();
+		
+		switch (category) {
+		case "AMBIENT":
+			return SoundCategory.AMBIENT;
+		case "BLOCKS":
+			return SoundCategory.BLOCKS;
+		case "HOSTILE":
+			return SoundCategory.HOSTILE;
+		case "MUSIC":
+			return SoundCategory.MUSIC;
+		case "NEUTRAL":
+			return SoundCategory.NEUTRAL;
+		case "PLAYERS":
+			return SoundCategory.PLAYERS;
+		case "RECORDS":
+			return SoundCategory.RECORDS;
+		case "VOICE":
+			return SoundCategory.VOICE;
+		default:
+			return SoundCategory.MASTER;
+		}
 	}
 
 	@Override
@@ -266,7 +291,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 
 	@Override
 	public void setFallingBlockHurtEntities(FallingBlock block, float damage, int max) {
-		EntityFallingBlock efb = ((CraftFallingSand)block).getHandle();
+		EntityFallingBlock efb = ((CraftFallingBlock)block).getHandle();
 		try {
 			Field field = EntityFallingBlock.class.getDeclaredField("hurtEntities");
 			field.setAccessible(true);
@@ -318,7 +343,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 	@Override
 	public void createFireworksExplosion(Location location, boolean flicker, boolean trail, int type, int[] colors, int[] fadeColors, int flightDuration) {
 		// create item
-		net.minecraft.server.v1_9_R1.ItemStack item = new net.minecraft.server.v1_9_R1.ItemStack(Item.getById(401), 1, 0);
+		net.minecraft.server.v1_11_R1.ItemStack item = new net.minecraft.server.v1_11_R1.ItemStack(Item.getById(401), 1, 0);
 		
 		// get tag
 		NBTTagCompound tag = item.getTag();
@@ -347,7 +372,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		
 		// create fireworks entity
 		EntityFireworks fireworks = new EntityFireworks(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), item);
-		((CraftWorld)location.getWorld()).getHandle().addEntity(fireworks);
+		((World)location.getWorld()).addEntity(fireworks);
 		
 		// cause explosion
 		if (flightDuration == 0) {

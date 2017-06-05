@@ -39,6 +39,7 @@ public class DanceCastListener implements Listener {
 	String startSound = null;
 	float startSoundVolume = 1;
 	float startSoundPitch = 1;
+	String startCategory = "MASTER";
 	
 	String strDanceStart;
 	String strDanceComplete;
@@ -58,6 +59,9 @@ public class DanceCastListener implements Listener {
 			startSoundVolume = Float.parseFloat(split[1]);
 			if (split.length > 2) {
 				startSoundPitch = Float.parseFloat(split[2]);
+			}
+			if (split.length > 3) {
+				startCategory = split[3];
 			}
 		}
 		
@@ -131,7 +135,7 @@ public class DanceCastListener implements Listener {
 					}
 					MagicSpells.sendMessage(player, strDanceStart);
 					if (startSound != null) {
-						MagicSpells.getVolatileCodeHandler().playSound(player, startSound, startSoundVolume, startSoundPitch);
+						MagicSpells.getVolatileCodeHandler().playSound(player, startSound, startSoundVolume, startSoundPitch, startCategory);
 					}
 					if (duration > 0) {
 						playerTasks.put(playerName, MagicSpells.scheduleDelayedTask(new DanceCastDuration(playerName), duration));

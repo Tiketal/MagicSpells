@@ -37,9 +37,9 @@ public interface VolatileCodeHandle {
 	
 	public void setTarget(LivingEntity entity, LivingEntity target);
 	
-	public void playSound(Location location, String sound, float volume, float pitch);
+	public void playSound(Location location, String sound, float volume, float pitch, String category);
 	
-	public void playSound(Player player, String sound, float volume, float pitch);
+	public void playSound(Player player, String sound, float volume, float pitch, String category);
 	
 	public ItemStack addFakeEnchantment(ItemStack item);
 	

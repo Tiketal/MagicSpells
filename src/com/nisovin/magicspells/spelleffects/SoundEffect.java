@@ -14,6 +14,7 @@ public class SoundEffect extends SpellEffect {
 	String sound = "random.pop";
 	float volume = 1.0F;
 	float pitch = 1.0F;
+	String category = "MASTER";
 
 	@Override
 	public void loadFromString(String string) {
@@ -39,11 +40,12 @@ public class SoundEffect extends SpellEffect {
 		sound = config.getString("sound", sound);
 		volume = (float)config.getDouble("volume", volume);
 		pitch = (float)config.getDouble("pitch", pitch);
+		category = config.getString("category", category);
 	}
 	
 	@Override
 	public void playEffectLocation(Location location) {
-		MagicSpells.getVolatileCodeHandler().playSound(location, sound, volume, pitch);
+		MagicSpells.getVolatileCodeHandler().playSound(location, sound, volume, pitch, category);
 	}
 	
 	public static void main(String[] args) {

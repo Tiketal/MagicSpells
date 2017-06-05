@@ -1,10 +1,8 @@
 package com.nisovin.magicspells.spells.instant;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -165,7 +163,6 @@ public class SteedSpell extends InstantSpell {
 	@Override
 	public void turnOff() {
 		for (String name : mounted.keySet()) {
-			@SuppressWarnings("deprecation")
 			Player player = Bukkit.getPlayerExact(name);
 			if (player != null && player.getVehicle() != null) {
 				player.getVehicle().eject();
