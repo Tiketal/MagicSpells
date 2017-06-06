@@ -250,11 +250,6 @@ public class Util {
 				((SkullMeta)meta).setOwner(config.getString("skullowner"));
 			}
 			
-			// spawn egg
-			if (config.contains("entitytype") && config.isString("entitytype") && meta instanceof SpawnEggMeta) {
-				((SpawnEggMeta)meta).setSpawnedType(getEntityType(config.getString("entitytype")));
-			}
-			
 			// flower pot
 			/*if (config.contains("flower") && item.getType() == Material.FLOWER_POT && meta instanceof BlockStateMeta) {
 				MagicMaterial flower = MagicSpells.getItemNameResolver().resolveBlock(config.getString("flower"));
