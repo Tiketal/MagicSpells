@@ -245,7 +245,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 	}
 	
 	private void playSound(Player player, Location loc, String sound, float volume, float pitch, String category) {
-		PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(sound, getSoundCategory(category) , loc.getX(), loc.getY(), loc.getZ(), volume, pitch);
+		PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(sound, getSoundCategory(category), loc.getX(), loc.getY(), loc.getZ(), volume, pitch);
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 	}
 	
