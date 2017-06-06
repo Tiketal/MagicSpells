@@ -18,15 +18,15 @@ public abstract class Variable {
 	public Variable() {
 	}
 	
-	public final void init(double defaultValue, double minValue, double maxValue, boolean permanent, Objective objective, String bossBar, String barStyle, String barColor, boolean expBar) {
+	public final void init(double defaultValue, double minValue, double maxValue, boolean permanent, Objective objective, String bossBar, String barColor, String barStyle, boolean expBar) {
 		this.defaultValue = defaultValue;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.permanent = permanent;
 		this.objective = objective;
 		this.bossBar = bossBar;
-		this.barStyle = barStyle;
 		this.barColor = barColor;
+		this.barStyle = barStyle;
 		this.expBar = expBar;
 		init();
 	}
