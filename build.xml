@@ -13,7 +13,7 @@
 	<property name="memory.src.dir" location="src_memory"/>
 	<property name="memory.build.dir" location="bin_memory"/>
 	
-	<property name="shop.version" value="1.6"/>
+	<property name="shop.version" value="1.8"/>
 	<property name="shop.src.dir" location="src_shop"/>
 	<property name="shop.build.dir" location="bin_shop"/>
 	
@@ -56,7 +56,7 @@
 	<!-- Compile the core -->
 	<target name="core-compile" depends="clean">
 		<mkdir dir="${core.build.dir}"/>
-		<javac srcdir="${core.src.dir}" destdir="${core.build.dir}" debug="true" source="1.6" target="1.6">
+		<javac srcdir="${core.src.dir}" destdir="${core.build.dir}" debug="true" source="1.8" target="1.8">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="spigot-1.11*.jar"/>
@@ -84,7 +84,7 @@
 	<!-- Compile teams addon -->
 	<target name="teams-compile" depends="core-jar">
 		<mkdir dir="${teams.build.dir}"/>
-		<javac srcdir="${teams.src.dir}" destdir="${teams.build.dir}" debug="true" source="1.6" target="1.6">
+		<javac srcdir="${teams.src.dir}" destdir="${teams.build.dir}" debug="true" source="1.8" target="1.8">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="bukkit*.jar"/>
@@ -109,7 +109,7 @@
 	<!-- Compile memory addon -->
 	<target name="memory-compile" depends="core-jar">
 		<mkdir dir="${memory.build.dir}"/>
-		<javac srcdir="${memory.src.dir}" destdir="${memory.build.dir}" debug="true" source="1.6" target="1.6">
+		<javac srcdir="${memory.src.dir}" destdir="${memory.build.dir}" debug="true" source="1.8" target="1.8">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="bukkit*.jar"/>
@@ -134,7 +134,7 @@
 	<!-- Compile shop addon -->
 	<target name="shop-compile" depends="core-jar">
 		<mkdir dir="${shop.build.dir}"/>
-		<javac srcdir="${shop.src.dir}" destdir="${shop.build.dir}" debug="true" source="1.6" target="1.6">
+		<javac srcdir="${shop.src.dir}" destdir="${shop.build.dir}" debug="true" source="1.8" target="1.8">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="bukkit*.jar"/>
@@ -160,7 +160,7 @@
 	<!-- Compile towny addon -->
 	<target name="towny-compile" depends="core-jar">
 		<mkdir dir="${towny.build.dir}"/>
-		<javac srcdir="${towny.src.dir}" destdir="${towny.build.dir}" debug="true" source="1.6" target="1.6">
+		<javac srcdir="${towny.src.dir}" destdir="${towny.build.dir}" debug="true" source="1.8" target="1.8">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="bukkit*.jar"/>
@@ -186,7 +186,7 @@
 	<!-- Compile factions addon -->
 	<target name="factions-compile" depends="core-jar">
 		<mkdir dir="${factions.build.dir}"/>
-		<javac srcdir="${factions.src.dir}" destdir="${factions.build.dir}" debug="true" source="1.6" target="1.6">
+		<javac srcdir="${factions.src.dir}" destdir="${factions.build.dir}" debug="true" source="1.8" target="1.8">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="bukkit*.jar"/>
