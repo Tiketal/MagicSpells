@@ -711,7 +711,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 	@Override
 	public ItemStack setUnbreakable(ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
-		meta.spigot().setUnbreakable(true);
+		meta.setUnbreakable(true);
 		item.setItemMeta(meta);
 		return item;
 	}
