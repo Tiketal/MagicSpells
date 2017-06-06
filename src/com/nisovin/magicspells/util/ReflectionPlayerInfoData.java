@@ -16,6 +16,7 @@ public class ReflectionPlayerInfoData {
 	
 	Object obj;
 	
+	@SuppressWarnings("unchecked")
 	public ReflectionPlayerInfoData(GameProfile profile,
 			int num, EnumGamemode mode, IChatBaseComponent icbc) {
 		try {
@@ -27,5 +28,9 @@ public class ReflectionPlayerInfoData {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Object getObject() {
+		return obj;
 	}
 }

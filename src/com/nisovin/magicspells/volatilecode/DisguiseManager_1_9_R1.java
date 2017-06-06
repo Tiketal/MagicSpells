@@ -567,12 +567,12 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 			if (Bukkit.getPlayer(entity.getUniqueID()) == null) {
 				PacketPlayOutPlayerInfo packetinfo = new PacketPlayOutPlayerInfo();
 				refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.REMOVE_PLAYER);
-				
-				List<ReflectionPlayerInfoData> list = new ArrayList<ReflectionPlayerInfoData>();
+
+				List<PacketPlayOutPlayerInfo.PlayerInfoData> list = new ArrayList<PacketPlayOutPlayerInfo.PlayerInfoData>();
 				//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 				
-				list.add(new ReflectionPlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
-				//list.add(packetinfo.new PlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
+				//list.add(new ReflectionPlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
+				list.add(packetinfo.new PlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list);
 				broadcastPacketGlobal(PacketType.Play.Server.PLAYER_INFO, packetinfo);
