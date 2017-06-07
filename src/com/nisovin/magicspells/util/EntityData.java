@@ -130,7 +130,7 @@ public class EntityData {
 		} else if (type.equalsIgnoreCase("mooshroom")) {
 			type = "mushroom_cow";
 		} else if (type.equalsIgnoreCase("magmacube")) {
-			type = "lavaslime";
+			type = "magma_cube";
 		} else if (type.toLowerCase().contains("ocelot")) {
 			type = type.toLowerCase().replace("ocelot", "ozelot");
 		} else if (type.equalsIgnoreCase("snowgolem")) {
@@ -223,7 +223,7 @@ public class EntityData {
 		if (type.equals("player")) {
 			entityType = EntityType.PLAYER;
 		} else {
-			entityType = EntityType.fromName(type);
+			entityType = EntityType.valueOf(type);
 		}
 	}
 	
