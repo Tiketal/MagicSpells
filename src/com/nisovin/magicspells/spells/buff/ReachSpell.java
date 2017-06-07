@@ -18,6 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -116,7 +117,7 @@ public class ReachSpell extends BuffSpell {
 					// place
 					
 					// check for block in hand
-					ItemStack inHand = player.getItemInHand();
+					ItemStack inHand = player.getInventory().getItemInMainHand();
 					if (inHand != null && inHand.getType() != Material.AIR && inHand.getType().isBlock()) {
 						
 						// check for disallowed
@@ -131,7 +132,7 @@ public class ReachSpell extends BuffSpell {
 						state.setData(inHand.getData());
 						state.update(true);
 						// call event
-						BlockPlaceEvent evt = new BlockPlaceEvent(airBlock, prevState, targetBlock, inHand, player, true);
+						BlockPlaceEvent evt = new BlockPlaceEvent(airBlock, prevState, targetBlock, inHand, player, true, EquipmentSlot.HAND);
 						Bukkit.getPluginManager().callEvent(evt);
 						if (evt.isCancelled()) {
 							// cancelled, revert
@@ -141,9 +142,9 @@ public class ReachSpell extends BuffSpell {
 							if (consumeBlocks && player.getGameMode() != GameMode.CREATIVE) {
 								if (inHand.getAmount() > 1) {
 									inHand.setAmount(inHand.getAmount() - 1);
-									player.setItemInHand(inHand);
+									player.getInventory().setItemInMainHand(inHand);
 								} else {
-									player.setItemInHand(null);
+									player.getInventory().setItemInMainHand(null);
 								}
 							}
 							addUseAndChargeCost(player);

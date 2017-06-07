@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.events.SpellTargetLocationEvent;
@@ -81,7 +82,7 @@ public class MaterializeSpell extends TargetedSpell implements TargetedLocationS
 		
 		if (checkPlugins && player != null) {
 			material.setBlock(block, false);
-			BlockPlaceEvent event = new BlockPlaceEvent(block, blockState, against, player.getItemInHand(), player, true);
+			BlockPlaceEvent event = new BlockPlaceEvent(block, blockState, against, player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
 			Bukkit.getPluginManager().callEvent(event);
 			blockState.update(true);
 			if (event.isCancelled()) {

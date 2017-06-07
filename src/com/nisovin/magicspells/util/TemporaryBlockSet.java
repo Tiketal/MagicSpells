@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.materials.MagicMaterial;
@@ -37,7 +38,7 @@ public class TemporaryBlockSet implements Runnable {
 			if (callPlaceEvent) {
 				BlockState state = block.getState();
 				replaceWith.setBlock(block, false);
-				BlockPlaceEvent event = new BlockPlaceEvent(block, state, block, player.getItemInHand(), player, true);
+				BlockPlaceEvent event = new BlockPlaceEvent(block, state, block, player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
 				Bukkit.getPluginManager().callEvent(event);
 				if (event.isCancelled()) {
 					BlockUtils.setTypeAndData(block, original, (byte)0, false);

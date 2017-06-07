@@ -61,8 +61,10 @@ public class HoldingCondition extends Condition {
 
 	@Override
 	public boolean check(Player player) {
-		ItemStack item = player.getItemInHand();
-		return check(item);
+		ItemStack itemMain = player.getInventory().getItemInMainHand();
+		ItemStack itemOff = player.getInventory().getItemInOffHand();
+		
+		return (check(itemMain) || check(itemOff));
 	}
 	
 	@Override
@@ -72,7 +74,7 @@ public class HoldingCondition extends Condition {
 		} else {
 			EntityEquipment equip = target.getEquipment();
 			if (equip != null) {
-				return check(equip.getItemInHand());
+				return (check(equip.getItemInMainHand()) || check(equip.getItemInOffHand()));
 			} else {
 				return false;
 			}

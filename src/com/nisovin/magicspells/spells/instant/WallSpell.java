@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -84,7 +85,7 @@ public class WallSpell extends InstantSpell {
 				if (checkPlugins) {
 					BlockState eventBlockState = target.getState();
 					wallMaterial.setBlock(target, false);
-					BlockPlaceEvent event = new BlockPlaceEvent(target, eventBlockState, target, player.getItemInHand(), player, true);
+					BlockPlaceEvent event = new BlockPlaceEvent(target, eventBlockState, target, player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
 					Bukkit.getPluginManager().callEvent(event);
 					BlockUtils.setTypeAndData(target, Material.AIR, (byte)0, false);
 					if (event.isCancelled()) {

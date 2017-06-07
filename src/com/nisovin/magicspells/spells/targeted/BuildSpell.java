@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -86,7 +87,7 @@ public class BuildSpell extends TargetedSpell implements TargetedLocationSpell {
 		state.setData(item.getData());
 		state.update(true);
 		if (checkPlugins) {
-			BlockPlaceEvent event = new BlockPlaceEvent(block, previousState, against, player.getItemInHand(), player, true);
+			BlockPlaceEvent event = new BlockPlaceEvent(block, previousState, against, player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
 			Bukkit.getServer().getPluginManager().callEvent(event);
 			if (event.isCancelled() && block.getType() == item.getType()) {
 				previousState.update(true);
