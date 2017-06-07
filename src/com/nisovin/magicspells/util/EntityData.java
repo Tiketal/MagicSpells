@@ -30,7 +30,7 @@ public class EntityData {
 			
 		// zombie villager
 		} else if (type.toLowerCase().startsWith("zombie villager")) {
-			String prof = type.toLowerCase().replace("villager ", "");
+			String prof = type.toLowerCase().replace("zombie villager ", "");
 			if (prof.matches("^[0-5]$")) {
 				var4 = getProfessionFromID(Integer.parseInt(prof));
 			} else if (prof.toLowerCase().startsWith("green")) {
@@ -45,7 +45,7 @@ public class EntityData {
 			}
 			type = "villager";
 		} else if (type.toLowerCase().endsWith(" villager zombie")) {
-			String prof = type.toLowerCase().replace(" villager", "");
+			String prof = type.toLowerCase().replace(" villager zombie", "");
 			if (prof.toLowerCase().startsWith("green")) {
 				var4 = "NITWIT";
 			} else {
