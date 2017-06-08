@@ -6,24 +6,23 @@ import com.mojang.authlib.GameProfile;
 
 import net.minecraft.server.v1_11_R1.EnumGamemode;
 import net.minecraft.server.v1_11_R1.IChatBaseComponent;
+import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo;
 
 public class ReflectionPlayerInfoData {
-	
-	@SuppressWarnings("rawtypes")
-	Class cls;
-	@SuppressWarnings("rawtypes")
-	Constructor constructor;
+
+	Class<?> cls;
+	Constructor<?> constructor;
 	
 	Object obj;
 	
-	public ReflectionPlayerInfoData(GameProfile profile,
+	public ReflectionPlayerInfoData(PacketPlayOutPlayerInfo playerinfo, GameProfile profile,
 			int num, EnumGamemode mode, IChatBaseComponent icbc) {
 		try {
-			cls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.PlayerInfoData");
+			cls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
+
+			constructor = cls.getDeclaredConstructor(PacketPlayOutPlayerInfo.class, GameProfile.class, Integer.class, EnumGamemode.class, IChatBaseComponent.class);
 			
-			constructor = cls.getConstructor(GameProfile.class, Integer.class, EnumGamemode.class, IChatBaseComponent.class);
-			
-			obj = constructor.newInstance(profile, num, mode, icbc);
+			obj = constructor.newInstance(playerinfo, profile, num, mode, icbc);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
