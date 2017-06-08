@@ -565,16 +565,14 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 		if (disguise != null && disguise.getEntityType() == EntityType.PLAYER) {
 			Entity entity = getEntity(disguised, disguise);
 			if (Bukkit.getPlayer(entity.getUniqueID()) == null) {
-				PacketPlayOutPlayerInfo packetinfo = new PacketPlayOutPlayerInfo();
+				ReflectionPlayerInfoData refPacketInfo = new ReflectionPlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName()));
+				PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.getOuterObject();
 				refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.REMOVE_PLAYER);
 				
-				//temp
 				List<Object> list = new ArrayList<Object>();
 				//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 				
-				ReflectionPlayerInfoData refPlayerInfoData = new ReflectionPlayerInfoData(packetinfo, ((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName()));
-				
-				list.add(refPlayerInfoData.getObject());
+				list.add(refPacketInfo.getInnerObject());
 				//list.add(packetinfo.new PlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list);
@@ -661,17 +659,16 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 				data = data.clone();
 				data.uuid = disguised.getUniqueId().toString();
 				GameProfile profile = getGameProfile(disguised.getName(), data);
-				PacketPlayOutPlayerInfo packetinfo = new PacketPlayOutPlayerInfo();
+				
+				ReflectionPlayerInfoData refPacketInfo = new ReflectionPlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName()));
+				PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.getOuterObject();
+				
 				refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.ADD_PLAYER);
 				
-				//temp 
 				List<Object> list = new ArrayList<Object>();
 				//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 				
-				ReflectionPlayerInfoData refPlayerInfoData = new ReflectionPlayerInfoData(packetinfo, profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName()));
-				
-				list.add(refPlayerInfoData.getObject());
-				//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
+				list.add(refPacketInfo.getInnerObject());
 				//list.add(packetinfo.new PlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list);
@@ -709,13 +706,15 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 		if (entity instanceof EntityHuman) {
 			PacketPlayOutNamedEntitySpawn packet20 = new PacketPlayOutNamedEntitySpawn((EntityHuman)entity);
 			refPacketNamedEntity.setInt(packet20, "a", disguised.getEntityId());
-			PacketPlayOutPlayerInfo packetinfo = new PacketPlayOutPlayerInfo();
+			
+
+			ReflectionPlayerInfoData refPacketInfo = new ReflectionPlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName()));
+			PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.getOuterObject();
+			
 			refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.ADD_PLAYER);
 			
-			//temp
 			List<Object> list = new ArrayList<Object>();
-			ReflectionPlayerInfoData refPlayerInfoData = new ReflectionPlayerInfoData(packetinfo, ((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName()));
-			list.add(refPlayerInfoData.getObject());
+			list.add(refPacketInfo.getInnerObject());
 			//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 			//list.add(packetinfo.new PlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
 			

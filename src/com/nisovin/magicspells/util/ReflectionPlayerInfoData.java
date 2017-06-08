@@ -6,29 +6,38 @@ import com.mojang.authlib.GameProfile;
 
 import net.minecraft.server.v1_11_R1.EnumGamemode;
 import net.minecraft.server.v1_11_R1.IChatBaseComponent;
-import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo;
 
 public class ReflectionPlayerInfoData {
 
-	Class<?> cls;
-	Constructor<?> constructor;
+	Class<?> outCls;
+	Class<?> inCls;
 	
-	Object obj;
+	Constructor<?> inConstructor;
 	
-	public ReflectionPlayerInfoData(PacketPlayOutPlayerInfo playerinfo, GameProfile profile,
-			int num, EnumGamemode mode, IChatBaseComponent icbc) {
+	Object outObj;
+	Object inObj;
+	
+	public ReflectionPlayerInfoData(GameProfile profile, int num, EnumGamemode mode, IChatBaseComponent icbc) {
+		
 		try {
-			cls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
-
-			constructor = cls.getDeclaredConstructor(PacketPlayOutPlayerInfo.class, GameProfile.class, Integer.class, EnumGamemode.class, IChatBaseComponent.class);
+			outCls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo");
+			outObj = outCls.newInstance();
 			
-			obj = constructor.newInstance(playerinfo, profile, num, mode, icbc);
+			inCls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
+			inConstructor = inCls.getConstructors()[0];
+			
+			inObj = inConstructor.newInstance(outObj, profile, num, mode, icbc);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public Object getObject() {
-		return obj;
+	public Object getOuterObject() {
+		return outObj;
+	}
+	
+	public Object getInnerObject() {
+		return inObj;
 	}
 }
