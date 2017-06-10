@@ -39,7 +39,7 @@ import com.nisovin.magicspells.spells.targeted.DisguiseSpell.PlayerDisguiseData;
 import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.ReflectionHelper;
-import com.nisovin.magicspells.util.ReflectionPlayerInfoData;
+import com.nisovin.magicspells.volatilecode.ReflectionPlayerInfoData;
 
 public class DisguiseManager_1_9_R1 extends DisguiseManager {
 
@@ -777,7 +777,7 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 		}
 		
 		// handle passengers and vehicles
-		if (disguised.getPassengers() != null) {
+		if (disguised.getPassengers().size() != 0) {
 			PacketPlayOutAttachEntity packet39 = new PacketPlayOutAttachEntity();
 			refPacketAttachEntity.setInt(packet39, "a", disguised.getPassengers().get(0).getEntityId());
 			refPacketAttachEntity.setInt(packet39, "b", disguised.getEntityId());

@@ -1,4 +1,4 @@
-package com.nisovin.magicspells.util;
+package com.nisovin.magicspells.volatilecode;
 
 import java.lang.reflect.Constructor;
 

@@ -372,7 +372,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		
 		// create fireworks entity
 		EntityFireworks fireworks = new EntityFireworks(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), item);
-		((World)location.getWorld()).addEntity(fireworks);
+		(((CraftWorld)location.getWorld()).getHandle()).addEntity(fireworks);
 		
 		// cause explosion
 		if (flightDuration == 0) {
