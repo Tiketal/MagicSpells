@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -381,6 +382,13 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		}
 	}
 	
+	// Handy for getting particle names
+	public static void main(String[] args) {
+		for (EnumParticle particle : EnumParticle.values()) {
+			System.out.println(particle.b());
+		}
+	}
+
 	Field[] packet63Fields = new Field[11];
 	Map<String, EnumParticle> particleMap = new HashMap<String, EnumParticle>();
 	@Override
@@ -395,7 +403,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		int[] data = null;
 		if (name.contains("_")) {
 			String[] split = name.split("_");
-			name = split[0] + "_";
+			name = split[0];
 			particle = particleMap.get(name);
 			if (split.length > 1) {
 				String[] split2 = split[1].split(":");
@@ -435,7 +443,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void playDragonDeathEffect(Location location) {
 		EntityEnderDragon dragon = new EntityEnderDragon(((CraftWorld)location.getWorld()).getHandle());
@@ -527,7 +535,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		if (attribute.equals("generic.maxHealth")) {
 			attr = Attribute.GENERIC_MAX_HEALTH;
 		} else if (attribute.equals("generic.followRange")) {
-			attr = Attribute.GENERIC_MAX_HEALTH;
+			attr = Attribute.GENERIC_FOLLOW_RANGE;
 		} else if (attribute.equals("generic.knockbackResistance")) {
 			attr = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
 		} else if (attribute.equals("generic.movementSpeed")) {
@@ -540,6 +548,8 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 			attr = Attribute.GENERIC_ARMOR;
 		} else if (attribute.equals("generic.luck")) {
 			attr = Attribute.GENERIC_LUCK;
+		} else if (attribute.equals("generic.armorToughness")) {
+			attr = Attribute.GENERIC_ARMOR_TOUGHNESS;
 		}
 		Operation oper = null;
 		if (operation == 0) {

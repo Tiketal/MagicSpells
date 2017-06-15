@@ -2,7 +2,9 @@ package com.nisovin.magicspells.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -16,7 +18,6 @@ public class EntityData {
 	private int var1 = 0;
 	private int var2 = 0;
 	private int var3 = 0;
-	private String var4;
 	
 	public EntityData(String type) {		
 		if (type.startsWith("baby ")) {
@@ -32,30 +33,31 @@ public class EntityData {
 		} else if (type.toLowerCase().startsWith("zombie villager")) {
 			String prof = type.toLowerCase().replace("zombie villager ", "");
 			if (prof.matches("^[0-5]$")) {
-				var4 = getProfessionFromID(Integer.parseInt(prof));
+				var1 = Integer.parseInt(prof);
 			} else if (prof.toLowerCase().startsWith("green")) {
-				var4 = "NITWIT";
+				var1 = 5;
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var4 = prof.toUpperCase();
+					var1 = getIdFromProfession(prof.toUpperCase());
 				} catch (Exception e) {
-					MagicSpells.error("Invalid villager profession: " + prof);
+					MagicSpells.error("Invalid zombie profession: " + prof);
 				}
 			}
-			type = "villager";
-		} else if (type.toLowerCase().endsWith(" villager zombie")) {
-			String prof = type.toLowerCase().replace(" villager zombie", "");
+			type = "zombie_villager";
+		} else if (type.toLowerCase().endsWith(" zombie villager")) {
+			String prof = type.toLowerCase().replace(" zombie villager", "");
 			if (prof.toLowerCase().startsWith("green")) {
-				var4 = "NITWIT";
+				var1 = 5;
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var4 = prof.toUpperCase();
+					var1 = getIdFromProfession(prof.toUpperCase());
 				} catch (Exception e) {
-					MagicSpells.error("Invalid villager profession: " + prof);
+					MagicSpells.error("Invalid zombie profession: " + prof);
 				}
 			}
+			type = "zombie_villager";
 			
 		// creeper
 		} else if (type.equalsIgnoreCase("powered creeper")) {
@@ -66,13 +68,13 @@ public class EntityData {
 		} else if (type.toLowerCase().startsWith("villager ")) {
 			String prof = type.toLowerCase().replace("villager ", "");
 			if (prof.matches("^[0-5]$")) {
-				var4 = getProfessionFromID(Integer.parseInt(prof));
+				var1 = Integer.parseInt(prof);
 			} else if (prof.toLowerCase().startsWith("green")) {
-				var4 = "NITWIT";
+				var1 = 5;
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var4 = prof.toUpperCase();
+					var1 = getIdFromProfession(prof.toUpperCase());
 				} catch (Exception e) {
 					MagicSpells.error("Invalid villager profession: " + prof);
 				}
@@ -81,11 +83,11 @@ public class EntityData {
 		} else if (type.toLowerCase().endsWith(" villager")) {
 			String prof = type.toLowerCase().replace(" villager", "");
 			if (prof.toLowerCase().startsWith("green")) {
-				var4 = "NITWIT";
+				var1 = 5;
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var4 = prof.toUpperCase();
+					var1 = getIdFromProfession(prof.toUpperCase());
 				} catch (Exception e) {
 					MagicSpells.error("Invalid villager profession: " + prof);
 				}
@@ -99,10 +101,7 @@ public class EntityData {
 				var1 = -1;
 			} else {
 				try {
-					DyeColor dyeColor = DyeColor.valueOf(color.toUpperCase().replace(" ", "_"));
-					if (dyeColor != null) {
-						var4 = color;
-					}
+					var1 = getIdFromDyeColor(color.toUpperCase().replace(" ", "_"));
 				} catch (IllegalArgumentException e) {
 					MagicSpells.error("Invalid sheep color: " + color);
 				}
@@ -184,8 +183,6 @@ public class EntityData {
 			type = "magma_cube";
 		} else if (type.equalsIgnoreCase("cavespider")) {
 			type = "cave_spider";
-		} else if (type.equalsIgnoreCase("elder guardian")) {
-			type = "eldar_guardian";
 			
 		// different aliases
 		} else if (type.equalsIgnoreCase("dragon")) {
@@ -242,7 +239,7 @@ public class EntityData {
 			entityType = EntityType.PLAYER;
 		} else {
 			try {
-				entityType = EntityType.valueOf(type.toUpperCase());
+				entityType = EntityType.valueOf(type.toUpperCase().replace(" ", "_"));
 			} catch (Exception e) {
 				entityType = null;
 			}
@@ -269,10 +266,6 @@ public class EntityData {
 		return var3;
 	}
 	
-	public String getVar4() {
-		return var4;
-	}
-	
 	public Entity spawn(Location loc) {
 		Entity entity = loc.getWorld().spawnEntity(loc, entityType);
 		if (entity instanceof Ageable && flag) {
@@ -281,7 +274,19 @@ public class EntityData {
 		if (entityType == EntityType.ZOMBIE) {
 			((Zombie)entity).setBaby(flag);
 		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
-			((ZombieVillager)entity).setVillagerProfession(Villager.Profession.valueOf(var4));
+			if (var1 == 0) {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.FARMER);
+			} else if (var1 == 1) {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.LIBRARIAN);
+			} else if (var1 == 2) {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.PRIEST);
+			} else if (var1 == 3) {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.BLACKSMITH);
+			} else if (var1 == 4) {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.BUTCHER);
+			} else if (var1 == 5) {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.NITWIT);
+			}
 		} else if (entityType == EntityType.CREEPER) {
 			if (flag) {
 				((Creeper)entity).setPowered(true);
@@ -301,7 +306,19 @@ public class EntityData {
 				((Ocelot)entity).setCatType(Ocelot.Type.SIAMESE_CAT);
 			}
 		} else if (entityType == EntityType.VILLAGER) {
-			((Villager)entity).setProfession(Villager.Profession.valueOf(var4));
+			if (var1 == 0) {
+				((Villager)entity).setProfession(Villager.Profession.FARMER);
+			} else if (var1 == 1) {
+				((Villager)entity).setProfession(Villager.Profession.LIBRARIAN);
+			} else if (var1 == 2) {
+				((Villager)entity).setProfession(Villager.Profession.PRIEST);
+			} else if (var1 == 3) {
+				((Villager)entity).setProfession(Villager.Profession.BLACKSMITH);
+			} else if (var1 == 4) {
+				((Villager)entity).setProfession(Villager.Profession.BUTCHER);
+			} else if (var1 == 5) {
+				((Villager)entity).setProfession(Villager.Profession.NITWIT);
+			}
 		} else if (entityType == EntityType.SLIME) {
 			((Slime)entity).setSize(var1);
 		} else if (entityType == EntityType.MAGMA_CUBE) {
@@ -309,7 +326,7 @@ public class EntityData {
 		} else if (entityType == EntityType.PIG) {
 			((Pig)entity).setSaddle(var1 == 1);
 		} else if (entityType == EntityType.SHEEP) {
-			DyeColor c = DyeColor.valueOf(var4.toUpperCase().replace(" ", "_"));
+			DyeColor c = getDyeColorFromId(var1);
 			if (c != null) {
 				((Sheep)entity).setColor(c);
 			}
@@ -333,20 +350,46 @@ public class EntityData {
 		return entity;
 	}
 	
-	private String getProfessionFromID(int id) {
-		switch (id) {
-		case 0:
-			return "FARMER";
-		case 1:
-			return "LIBRARIAN";
-		case 2:
-			return "PRIEST";
-		case 3:
-			return "BLACKSMITH";
-		case 4:
-			return "BUTCHER";
+	private int getIdFromProfession(String prof) {
+		switch (prof) {
+		case "FARMER":
+			return 0;
+		case "LIBRARIAN":
+			return 1;
+		case "PRIEST":
+			return 2;
+		case "BLACKSMITH":
+			return 3;
+		case "BUTCHER":
+			return 4;
+		case "NITWIT":
+			return 5;
 		default:
-			return "FARMER";
+			return 0;
 		}
+	}
+	
+	private int getIdFromDyeColor(String color) {
+		Map<DyeColor, Integer> colors = new HashMap<DyeColor, Integer>();
+
+		int i = 0;
+		for (DyeColor c : DyeColor.values()) {
+			colors.put(c, i);
+			i++;
+		}
+		
+		return colors.get(DyeColor.valueOf(color));
+	}
+	
+	private DyeColor getDyeColorFromId(int id) {
+		Map<Integer, DyeColor> colors = new HashMap<Integer, DyeColor>();
+		
+		int i = 0;
+		for (DyeColor c : DyeColor.values()) {
+			colors.put(i, c);
+			i++;
+		}
+		
+		return colors.get(id);
 	}
 }

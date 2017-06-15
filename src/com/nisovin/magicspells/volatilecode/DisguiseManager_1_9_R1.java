@@ -134,6 +134,7 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 			if (flag) {
 				((EntityZombie)entity).setBaby(true);
 			}
+		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
 			if (var >= 1) {
 				entity = new EntityZombieVillager(world);
 				((EntityZombieVillager)entity).setProfession(var);
@@ -260,17 +261,42 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			((EntityRabbit)entity).setRabbitType(var);
 			
+		} else if (entityType == EntityType.POLAR_BEAR) {
+			entity = new EntityPolarBear(world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			// TODO: Figure out animations for attacking
+			
 		} else if (entityType == EntityType.GUARDIAN) {
 			entity = new EntityGuardian(world);
-			if (flag) {
-				entity = new EntityGuardian(world);
-			}
+			
+		} else if (entityType == EntityType.ELDER_GUARDIAN) {
+			entity = new EntityGuardianElder(world);
 			
 		} else if (entityType == EntityType.ENDERMITE) {
 			entity = new EntityEndermite(world);
 			
+		} else if (entityType == EntityType.VINDICATOR) {
+			entity = new EntityVindicator(world);
+			
+		} else if (entityType == EntityType.VEX) {
+			entity = new EntityVex(world);
+			
+		} else if (entityType == EntityType.EVOKER) {
+			entity = new EntityEvoker(world);
+			
+		} else if (entityType == EntityType.HUSK) {
+			entity = new EntityZombieHusk(world);
+			
+		} else if (entityType == EntityType.STRAY) {
+			entity = new EntitySkeletonStray(world);
+			
 		} else if (entityType == EntityType.WITHER) {
 			entity = new EntityWither(world);
+			
+		} else if (entityType == EntityType.LLAMA) {
+			entity = new EntityLlama(world);
+			((EntityLlama)entity).setVariant(var);
+			// TODO: Add support for different colours
 			
 		} else if (entityType == EntityType.HORSE) {
 			entity = new EntityHorse(world);
@@ -340,7 +366,7 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 						dw.watch(16, Byte.valueOf((byte)0));
 						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 					}
-				}, 10);*/
+				}, 10);
 			} else if (entityType == EntityType.WITCH) {
 				/*final DataWatcher dw = new DataWatcher(entityPlayer);
 				dw.a(0, Byte.valueOf((byte) 0));

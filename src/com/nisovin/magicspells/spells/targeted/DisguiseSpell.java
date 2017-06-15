@@ -292,6 +292,7 @@ public class DisguiseSpell extends TargetedSpell implements TargetedEntitySpell 
 		private int var1;
 		private int var2;
 		private int var3;
+		private String var4;
 		private DisguiseSpell spell;
 		
 		private int taskId;
