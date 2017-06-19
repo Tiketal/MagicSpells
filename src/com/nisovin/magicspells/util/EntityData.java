@@ -30,8 +30,8 @@ public class EntityData {
 			type = "player";
 			
 		// zombie villager
-		} else if (type.toLowerCase().startsWith("zombie villager")) {
-			String prof = type.toLowerCase().replace("zombie villager ", "");
+		} else if (type.toLowerCase().startsWith("zombie ")) {
+			String prof = type.toLowerCase().replace("zombie ", "");
 			if (prof.matches("^[0-5]$")) {
 				var1 = Integer.parseInt(prof);
 			} else if (prof.toLowerCase().startsWith("green")) {
@@ -45,8 +45,8 @@ public class EntityData {
 				}
 			}
 			type = "zombie_villager";
-		} else if (type.toLowerCase().endsWith(" zombie villager")) {
-			String prof = type.toLowerCase().replace(" zombie villager", "");
+		} else if (type.toLowerCase().endsWith(" zombie")) {
+			String prof = type.toLowerCase().replace(" zombie", "");
 			if (prof.toLowerCase().startsWith("green")) {
 				var1 = 5;
 			} else {

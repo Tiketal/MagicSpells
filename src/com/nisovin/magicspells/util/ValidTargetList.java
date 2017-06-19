@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -77,6 +78,8 @@ public class ValidTargetList {
 	
 	public boolean canTarget(Player caster, LivingEntity target, boolean targetPlayers) {
 		if (target instanceof Player && ((Player)target).getGameMode() == GameMode.CREATIVE) {
+			return false;
+		} else if (target instanceof ArmorStand) {
 			return false;
 		} else if (targetSelf && target.equals(caster)) {
 			return true;

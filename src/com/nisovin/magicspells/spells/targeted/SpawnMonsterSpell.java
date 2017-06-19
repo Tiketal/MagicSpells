@@ -358,8 +358,8 @@ public class SpawnMonsterSpell extends TargetedSpell implements TargetedLocation
 				((Enderman)entity).setCarriedMaterial(holding.getData());
 			} else if (entity instanceof Skeleton || entity instanceof Zombie) {
 				final EntityEquipment equip = ((LivingEntity)entity).getEquipment();
-				equip.setItemInHand(holding.clone());
-				equip.setItemInHandDropChance(holdingDropChance);
+				equip.setItemInMainHand(holding.clone());
+				equip.setItemInMainHandDropChance(holdingDropChance);
 			}
 		}
 		// set armor

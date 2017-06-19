@@ -286,6 +286,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 			}
 			
 			// show particle
+			if (!particleName.equalsIgnoreCase("none"))
 			MagicSpells.getVolatileCodeHandler().playParticleEffect(currentLocation, particleName, particleXSpread, particleYSpread, particleZSpread, particleSpeed, particleCount, renderDistance, 0F);
 			
 			// play effects
