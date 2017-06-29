@@ -2,6 +2,7 @@ package com.nisovin.magicspells.spells.targeted;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class DestroySpell extends TargetedSpell implements TargetedLocationSpell
 	Set<Material> blockTypesToThrow;
 	Set<Material> blockTypesToRemove;
 	
-	Set<FallingBlock> fallingBlocks;
+	Set<FallingBlock> fallingBlocks = new HashSet<FallingBlock>();
 	
 	public DestroySpell(MagicConfig config, String spellName) {
 		super(config, spellName);
@@ -72,7 +73,7 @@ public class DestroySpell extends TargetedSpell implements TargetedLocationSpell
 			velocityType = VelocityType.NONE;
 		}
 		
-		preventLandingBlocks = config.getBoolean("prevent-landing-blocks", false);
+		preventLandingBlocks = getConfigBoolean("prevent-landing-blocks", false);
 		fallingBlockDamage = getConfigInt("falling-block-damage", 0);
 		
 		List<String> toThrow = getConfigStringList("block-types-to-throw", null);

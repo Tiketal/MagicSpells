@@ -2,6 +2,7 @@ package com.nisovin.magicspells.volatilecode;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fireball;
@@ -54,6 +55,8 @@ public interface VolatileCodeHandle {
 	//public void setHeldItemSlot(Player player, int slot);
 	
 	public void playParticleEffect(Location location, String name, float spreadHoriz, float spreadVert, float speed, int count, int radius, float yOffset);
+	
+	public void playParticleEffect(Player player, Location location, String name, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset);
 	
 	public void playParticleEffect(Location location, String name, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset);
 	

@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -391,13 +390,53 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 
 	Field[] packet63Fields = new Field[11];
 	Map<String, EnumParticle> particleMap = new HashMap<String, EnumParticle>();
+	
 	@Override
-	public void playParticleEffect(Location location, String name, float spreadHoriz, float spreadVert, float speed, int count, int radius, float yOffset) {
+	public void playParticleEffect(Location location, String name, float spreadHoriz, float spreadVert,
+			float speed, int count, int radius, float yOffset) {
 		playParticleEffect(location, name, spreadHoriz, spreadVert, spreadHoriz, speed, count, radius, yOffset);
 	}
+	
 	@Override
-	public void playParticleEffect(Location location, String name, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
+	public void playParticleEffect(Player player, Location location, String name, float spreadX, float spreadY, float spreadZ,
+			float speed, int count, int radius, float yOffset) {
+		
+		PacketPlayOutWorldParticles packet = createParticlesPacket(location, name, spreadX, spreadY, spreadZ, speed, count, radius, yOffset);
+
+		if (packet == null) return;
+		
+		int rSq = radius * radius;
+		try {
+			if (player.getLocation().distanceSquared(location) <= rSq) {
+				((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void playParticleEffect(Location location, String name, float spreadX, float spreadY, float spreadZ,
+			float speed, int count, int radius, float yOffset) {
+		
 		//location.getWorld().spawnParticle(null, location.getX(), location.getY() + yOffset, location.getZ(), count, spreadX, spreadY, spreadZ, speed);
+		PacketPlayOutWorldParticles packet = createParticlesPacket(location, name, spreadX, spreadY, spreadZ, speed, count, radius, yOffset);
+		
+		if (packet == null) return;
+		
+		int rSq = radius * radius;
+		try {
+			for (Player player : location.getWorld().getPlayers()) {
+				if (player.getLocation().distanceSquared(location) <= rSq) {
+					((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private PacketPlayOutWorldParticles createParticlesPacket(Location location, String name, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
 		PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
 		EnumParticle particle = particleMap.get(name);
 		int[] data = null;
@@ -415,7 +454,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		}
 		if (particle == null) {
 			MagicSpells.error("Invalid particle: " + name);
-			return;
+			return null;
 		}
 		try {
 			packet63Fields[0].set(packet, particle);
@@ -431,17 +470,10 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 			if (data != null) {
 				packet63Fields[10].set(packet,data);
 			}
-			int rSq = radius * radius;
-			
-			for (Player player : location.getWorld().getPlayers()) {
-				if (player.getLocation().distanceSquared(location) <= rSq) {
-					((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-				} else {
-				}
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return packet;
 	}
 
 	@Override
@@ -799,5 +831,21 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		PacketPlayOutSetCooldown packet = new PacketPlayOutSetCooldown(Item.getById(item.getTypeId()), duration);
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 	}
-
+	
+	/*@Override
+	public org.bukkit.entity.Entity spawnCosmeticArmorStand(final Location location, final ItemStack item) {
+		final EntityArmorStand armorStand = new EntityArmorStand(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ());
+		
+		armorStand.setInvisible(true);
+		armorStand.setNoGravity(true);
+		armorStand.setCustomName("MS_ArmorStand");
+		armorStand.setCustomNameVisible(false);
+		armorStand.setMarker(true);
+		armorStand.setInvulnerable(true);
+		armorStand.setHeadPose(new Vector3f(location.getPitch(),location.getYaw(),0));
+		armorStand.setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(item));
+		(((CraftWorld)location.getWorld()).getHandle()).addEntity(armorStand);
+		
+		return armorStand.getBukkitEntity();
+	}*/
 }

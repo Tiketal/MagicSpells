@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fireball;
@@ -158,6 +159,11 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	@Override
 	public void playParticleEffect(Location location, String name, float spreadHoriz, float spreadVert, float speed, int count, int radius, float yOffset) {
 	}
+
+	@Override
+	public void playParticleEffect(Player player, Location location, String name, float spreadX, float spreadY,
+			float spreadZ, float speed, int count, int radius, float yOffset) {
+	}
 	
 	@Override
 	public void playParticleEffect(Location location, String name, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
@@ -270,4 +276,9 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/*@Override
+	public Entity spawnCosmeticArmorStand(Location location, ItemStack item) {
+		return null;
+	}*/
 }

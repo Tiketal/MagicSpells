@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -129,6 +130,47 @@ public abstract class SpellEffect {
 	}
 	
 	protected void playEffectLocation(Location location) {
+		
+	}
+	
+	/**
+	 *  Plays an effect for an entity at the location
+	 *  Only the entity will see the effect
+	 * @param entity
+	 * @param location
+	 */
+	public final void playEffect(final Entity entity, final Location location) {
+		if (delay <= 0) {
+			playEffectForEntityReal(entity, location);
+		} else {
+			MagicSpells.scheduleDelayedTask(new Runnable() {
+				public void run() {
+					playEffectForEntityReal(entity, location);
+				}
+			}, delay);
+		}
+	}
+	
+	private void playEffectForEntityReal(Entity entity, Location location) {
+		if (entity != null && !(entity instanceof Player)) return;
+		
+		if (location == null) {
+			playEffectForEntity(entity, null);
+		} else if (heightOffset != 0 || forwardOffset != 0) {
+			Location loc = location.clone();
+			if (heightOffset != 0) {
+				loc.setY(loc.getY() + heightOffset);
+			}
+			if (forwardOffset != 0) {
+				loc.add(loc.getDirection().setY(0).normalize().multiply(forwardOffset));
+			}
+			playEffectForEntity(entity, loc);
+		} else {
+			playEffectForEntity(entity, location);
+		}
+	}
+	
+	protected void playEffectForEntity(Entity entity, Location location) {
 		
 	}
 	
@@ -279,6 +321,7 @@ public abstract class SpellEffect {
 		effects.put("broadcast", BroadcastEffect.class);
 		effects.put("cloud", CloudEffect.class);
 		effects.put("dragondeath", DragonDeathEffect.class);
+		effects.put("earthquake", EarthquakeEffect.class);
 		effects.put("ender", EnderSignalEffect.class);
 		effects.put("explosion", ExplosionEffect.class);
 		effects.put("fireworks", FireworksEffect.class);
@@ -289,6 +332,7 @@ public abstract class SpellEffect {
 		effects.put("lightning", LightningEffect.class);
 		effects.put("nova", NovaEffect.class);
 		effects.put("particles", ParticlesEffect.class);
+		effects.put("particlespersonal", ParticlesPersonalEffect.class);
 		effects.put("particlecloud", ParticleCloudEffect.class);
 		effects.put("particleline", ParticleLineEffect.class);
 		effects.put("potion", PotionEffect.class);

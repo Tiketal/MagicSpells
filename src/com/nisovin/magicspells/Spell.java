@@ -1450,12 +1450,16 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		playSpellEffects(EffectPosition.CASTER, pos1);
 		playSpellEffects(EffectPosition.TARGET, pos2);
 		playSpellEffectsTrail(pos1.getLocation(), pos2.getLocation());
+		playSpellEffects(EffectPosition.CASTER, pos1, pos1.getLocation());
+		playSpellEffects(EffectPosition.TARGET, pos1, pos2.getLocation());
 	}
 	
 	protected void playSpellEffects(Entity pos1, Location pos2) {
 		playSpellEffects(EffectPosition.CASTER, pos1);
 		playSpellEffects(EffectPosition.TARGET, pos2);
 		playSpellEffectsTrail(pos1.getLocation(), pos2);
+		playSpellEffects(EffectPosition.CASTER, pos1, pos2);
+		playSpellEffects(EffectPosition.TARGET, pos1, pos2);
 	}
 	
 	protected void playSpellEffects(Location pos1, Entity pos2) {
@@ -1487,6 +1491,17 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 			if (effectsList != null) {
 				for (SpellEffect effect : effectsList) {
 					effect.playEffect(location);
+				}
+			}
+		}
+	}
+	
+	protected void playSpellEffects(EffectPosition pos, Entity entity, Location location) {
+		if (effects != null) {
+			List<SpellEffect> effectsList = effects.get(pos);
+			if (effectsList != null) {
+				for (SpellEffect effect : effectsList) {
+					effect.playEffect(entity, location);
 				}
 			}
 		}

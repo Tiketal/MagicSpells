@@ -1,14 +1,15 @@
 package com.nisovin.magicspells.spelleffects;
 
+import java.util.Random;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import com.nisovin.magicspells.MagicSpells;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-class ParticlesEffect extends SpellEffect {
+public class ParticlesPersonalEffect extends SpellEffect {
 	
 	String name = "explode";
 	boolean colored = false;
@@ -67,7 +68,7 @@ class ParticlesEffect extends SpellEffect {
 	}
 
 	@Override
-	public void playEffectLocation(Location location) {
+	public void playEffectForEntity(Entity entity, Location location) {
 		if (colored) {
 			double randomX, randomY, randomZ;
 			Location loc = location.clone();
@@ -85,10 +86,10 @@ class ParticlesEffect extends SpellEffect {
 				loc.setZ(randomZ + location.getZ());
 				
 				// spawn particle
-				MagicSpells.getVolatileCodeHandler().playParticleEffect(loc, name, red, green, blue, 1, 0, renderDistance, yOffset);
+				MagicSpells.getVolatileCodeHandler().playParticleEffect((Player)entity, loc, name, red, green, blue, 1, 0, renderDistance, yOffset);
 			}
 		} else {
-			MagicSpells.getVolatileCodeHandler().playParticleEffect(location, name, xSpread, ySpread, zSpread, speed, count, renderDistance, yOffset);
+			MagicSpells.getVolatileCodeHandler().playParticleEffect((Player)entity, location, name, xSpread, ySpread, zSpread, speed, count, renderDistance, yOffset);
 		}
 	}
 }
