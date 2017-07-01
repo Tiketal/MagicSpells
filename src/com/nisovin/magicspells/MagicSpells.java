@@ -185,7 +185,7 @@ public class MagicSpells extends JavaPlugin {
 		if (config.getBoolean("general.enable-volatile-features", true)) {
 			try {
 				Class.forName("net.minecraft.server.v1_11_R1.MinecraftServer");
-				volatileCodeHandle = new VolatileCodeEnabled_1_9_R1();
+				volatileCodeHandle = new VolatileCodeEnabled_1_11_R1();
 				v1_11 = true;
 			} catch (ClassNotFoundException e_1_9_r1) {
 				error("This MagicSpells version is not fully compatible with this server version.");

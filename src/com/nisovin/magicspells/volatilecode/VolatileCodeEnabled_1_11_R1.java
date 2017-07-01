@@ -48,7 +48,7 @@ import com.nisovin.magicspells.util.BoundingBox;
 import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 
-public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
+public class VolatileCodeEnabled_1_11_R1 implements VolatileCodeHandle {
 
 	VolatileCodeDisabled fallback = new VolatileCodeDisabled();
 	
@@ -96,7 +96,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 		return craftItem;
 	}
 	
-	public VolatileCodeEnabled_1_9_R1() {
+	public VolatileCodeEnabled_1_11_R1() {
 		try {
 			packet63Fields[0] = PacketPlayOutWorldParticles.class.getDeclaredField("a");
 			packet63Fields[1] = PacketPlayOutWorldParticles.class.getDeclaredField("b");
@@ -514,7 +514,7 @@ public class VolatileCodeEnabled_1_9_R1 implements VolatileCodeHandle {
 	@Override
 	public DisguiseManager getDisguiseManager(MagicConfig config) {
 		if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-			return new DisguiseManager_1_9_R1(config);
+			return new DisguiseManager_1_11_R1(config);
 		} else {
 			return new DisguiseManagerEmpty(config);
 		}

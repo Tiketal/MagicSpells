@@ -2,11 +2,9 @@ package com.nisovin.magicspells.spelleffects;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-
 import com.nisovin.magicspells.MagicSpells;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 class ParticlesEffect extends SpellEffect {
 	

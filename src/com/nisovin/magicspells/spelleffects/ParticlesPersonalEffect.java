@@ -1,13 +1,17 @@
 package com.nisovin.magicspells.spelleffects;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.events.SpellCastEvent;
 
 public class ParticlesPersonalEffect extends SpellEffect {
 	
@@ -23,6 +27,8 @@ public class ParticlesPersonalEffect extends SpellEffect {
 	int count = 5;
 	float yOffset = 0F;
 	int renderDistance = 32;
+	
+	Player player;
 
 	@Override
 	public void loadFromString(String string) {
@@ -48,6 +54,7 @@ public class ParticlesPersonalEffect extends SpellEffect {
 			if (data.length >= 6) {
 				yOffset = Float.parseFloat(data[5]);
 			}
+			MagicSpells.registerEvents(new SpellCastListener());
 		}
 	}
 
@@ -65,10 +72,11 @@ public class ParticlesPersonalEffect extends SpellEffect {
 		colored = config.getBoolean("colored", colored);
 		yOffset = (float)config.getDouble("y-offset", yOffset);
 		renderDistance = config.getInt("render-distance", renderDistance);
+		MagicSpells.registerEvents(new SpellCastListener());
 	}
 
 	@Override
-	public void playEffectForEntity(Entity entity, Location location) {
+	public void playEffectLocation(Location location) {
 		if (colored) {
 			double randomX, randomY, randomZ;
 			Location loc = location.clone();
@@ -86,10 +94,37 @@ public class ParticlesPersonalEffect extends SpellEffect {
 				loc.setZ(randomZ + location.getZ());
 				
 				// spawn particle
-				MagicSpells.getVolatileCodeHandler().playParticleEffect((Player)entity, loc, name, red, green, blue, 1, 0, renderDistance, yOffset);
+				MagicSpells.getVolatileCodeHandler().playParticleEffect(player, loc, name, red, green, blue, 1, 0, renderDistance, yOffset);
 			}
 		} else {
-			MagicSpells.getVolatileCodeHandler().playParticleEffect((Player)entity, location, name, xSpread, ySpread, zSpread, speed, count, renderDistance, yOffset);
+			MagicSpells.getVolatileCodeHandler().playParticleEffect(player, location, name, xSpread, ySpread, zSpread, speed, count, renderDistance, yOffset);
+		}
+	}
+	
+	class SpellCastListener implements Listener {
+		@EventHandler
+		public void onSpellCast(SpellCastEvent event) {
+			Map<EffectPosition, List<SpellEffect>> effects = event.getSpell().getEffects();
+			
+			if (effects == null) return;
+			
+			Player caster = event.getCaster();
+			ParticlesPersonalEffect thisEffect = ParticlesPersonalEffect.this;
+			
+			List<SpellEffect> spellEffects;
+			
+			for (EffectPosition pos : effects.keySet()) {
+				spellEffects = effects.get(pos);
+				
+				if (spellEffects == null) continue;
+				
+				for (SpellEffect effect : spellEffects) {
+					if (thisEffect.equals(effect)) {
+						thisEffect.player = caster;
+						return;
+					}
+				}
+			}
 		}
 	}
 }

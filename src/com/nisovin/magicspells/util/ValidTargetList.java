@@ -79,8 +79,6 @@ public class ValidTargetList {
 	public boolean canTarget(Player caster, LivingEntity target, boolean targetPlayers) {
 		if (target instanceof Player && ((Player)target).getGameMode() == GameMode.CREATIVE) {
 			return false;
-		} else if (target instanceof ArmorStand) {
-			return false;
 		} else if (targetSelf && target.equals(caster)) {
 			return true;
 		} else if (!targetSelf && target.equals(caster)) {

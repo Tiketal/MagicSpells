@@ -41,7 +41,7 @@ import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.ReflectionHelper;
 import com.nisovin.magicspells.volatilecode.ReflectionPlayerInfoData;
 
-public class DisguiseManager_1_9_R1 extends DisguiseManager {
+public class DisguiseManager_1_11_R1 extends DisguiseManager {
 
 	ReflectionHelper<Packet<?>> refPacketNamedEntity = new ReflectionHelper<Packet<?>>(PacketPlayOutNamedEntitySpawn.class, "a", "b");
 	ReflectionHelper<Packet<?>> refPacketPlayerInfo = new ReflectionHelper<Packet<?>>(PacketPlayOutPlayerInfo.class, "a", "b");
@@ -60,7 +60,7 @@ public class DisguiseManager_1_9_R1 extends DisguiseManager {
 	protected ProtocolManager protocolManager;
 	protected PacketAdapter packetListener = null;
 	
-	public DisguiseManager_1_9_R1(MagicConfig config) {
+	public DisguiseManager_1_11_R1(MagicConfig config) {
 		super(config);
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		packetListener = new PacketListener();

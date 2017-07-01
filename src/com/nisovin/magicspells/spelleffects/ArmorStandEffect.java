@@ -1,14 +1,20 @@
 package com.nisovin.magicspells.spelleffects;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.events.SpellTargetEvent;
 import com.nisovin.magicspells.util.Util;
 
 public class ArmorStandEffect extends SpellEffect {
@@ -16,17 +22,21 @@ public class ArmorStandEffect extends SpellEffect {
 	ItemStack item;
 	int duration;
 	
+	Set<Entity> armorStands = new HashSet<Entity>();
+	
 	@Override
 	public void loadFromString(String string) {
 		String[] split = Util.splitParams(string);
 		item = Util.getItemStackFromString(split[0]);
 		duration = Integer.parseInt(split[1]);
+		MagicSpells.registerEvents(new SpellTargetListener());
 	}
 
 	@Override
 	protected void loadFromConfig(ConfigurationSection config) {
 		item = Util.getItemStackFromString(config.getString("item", "stone"));
 		duration = config.getInt("duration", 5);
+		MagicSpells.registerEvents(new SpellTargetListener());
 	}
 	
 	@Override
@@ -45,9 +55,12 @@ public class ArmorStandEffect extends SpellEffect {
 		((ArmorStand)entity).setInvulnerable(true);
 		((ArmorStand)entity).setHelmet(item);
 		
+		armorStands.add(entity);
+		
 		MagicSpells.scheduleDelayedTask(new Runnable() {
 			public void run() {
 				entity.remove();
+				armorStands.remove(entity);
 			}
 		}, duration);
 	}
@@ -67,5 +80,13 @@ public class ArmorStandEffect extends SpellEffect {
 		loc1.setYaw(yaw);
 		
 		super.playEffectLine(loc1, location2);
+	}
+	
+	class SpellTargetListener implements Listener {
+		@EventHandler
+		public void onSpellTarget(SpellTargetEvent event) {
+			boolean partOfEffect = armorStands.contains(event.getTarget());
+			if (partOfEffect) event.setCancelled(true);
+		}
 	}
 }
