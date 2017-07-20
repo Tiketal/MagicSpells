@@ -44,11 +44,9 @@ public abstract class SpellEffect {
 	
 	int taskId = -1;
 	
-	
 	public abstract void loadFromString(String string);
 	
 	public final void loadFromConfiguration(ConfigurationSection config) {
-		
 		heightOffset = config.getDouble("height-offset", heightOffset);
 		forwardOffset = config.getDouble("forward-offset", forwardOffset);
 		delay = config.getInt("delay", delay);
@@ -94,7 +92,7 @@ public abstract class SpellEffect {
 	}
 	
 	protected void playEffectEntity(Entity entity) {
-		playEffectLocationReal((entity == null ? null : entity.getLocation()));
+		playEffectLocationReal(entity == null ? null : entity.getLocation());
 	}
 	
 	/**

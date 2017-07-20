@@ -277,8 +277,7 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 		
 	}
 	
-	/*@Override
-	public Entity spawnCosmeticArmorStand(Location location, ItemStack item) {
-		return null;
-	}*/
+	@Override
+	public void spawnCosmeticArmorStand(Location location, ItemStack item, int duration) {
+	}
 }

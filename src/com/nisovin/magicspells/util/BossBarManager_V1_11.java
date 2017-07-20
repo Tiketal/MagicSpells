@@ -9,7 +9,7 @@ import org.bukkit.boss.*;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
-public class BossBarManager_V1_9 implements BossBarManager {
+public class BossBarManager_V1_11 implements BossBarManager {
 
 	Map<String, BossBar> bars = new HashMap<String, BossBar>();
 	

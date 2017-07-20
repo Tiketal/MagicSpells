@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.bukkit.Particle;
 
-public class Util_1_9 {
+public class ParticleUtil {
 
 	static Map<String, Particle> particleMap = new HashMap<String, Particle>();
 	

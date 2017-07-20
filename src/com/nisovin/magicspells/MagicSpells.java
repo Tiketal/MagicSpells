@@ -50,7 +50,7 @@ import com.nisovin.magicspells.materials.MagicItemNameResolver;
 import com.nisovin.magicspells.spells.PassiveSpell;
 import com.nisovin.magicspells.spells.passive.PassiveManager;
 import com.nisovin.magicspells.util.BossBarManager;
-import com.nisovin.magicspells.util.BossBarManager_V1_9;
+import com.nisovin.magicspells.util.BossBarManager_V1_11;
 import com.nisovin.magicspells.util.ExperienceBarManager;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.MoneyHandler;
@@ -275,7 +275,7 @@ public class MagicSpells extends JavaPlugin {
 		buffManager = new BuffManager(config.getInt("general.buff-check-interval", 0));
 		expBarManager = new ExperienceBarManager();
 		if (v1_11) {
-			bossBarManager = new BossBarManager_V1_9();
+			bossBarManager = new BossBarManager_V1_11();
 		}
 		itemNameResolver = new MagicItemNameResolver();
 		if (getServer().getPluginManager().isPluginEnabled("Vault")) {

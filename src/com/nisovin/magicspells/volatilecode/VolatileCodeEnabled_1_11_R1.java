@@ -832,20 +832,39 @@ public class VolatileCodeEnabled_1_11_R1 implements VolatileCodeHandle {
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 	}
 	
-	/*@Override
-	public org.bukkit.entity.Entity spawnCosmeticArmorStand(final Location location, final ItemStack item) {
-		final EntityArmorStand armorStand = new EntityArmorStand(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ());
-		
+	@Override
+	public void spawnCosmeticArmorStand(Location location, ItemStack item, int duration) {
+		EntityArmorStand armorStand = new EntityArmorStand(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ());
+		armorStand.setPositionRotation(location.getX(), location.getY(), location.getZ(), 0F, 0F);
 		armorStand.setInvisible(true);
 		armorStand.setNoGravity(true);
-		armorStand.setCustomName("MS_ArmorStand");
-		armorStand.setCustomNameVisible(false);
 		armorStand.setMarker(true);
 		armorStand.setInvulnerable(true);
-		armorStand.setHeadPose(new Vector3f(location.getPitch(),location.getYaw(),0));
-		armorStand.setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(item));
-		(((CraftWorld)location.getWorld()).getHandle()).addEntity(armorStand);
+		armorStand.setHeadPose(new Vector3f(location.getPitch(), location.getYaw(),0));
 		
-		return armorStand.getBukkitEntity();
-	}*/
+		PacketPlayOutSpawnEntityLiving packet24 = new PacketPlayOutSpawnEntityLiving(armorStand);
+	//	PacketPlayOutEntityHeadRotation packet25 = new PacketPlayOutEntityHeadRotation();
+		PacketPlayOutEntityEquipment packet27 = new PacketPlayOutEntityEquipment(armorStand.getBukkitEntity().getEntityId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(item));
+		final PacketPlayOutEntityDestroy packet29 = new PacketPlayOutEntityDestroy(armorStand.getBukkitEntity().getEntityId());
+		
+		BoundingBox box = new BoundingBox(location, 64);
+		final List<Player> players = new ArrayList<Player>();
+		for (Player player : location.getWorld().getPlayers()) {
+			if (box.contains(player)) {
+				players.add(player);
+				((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet24);
+				((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet27);
+			}
+		}
+		
+		MagicSpells.scheduleDelayedTask(new Runnable() {
+			public void run() {
+				for (Player player : players) {
+					if (player.isValid()) {
+						((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet29);
+					}
+				}
+			}
+		}, duration);
+	}
 }

@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
@@ -35,6 +36,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 	float projectileVelocityHorizOffset;
 	float projectileGravity;
 	float projectileSpread;
+	float projectileFriction;
 	boolean powerAffectsVelocity;
 	
 	int tickInterval;
@@ -51,6 +53,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 	
 	int maxDistanceSquared;
 	int maxDuration;
+	int maxBounces;
 	float hitRadius;
 	float verticalHitRadius;
 	int renderDistance;
@@ -65,8 +68,11 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 	boolean hitAirAtEnd;
 	boolean hitAirAfterDuration;
 	boolean hitAirDuring;
+	boolean hitAirAfterStop;
 	boolean stopOnHitEntity;
 	boolean stopOnHitGround;
+	boolean bounceOnHitGround;
+	float bounceFriction;
 	
 	String landSpellName;
 	Subspell spell;
@@ -85,6 +91,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 		projectileVelocityVertOffset = getConfigFloat("projectile-vert-offset", 0F);
 		projectileVelocityHorizOffset = getConfigFloat("projectile-horiz-offset", 0F);
 		projectileGravity = getConfigFloat("projectile-gravity", 0.25F);
+		projectileFriction = getConfigFloat("projectile-friction", 0F);
 		projectileSpread = getConfigFloat("projectile-spread", 0F);
 		powerAffectsVelocity = getConfigBoolean("power-affects-velocity", true);
 		
@@ -106,6 +113,8 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 		maxDistanceSquared = getConfigInt("max-distance", 15);
 		maxDistanceSquared *= maxDistanceSquared;
 		maxDuration = getConfigInt("max-duration", 0) * 1000;
+		maxBounces = getConfigInt("max-bounces", -1);
+		
 		hitRadius = getConfigFloat("hit-radius", 1.5F);
 		verticalHitRadius = getConfigFloat("vertical-hit-radius", hitRadius);
 		renderDistance = getConfigInt("render-distance", 32);
@@ -124,8 +133,17 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 		hitAirAtEnd = getConfigBoolean("hit-air-at-end", false);
 		hitAirAfterDuration = getConfigBoolean("hit-air-after-duration", false);
 		hitAirDuring = getConfigBoolean("hit-air-during", false);
+		hitAirAfterStop = getConfigBoolean("hit-air-after-stop", false);
 		stopOnHitEntity = getConfigBoolean("stop-on-hit-entity", true);
+		
 		stopOnHitGround = getConfigBoolean("stop-on-hit-ground", true);
+		if (!stopOnHitGround) {
+			bounceOnHitGround = getConfigBoolean("bounce-on-hit-ground", false);
+			bounceFriction = getConfigFloat("bounce-friction", 0F);
+		} else {
+			bounceOnHitGround = false;
+			bounceFriction = 0F;
+		}
 		
 		landSpellName = getConfigString("spell", "explode");
 	}
@@ -163,6 +181,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 		int currentX;
 		int currentZ;
 		int taskId;
+		int bounces = 0;
 		List<LivingEntity> inRange;
 		Map<LivingEntity, Long> immune;
 		
@@ -190,6 +209,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 			}
 			if (projectileSpread > 0) {
 				this.currentVelocity.add(new Vector(rand.nextFloat() * projectileSpread, rand.nextFloat() * projectileSpread, rand.nextFloat() * projectileSpread));
+				this.currentVelocity.subtract(new Vector(rand.nextFloat() * projectileSpread, rand.nextFloat() * projectileSpread, rand.nextFloat() * projectileSpread));
 			}
 			if (hugSurface) {
 				this.currentLocation.setY((int)this.currentLocation.getY() + heightFromSurface);
@@ -239,7 +259,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 				return;
 			}
 			
-			// move projectile and apply gravity
+			// move projectile and apply gravity and air resistance
 			previousLocation = currentLocation.clone();
 			currentLocation.add(currentVelocity);
 			if (hugSurface) {
@@ -285,6 +305,10 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 				currentVelocity.setY(currentVelocity.getY() - (projectileGravity / ticksPerSecond));
 			}
 			
+			if (projectileFriction != 0) {
+				currentVelocity.multiply((1F - projectileFriction));
+			}
+			
 			// show particle
 			if (!particleName.equalsIgnoreCase("none"))
 			MagicSpells.getVolatileCodeHandler().playParticleEffect(currentLocation, particleName, particleXSpread, particleYSpread, particleZSpread, particleSpeed, particleCount, renderDistance, 0F);
@@ -301,13 +325,79 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 				spell.castAtLocation(caster, currentLocation.clone(), power);
 			}
 			
-			if (stopOnHitGround && !BlockUtils.isPathable(currentLocation.getBlock())) {
+
+			if (currentVelocity.length() <= 0 && hitAirAfterStop) {
+				if (spell != null && spell.isTargetedLocationSpell()) {
+					spell.castAtLocation(caster, currentLocation.clone(), power);
+					playSpellEffects(EffectPosition.TARGET, currentLocation);
+				}
+				stop();
+			} else if ((stopOnHitGround || bounceOnHitGround) && !BlockUtils.isPathable(currentLocation.getBlock())) {
 				if (hitGround && spell != null && spell.isTargetedLocationSpell()) {
 					Util.setLocationFacingFromVector(previousLocation, currentVelocity);
 					spell.castAtLocation(caster, previousLocation, power);
 					playSpellEffects(EffectPosition.TARGET, currentLocation);
 				}
-				stop();
+				
+				if (bounceOnHitGround) {
+					Vector v = currentVelocity.clone().normalize().multiply(0.05);
+					
+					Location previous = currentLocation.clone();
+					
+					while(previous.getBlock().getType() != Material.AIR) {
+						previous.subtract(v);
+					}
+					
+					Location current = previous.clone().add(v).getBlock().getLocation();
+					
+					previous = previous.getBlock().getLocation();
+					
+					double x = previous.getX();
+					double y = previous.getY();
+					double z = previous.getZ();
+					
+					// up and down
+					if (y == (current.getY() + 1) || y == (current.getY() - 1)){
+						currentVelocity.setY(currentVelocity.getY() * -1D);
+						
+						if (bounceFriction != 0) {
+							currentVelocity.setY(currentVelocity.getY() * (1 - bounceFriction));
+						}
+					}
+					
+					// south and north
+					if (z == (current.getZ() + 1) || z == (current.getZ() - 1)) {
+						currentVelocity.setZ(currentVelocity.getZ() * -1D);
+						
+						if (bounceFriction != 0) {
+							currentVelocity.setZ(currentVelocity.getZ() * (1 - bounceFriction));
+						}
+					}
+					
+					// east and west
+					if (x == (current.getX() + 1) || x == (current.getX() - 1)){
+						currentVelocity.setX(currentVelocity.getX() * -1D);
+
+						if (bounceFriction != 0) {
+							currentVelocity.setX(currentVelocity.getX() * (1 - bounceFriction));
+						}
+					}
+					
+					currentLocation = previousLocation.clone();
+					
+					if (maxBounces > 0) {
+						bounces++;
+						if (bounces == maxBounces) {
+							if (hitAirAtEnd && spell != null && spell.isTargetedLocationSpell()) {
+								spell.castAtLocation(caster, currentLocation.clone(), power);
+								playSpellEffects(EffectPosition.TARGET, currentLocation);
+							}
+							stop();
+						}
+					}
+				} else if (stopOnHitGround) {
+					stop();
+				}
 			} else if (currentLocation.distanceSquared(startLocation) >= maxDistanceSquared) {
 				if (hitAirAtEnd && spell != null && spell.isTargetedLocationSpell()) {
 					spell.castAtLocation(caster, currentLocation.clone(), power);

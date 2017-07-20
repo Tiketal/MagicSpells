@@ -1,5 +1,6 @@
 package com.nisovin.magicspells.volatilecode;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +40,6 @@ import com.nisovin.magicspells.spells.targeted.DisguiseSpell.PlayerDisguiseData;
 import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.ReflectionHelper;
-import com.nisovin.magicspells.volatilecode.ReflectionPlayerInfoData;
 
 public class DisguiseManager_1_11_R1 extends DisguiseManager {
 
@@ -59,6 +59,34 @@ public class DisguiseManager_1_11_R1 extends DisguiseManager {
 	
 	protected ProtocolManager protocolManager;
 	protected PacketAdapter packetListener = null;
+	
+	// fixes build not working
+	class ReflectionPlayerInfoData {
+
+		Class<?> outCls;
+		Class<?> inCls;
+		
+		Constructor<?> inConstructor;
+		
+		Object outObj;
+		Object inObj;
+		
+		public ReflectionPlayerInfoData(GameProfile profile, int num, EnumGamemode mode, IChatBaseComponent icbc) {
+			
+			try {
+				outCls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo");
+				outObj = outCls.newInstance();
+				
+				inCls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
+				inConstructor = inCls.getConstructors()[0];
+				
+				inObj = inConstructor.newInstance(outObj, profile, num, mode, icbc);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public DisguiseManager_1_11_R1(MagicConfig config) {
 		super(config);
@@ -592,13 +620,13 @@ public class DisguiseManager_1_11_R1 extends DisguiseManager {
 			Entity entity = getEntity(disguised, disguise);
 			if (Bukkit.getPlayer(entity.getUniqueID()) == null) {
 				ReflectionPlayerInfoData refPacketInfo = new ReflectionPlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName()));
-				PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.getOuterObject();
+				PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.outObj;
 				refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.REMOVE_PLAYER);
 				
 				List<Object> list = new ArrayList<Object>();
 				//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 				
-				list.add(refPacketInfo.getInnerObject());
+				list.add(refPacketInfo.inObj);
 				//list.add(packetinfo.new PlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list);
@@ -687,14 +715,14 @@ public class DisguiseManager_1_11_R1 extends DisguiseManager {
 				GameProfile profile = getGameProfile(disguised.getName(), data);
 				
 				ReflectionPlayerInfoData refPacketInfo = new ReflectionPlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName()));
-				PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.getOuterObject();
+				PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.outObj;
 				
 				refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.ADD_PLAYER);
 				
 				List<Object> list = new ArrayList<Object>();
 				//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 				
-				list.add(refPacketInfo.getInnerObject());
+				list.add(refPacketInfo.inObj);
 				//list.add(packetinfo.new PlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list);
@@ -735,12 +763,12 @@ public class DisguiseManager_1_11_R1 extends DisguiseManager {
 			
 
 			ReflectionPlayerInfoData refPacketInfo = new ReflectionPlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName()));
-			PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.getOuterObject();
+			PacketPlayOutPlayerInfo packetinfo = (PacketPlayOutPlayerInfo)refPacketInfo.outObj;
 			
 			refPacketPlayerInfo.set(packetinfo, "a", EnumPlayerInfoAction.ADD_PLAYER);
 			
 			List<Object> list = new ArrayList<Object>();
-			list.add(refPacketInfo.getInnerObject());
+			list.add(refPacketInfo.inObj);
 			//List<PlayerInfoData> list = new ArrayList<PlayerInfoData>();
 			//list.add(packetinfo.new PlayerInfoData(((EntityHuman)entity).getProfile(), 0, EnumGamemode.SURVIVAL, new ChatComponentText(((EntityHuman)entity).getName())));
 			

@@ -102,7 +102,7 @@ public class ParticlesPersonalEffect extends SpellEffect {
 	}
 	
 	class SpellCastListener implements Listener {
-		@EventHandler
+		@EventHandler(ignoreCancelled=true)
 		public void onSpellCast(SpellCastEvent event) {
 			Map<EffectPosition, List<SpellEffect>> effects = event.getSpell().getEffects();
 			

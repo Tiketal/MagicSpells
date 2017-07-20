@@ -6,7 +6,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.AreaEffectCloud;
 
-import com.nisovin.magicspells.util.Util_1_9;
+import com.nisovin.magicspells.util.ParticleUtil;
 
 class ParticleCloudEffect extends SpellEffect {
 	
@@ -23,7 +23,7 @@ class ParticleCloudEffect extends SpellEffect {
 
 	@Override
 	public void loadFromConfig(ConfigurationSection config) {
-		particle = Util_1_9.getParticleFromName(config.getString("particle-name", "explode"));
+		particle = ParticleUtil.getParticleFromName(config.getString("particle-name", "explode"));
 		radius = (float)config.getDouble("radius", radius);
 		radiusPerTick = (float)config.getDouble("radius-per-tick", radiusPerTick);
 		duration = config.getInt("duration", duration);

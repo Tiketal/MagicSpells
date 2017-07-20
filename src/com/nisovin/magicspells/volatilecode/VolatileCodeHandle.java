@@ -108,4 +108,6 @@ public interface VolatileCodeHandle {
 	
 	public void showItemCooldown(Player player, ItemStack item, int duration);
 	
+	public void spawnCosmeticArmorStand(Location location, ItemStack item, int duration);
+	
 }
