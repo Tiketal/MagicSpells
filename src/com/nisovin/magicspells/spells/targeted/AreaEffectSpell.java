@@ -29,7 +29,7 @@ public class AreaEffectSpell extends TargetedSpell implements TargetedLocationSp
 	private int radius;
 	private int verticalRadius;
 	private boolean pointBlank;
-	private int cone;
+	private float cone;
 	private boolean failIfNoTargets;
 	private int maxTargets;
 	private List<String> spellNames;
@@ -45,7 +45,7 @@ public class AreaEffectSpell extends TargetedSpell implements TargetedLocationSp
 		radius = getConfigInt("horizontal-radius", 10);
 		verticalRadius = getConfigInt("vertical-radius", 5);
 		pointBlank = getConfigBoolean("point-blank", true);
-		cone = getConfigInt("cone", 0);
+		cone = (float)Math.toRadians(getConfigFloat("cone", 0));
 		failIfNoTargets = getConfigBoolean("fail-if-no-targets", true);
 		maxTargets = getConfigInt("max-targets", 0);
 		spellSourceInCenter = getConfigBoolean("spell-source-in-center", false);
