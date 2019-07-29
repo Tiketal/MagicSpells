@@ -50,7 +50,7 @@ import com.nisovin.magicspells.materials.MagicItemNameResolver;
 import com.nisovin.magicspells.spells.PassiveSpell;
 import com.nisovin.magicspells.spells.passive.PassiveManager;
 import com.nisovin.magicspells.util.BossBarManager;
-import com.nisovin.magicspells.util.BossBarManager_V1_11;
+import com.nisovin.magicspells.util.BossBarManager;
 import com.nisovin.magicspells.util.ExperienceBarManager;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.MoneyHandler;
@@ -181,13 +181,11 @@ public class MagicSpells extends JavaPlugin {
 			return;
 		}
 		
-		boolean v1_11 = false;
 		if (config.getBoolean("general.enable-volatile-features", true)) {
 			try {
-				Class.forName("net.minecraft.server.v1_11_R1.MinecraftServer");
-				volatileCodeHandle = new VolatileCodeEnabled_1_11_R1();
-				v1_11 = true;
-			} catch (ClassNotFoundException e_1_9_r1) {
+				Class.forName("net.minecraft.server.v1_14_R1.MinecraftServer");
+				volatileCodeHandle = new VolatileCodeEnabled_1_14_R1();
+			} catch (ClassNotFoundException e_1_14_r1) {
 				error("This MagicSpells version is not fully compatible with this server version.");
 				error("Some features have been disabled.");
 				error("See http://nisovin.com/magicspells/volatilefeatures for more information.");
@@ -274,9 +272,7 @@ public class MagicSpells extends JavaPlugin {
 		noMagicZones = new NoMagicZoneManager();
 		buffManager = new BuffManager(config.getInt("general.buff-check-interval", 0));
 		expBarManager = new ExperienceBarManager();
-		if (v1_11) {
-			bossBarManager = new BossBarManager_V1_11();
-		}
+		bossBarManager = new BossBarManager();
 		itemNameResolver = new MagicItemNameResolver();
 		if (getServer().getPluginManager().isPluginEnabled("Vault")) {
 			moneyHandler = new MoneyHandler();
