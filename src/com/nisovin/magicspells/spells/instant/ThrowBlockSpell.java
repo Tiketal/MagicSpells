@@ -212,7 +212,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		@Override
 		public void run() {
 			if (stickyBlocks && !block.isDead()) {
-				if (block.getVelocity().lengthSquared() < .01) {
+				if (block.getVelocity().lengthSquared() <= .25) {
 					if (!preventBlocks) {
 						Block b = block.getLocation().getBlock();
 						if (b.getType() == Material.AIR) {
