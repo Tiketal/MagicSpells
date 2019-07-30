@@ -29,6 +29,7 @@ public class ExplodeSpell extends TargetedSpell implements TargetedLocationSpell
 	private float damageMultiplier;
 	private boolean addFire;
 	private boolean ignoreCanceled;
+	private boolean powerAffectsExplosion;
 	
 	private long currentTick = 0;
 	private float currentPower = 0;
@@ -44,6 +45,7 @@ public class ExplodeSpell extends TargetedSpell implements TargetedLocationSpell
 		damageMultiplier = getConfigFloat("damage-multiplier", 0);
 		addFire = getConfigBoolean("add-fire", false);
 		ignoreCanceled = getConfigBoolean("ignore-canceled", false);
+		powerAffectsExplosion = getConfigBoolean("power-affects-explosion", true);
 		
 	}
 	
@@ -81,7 +83,8 @@ public class ExplodeSpell extends TargetedSpell implements TargetedLocationSpell
 	private boolean explode(Player player, Location target, float power) {
 		// check plugins
 		if (simulateTnt) {
-			boolean cancelled = MagicSpells.getVolatileCodeHandler().simulateTnt(target, player, explosionSize * power, addFire);
+			boolean cancelled = MagicSpells.getVolatileCodeHandler().simulateTnt(target, player, 
+					powerAffectsExplosion ? explosionSize * power : explosionSize, addFire);
 			if (cancelled) {
 				return false;
 			}
@@ -97,7 +100,8 @@ public class ExplodeSpell extends TargetedSpell implements TargetedLocationSpell
 		currentTick = Bukkit.getWorlds().get(0).getFullTime();
 		currentPower = power;
 		// cause explosion
-		boolean ret = MagicSpells.getVolatileCodeHandler().createExplosionByPlayer(player, target, explosionSize * power, addFire, !preventBlockDamage);
+		boolean ret = MagicSpells.getVolatileCodeHandler().createExplosionByPlayer(player, target, 
+				powerAffectsExplosion ? explosionSize * power : explosionSize, addFire, !preventBlockDamage);
 		if (ret) {
 			playSpellEffects(player, target);
 		}
@@ -123,7 +127,8 @@ public class ExplodeSpell extends TargetedSpell implements TargetedLocationSpell
 			if (preventPlayerDamage && event.getEntity() instanceof Player) {
 				event.setCancelled(true);
 			} else if (damageMultiplier > 0) {
-				event.setDamage(Math.round(event.getDamage() * damageMultiplier * currentPower));
+				event.setDamage(Math.round(event.getDamage() * damageMultiplier * 
+						(powerAffectsExplosion ? currentPower : 1)));
 			}
 		}
 	}
