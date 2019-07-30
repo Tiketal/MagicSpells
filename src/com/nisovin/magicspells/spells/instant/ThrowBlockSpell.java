@@ -216,7 +216,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 			if (stickyBlocks && !block.isDead()) {
 				if (block.getVelocity().lengthSquared() <= .01
 						|| Math.toDegrees(Math.abs(
-								block.getVelocity().angle(prevVelocity))) > 20) {
+								block.getVelocity().angle(prevVelocity))) > 45) {
 					if (!preventBlocks) {
 						Block b = block.getLocation().getBlock();
 						if (b.getType() == Material.AIR) {
