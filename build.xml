@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="MagicSpells" default="build" basedir=".">
 	
-	<property name="core.version" value="3.5"/>
+	<property name="core.version" value="3.5.1"/>
 	<property name="core.src.dir" location="src"/>
 	<property name="core.build.dir" location="bin"/>
 	
@@ -128,7 +128,7 @@
 		<replace file="${memory.build.dir}\plugin.yml" token="VERSION_STRING" value="${memory.version}-${version.suffix}"/>
 	</target>
 	
-	<!-- Create the teams jar file -->
+	<!-- Create the memory jar file -->
 	<target name="memory-jar" depends="memory-compile">
 		<jar destfile="${dist.dir}\MagicSpellsMemory-${memory.version}-${version.suffix}.jar" basedir="${memory.build.dir}"/>
 		<copy file="${dist.dir}\MagicSpellsMemory-${memory.version}-${version.suffix}.jar" tofile="${dist.dir}\MagicSpellsMemory.jar"/>
