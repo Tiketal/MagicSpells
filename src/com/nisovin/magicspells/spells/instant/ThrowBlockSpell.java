@@ -202,6 +202,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		FallingBlockInfo info;
 		int task;
 		int counter = 0;
+		Vector prevVelocity = null;
 		
 		public ThrowBlockMonitor(FallingBlock block, FallingBlockInfo info) {
 			this.block = block;
@@ -212,7 +213,9 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		@Override
 		public void run() {
 			if (stickyBlocks && !block.isDead()) {
-				if (block.getVelocity().lengthSquared() <= .25) {
+				if (block.getVelocity().lengthSquared() <= .25
+						|| Math.toDegrees(Math.abs(
+								block.getVelocity().angle(prevVelocity))) > 20) {
 					if (!preventBlocks) {
 						Block b = block.getLocation().getBlock();
 						if (b.getType() == Material.AIR) {
