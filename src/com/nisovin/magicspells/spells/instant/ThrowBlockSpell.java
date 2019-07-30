@@ -214,9 +214,8 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		@Override
 		public void run() {
 			if (stickyBlocks && !block.isDead()) {
-				if (block.getVelocity().lengthSquared() <= .01
-						|| Math.toDegrees(Math.abs(
-								block.getVelocity().angle(prevVelocity))) > 45) {
+				if (Math.toDegrees(Math.abs(
+						block.getVelocity().angle(prevVelocity))) > 45) {
 					if (!preventBlocks) {
 						Block b = block.getLocation().getBlock();
 						if (b.getType() == Material.AIR) {
@@ -248,6 +247,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 			if (counter++ > 1500) {
 				MagicSpells.cancelTask(task);
 			}
+			playSpellEffects(EffectPosition.SPECIAL, block.getLocation());
 		}
 	}
 
