@@ -52,6 +52,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 	boolean stickyBlocks;
 	String spellOnLand;
 	TargetedLocationSpell spell;
+	float bounceAngle;
 	
 	Map<Entity, FallingBlockInfo> fallingBlocks;
 	int cleanTask = -1;
@@ -83,6 +84,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		ensureSpellCast = getConfigBoolean("ensure-spell-cast", true);
 		stickyBlocks = getConfigBoolean("sticky-blocks", false);
 		spellOnLand = getConfigString("spell-on-land", null);
+		bounceAngle = getConfigFloat("bounce-angle", 45f);
 	}	
 	
 	@Override
@@ -215,7 +217,7 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		public void run() {
 			if (stickyBlocks && !block.isDead()) {
 				if (Math.toDegrees(Math.abs(
-						block.getVelocity().angle(prevVelocity))) > 45) {
+						block.getVelocity().angle(prevVelocity))) > bounceAngle) {
 					if (!preventBlocks) {
 						Block b = block.getLocation().getBlock();
 						if (b.getType() == Material.AIR) {
