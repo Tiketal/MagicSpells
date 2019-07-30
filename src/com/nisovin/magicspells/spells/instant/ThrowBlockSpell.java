@@ -207,14 +207,14 @@ public class ThrowBlockSpell extends InstantSpell implements TargetedLocationSpe
 		public ThrowBlockMonitor(FallingBlock block, FallingBlockInfo info) {
 			this.block = block;
 			this.info = info;
-			this.task = MagicSpells.scheduleRepeatingTask(this, 20, 1);
+			this.task = MagicSpells.scheduleRepeatingTask(this, 10, 1);
 			this.prevVelocity = block.getVelocity();
 		}
 		
 		@Override
 		public void run() {
 			if (stickyBlocks && !block.isDead()) {
-				if (block.getVelocity().lengthSquared() <= .25
+				if (block.getVelocity().lengthSquared() <= .01
 						|| Math.toDegrees(Math.abs(
 								block.getVelocity().angle(prevVelocity))) > 20) {
 					if (!preventBlocks) {
