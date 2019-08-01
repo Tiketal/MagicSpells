@@ -132,14 +132,14 @@ public class FirenovaSpell extends InstantSpell implements TargetedLocationSpell
 					for (int z = bz - i; z <= bz + i; z++) {
 						if (Math.abs(x-bx) == i || Math.abs(z-bz) == i) {
 							Block b = center.getWorld().getBlockAt(x,y,z);
-							if (b.getType() == Material.AIR || (burnTallGrass && b.getType() == Material.LONG_GRASS)) {
+							if (b.getType() == Material.AIR || (burnTallGrass && b.getType() == Material.TALL_GRASS)) {
 								Block under = b.getRelative(BlockFace.DOWN);
-								if (under.getType() == Material.AIR || (burnTallGrass && under.getType() == Material.LONG_GRASS)) {
+								if (under.getType() == Material.AIR || (burnTallGrass && under.getType() == Material.TALL_GRASS)) {
 									b = under;
 								}
 								mat.setBlock(b, false);
 								fireBlocks.add(b);
-							} else if (b.getRelative(BlockFace.UP).getType() == Material.AIR || (burnTallGrass && b.getRelative(BlockFace.UP).getType() == Material.LONG_GRASS)) {
+							} else if (b.getRelative(BlockFace.UP).getType() == Material.AIR || (burnTallGrass && b.getRelative(BlockFace.UP).getType() == Material.TALL_GRASS)) {
 								b = b.getRelative(BlockFace.UP);
 								mat.setBlock(b, false);
 								fireBlocks.add(b);

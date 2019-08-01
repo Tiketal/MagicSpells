@@ -124,7 +124,7 @@ public class PulserSpell extends TargetedSpell implements TargetedLocationSpell 
 			}
 			if (target.getType() != Material.AIR
 					&& target.getType() != Material.SNOW
-					&& target.getType() != Material.LONG_GRASS) {
+					&& target.getType() != Material.TALL_GRASS) {
 				return noTarget(player);
 			}
 			if (target != null) {
@@ -163,14 +163,14 @@ public class PulserSpell extends TargetedSpell implements TargetedLocationSpell 
 		}
 		if (block.getType() == Material.AIR 
 				|| block.getType() == Material.SNOW
-				|| block.getType() == Material.LONG_GRASS) {
+				|| block.getType() == Material.TALL_GRASS) {
 			createPulser(caster, block, power);
 			return true;
 		} else {
 			block = block.getRelative(BlockFace.UP);
 			if (block.getType() == Material.AIR
 					|| block.getType() == Material.SNOW
-					|| block.getType() == Material.LONG_GRASS) {
+					|| block.getType() == Material.TALL_GRASS) {
 				createPulser(caster, block, power);
 				return true;
 			} else {

@@ -160,5 +160,55 @@ public class BlockUtils {
 				isPathable(location.add(0, 1, 0).getBlock()) && 
 				(!isPathable(location.subtract(0, 2, 0).getBlock()) || !isPathable(location.subtract(0, 1, 0).getBlock()));
 	}
+
+	public static boolean isSign(Material type) {
+		return type == Material.ACACIA_SIGN ||
+				type == Material.BIRCH_SIGN ||
+				type == Material.DARK_OAK_SIGN ||
+				type == Material.JUNGLE_SIGN ||
+				type == Material.OAK_SIGN ||
+				type == Material.SPRUCE_SIGN ||
+				type == Material.ACACIA_WALL_SIGN ||
+				type == Material.BIRCH_WALL_SIGN ||
+				type == Material.DARK_OAK_WALL_SIGN ||
+				type == Material.JUNGLE_WALL_SIGN ||
+				type == Material.OAK_WALL_SIGN ||
+				type == Material.SPRUCE_WALL_SIGN;
+	}
 	
+	public static boolean isWood(Material type) {
+		return type == Material.ACACIA_WOOD ||
+				type == Material.BIRCH_WOOD ||
+				type == Material.DARK_OAK_WOOD ||
+				type == Material.JUNGLE_WOOD ||
+				type == Material.OAK_WOOD ||
+				type == Material.SPRUCE_WOOD ||
+				type == Material.ACACIA_LOG ||
+				type == Material.BIRCH_LOG ||
+				type == Material.DARK_OAK_LOG ||
+				type == Material.JUNGLE_LOG ||
+				type == Material.OAK_LOG ||
+				type == Material.SPRUCE_LOG;
+	}
+	
+	public static boolean isWoodStairs(Material type) {
+		return type == Material.ACACIA_STAIRS ||
+				type == Material.BIRCH_STAIRS ||
+				type == Material.DARK_OAK_STAIRS ||
+				type == Material.JUNGLE_STAIRS ||
+				type == Material.OAK_STAIRS ||
+				type == Material.SPRUCE_STAIRS;
+	}
+	
+	public static boolean isPressurePlate(Material type) {
+		return type == Material.STONE_PRESSURE_PLATE ||
+				type == Material.ACACIA_PRESSURE_PLATE ||
+				type == Material.BIRCH_PRESSURE_PLATE ||
+				type == Material.DARK_OAK_PRESSURE_PLATE ||
+				type == Material.JUNGLE_PRESSURE_PLATE ||
+				type == Material.OAK_PRESSURE_PLATE ||
+				type == Material.SPRUCE_PRESSURE_PLATE ||
+				type == Material.HEAVY_WEIGHTED_PRESSURE_PLATE ||
+				type == Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+	}
 }

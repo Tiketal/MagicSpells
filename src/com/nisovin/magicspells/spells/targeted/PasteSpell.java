@@ -205,8 +205,9 @@ public class PasteSpell extends TargetedSpell implements TargetedLocationSpell {
 		
 		@SuppressWarnings("deprecation")
 		private void setBlockStateFromWorldEditBlock(BlockState state, BaseBlock block) {
-			state.setTypeId(block.getId());
-			state.setRawData((byte)block.getData());
+			//TODO: update worldedit and fix
+			/*state.setTypeId(block.getId());
+			state.setRawData((byte)block.getData());*/
 		}
 		
 	}

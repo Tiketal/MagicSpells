@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -74,9 +75,9 @@ public class FarmSpell extends TargetedSpell implements TargetedLocationSpell {
 		for (int x = cx - radius; x <= cx + radius; x++) {
 			for (int z = cz - radius; z <= cz + radius; z++) {
 				Block b = center.getWorld().getBlockAt(x, y, z);
-				if (b.getType() != Material.SOIL) {
+				if (b.getType() != Material.FARMLAND) {
 					b = b.getRelative(BlockFace.DOWN);
-					if (b.getType() != Material.SOIL) {
+					if (b.getType() != Material.FARMLAND) {
 						continue;
 					}
 				}
@@ -89,7 +90,7 @@ public class FarmSpell extends TargetedSpell implements TargetedLocationSpell {
 						}
 						count++;
 					}
-				} else if ((b.getType() == Material.CROPS || b.getType() == Material.CARROT || b.getType() == Material.POTATO) && BlockUtils.getGrowthLevel(b) < 7) {
+				} else if (b.getBlockData() instanceof Ageable && BlockUtils.getGrowthLevel(b) < 7) {
 					int newGrowth = BlockUtils.getGrowthLevel(b) + growth;
 					if (newGrowth > 7) newGrowth = 7;
 					BlockUtils.setGrowthLevel(b, newGrowth);

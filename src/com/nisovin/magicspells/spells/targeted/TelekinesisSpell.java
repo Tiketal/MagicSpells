@@ -16,6 +16,7 @@ import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.events.SpellTargetLocationEvent;
 import com.nisovin.magicspells.spells.TargetedLocationSpell;
 import com.nisovin.magicspells.spells.TargetedSpell;
+import com.nisovin.magicspells.util.BlockUtils;
 import com.nisovin.magicspells.util.MagicConfig;
 
 public class TelekinesisSpell extends TargetedSpell implements TargetedLocationSpell {
@@ -27,14 +28,24 @@ public class TelekinesisSpell extends TargetedSpell implements TargetedLocationS
 		
 		checkPlugins = getConfigBoolean("check-plugins", true);
 		
-		losTransparentBlocks = new HashSet<Byte>(losTransparentBlocks);
-		losTransparentBlocks.remove((byte)Material.LEVER.getId());
-		losTransparentBlocks.remove((byte)Material.STONE_PLATE.getId());
-		losTransparentBlocks.remove((byte)Material.WOOD_PLATE.getId());
-		losTransparentBlocks.remove((byte)Material.IRON_PLATE.getId());
-		losTransparentBlocks.remove((byte)Material.GOLD_PLATE.getId());
-		losTransparentBlocks.remove((byte)Material.STONE_BUTTON.getId());
-		losTransparentBlocks.remove((byte)Material.WOOD_BUTTON.getId());
+		losTransparentBlocks = new HashSet<Material>(losTransparentBlocks);
+		losTransparentBlocks.remove(Material.LEVER);
+		losTransparentBlocks.remove(Material.STONE_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.ACACIA_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.BIRCH_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.DARK_OAK_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.JUNGLE_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.OAK_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.SPRUCE_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.HEAVY_WEIGHTED_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
+		losTransparentBlocks.remove(Material.STONE_BUTTON);
+		losTransparentBlocks.remove(Material.ACACIA_BUTTON);
+		losTransparentBlocks.remove(Material.BIRCH_BUTTON);
+		losTransparentBlocks.remove(Material.DARK_OAK_BUTTON);
+		losTransparentBlocks.remove(Material.JUNGLE_BUTTON);
+		losTransparentBlocks.remove(Material.OAK_BUTTON);
+		losTransparentBlocks.remove(Material.SPRUCE_BUTTON);
 	}
 	
 	public PostCastAction castSpell(Player player, SpellCastState state, float power, String[] args) {
@@ -65,18 +76,28 @@ public class TelekinesisSpell extends TargetedSpell implements TargetedLocationS
 	}
 	
 	private boolean activate(Player caster, Block target) {
-		if (target.getType() == Material.LEVER || target.getType() == Material.STONE_BUTTON || target.getType() == Material.WOOD_BUTTON) {
+		if (target.getType() == Material.LEVER || isButton(target.getType())) {
 			if (checkPlugins(caster, target)) {
 				MagicSpells.getVolatileCodeHandler().toggleLeverOrButton(target);
 				return true;
 			}
-		} else if (target.getType() == Material.WOOD_PLATE || target.getType() == Material.STONE_PLATE || target.getType() == Material.IRON_PLATE || target.getType() == Material.GOLD_PLATE) {
+		} else if (BlockUtils.isPressurePlate(target.getType())) {
 			if (checkPlugins(caster, target)) {
 				MagicSpells.getVolatileCodeHandler().pressPressurePlate(target);
 				return true;
 			}
 		}		
 		return false;
+	}
+	
+	private boolean isButton(Material type) {
+		return  type == Material.STONE_BUTTON ||
+				type == Material.ACACIA_BUTTON ||
+				type == Material.BIRCH_BUTTON ||
+				type == Material.DARK_OAK_BUTTON ||
+				type == Material.JUNGLE_BUTTON ||
+				type == Material.OAK_BUTTON ||
+				type == Material.SPRUCE_BUTTON;
 	}
 	
 	private boolean checkPlugins(Player caster, Block target) {

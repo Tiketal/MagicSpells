@@ -28,7 +28,7 @@ public class ConjureFireworkSpell extends InstantSpell implements TargetedLocati
 
 		addToInventory = getConfigBoolean("add-to-inventory", true);
 		
-		firework = new ItemStack(Material.FIREWORK, getConfigInt("count", 1));
+		firework = new ItemStack(Material.FIREWORK_ROCKET, getConfigInt("count", 1));
 		FireworkMeta meta = (FireworkMeta)firework.getItemMeta();
 		
 		meta.setPower(getConfigInt("flight", 2));

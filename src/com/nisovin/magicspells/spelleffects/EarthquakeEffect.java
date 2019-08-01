@@ -19,6 +19,8 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.materials.MagicBlockMaterial;
+import com.nisovin.magicspells.materials.MagicMaterial;
 
 public class EarthquakeEffect extends SpellEffect {
 
@@ -88,8 +90,9 @@ public class EarthquakeEffect extends SpellEffect {
 		}
 		
 		for (Block b : blocksToThrow) {
+			MagicMaterial mat = new MagicBlockMaterial(b.getType());
 			Location l = new Location(target.getWorld(), b.getX() + 0.5, b.getY() + 1, b.getZ() + 0.5);
-			FallingBlock fb = Bukkit.getWorlds().get(0).spawnFallingBlock(l, b.getBlockData());
+			FallingBlock fb = mat.spawnFallingBlock(l);
 			fb.setDropItem(false);
 			Vector v = null;
 			v = new Vector(0, velocity, 0);

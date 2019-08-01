@@ -3,6 +3,7 @@ package com.nisovin.magicspells.spells.command;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -65,7 +66,7 @@ public class BindSpell extends CommandSpell {
 				} else {
 					CastItem castItem = new CastItem(player.getItemInHand());
 					MagicSpells.debug(3, "Trying to bind spell '" + spell.getInternalName() + "' to cast item " + castItem.toString() + "...");
-					if (castItem.getItemType() == 0 && !allowBindToFist) {
+					if (castItem.getItemType() == Material.AIR && !allowBindToFist) {
 						sendMessage(player, strCantBindItem);
 						return PostCastAction.ALREADY_HANDLED;
 					} else if (bindableItems != null && !bindableItems.contains(castItem)) {
