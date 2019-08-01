@@ -279,14 +279,14 @@ public class EntityData {
 			} else if (var1 == 1) {
 				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.LIBRARIAN);
 			} else if (var1 == 2) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.PRIEST);
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.CLERIC);
 			} else if (var1 == 3) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.BLACKSMITH);
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.TOOLSMITH);
 			} else if (var1 == 4) {
 				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.BUTCHER);
 			} else if (var1 == 5) {
 				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.NITWIT);
-			}
+			} // TODO: add other professions
 		} else if (entityType == EntityType.CREEPER) {
 			if (flag) {
 				((Creeper)entity).setPowered(true);
@@ -304,21 +304,21 @@ public class EntityData {
 				((Ocelot)entity).setCatType(Ocelot.Type.RED_CAT);
 			} else if (var1 == 3) {
 				((Ocelot)entity).setCatType(Ocelot.Type.SIAMESE_CAT);
-			}
+			} // TODO: change to cat
 		} else if (entityType == EntityType.VILLAGER) {
 			if (var1 == 0) {
 				((Villager)entity).setProfession(Villager.Profession.FARMER);
 			} else if (var1 == 1) {
 				((Villager)entity).setProfession(Villager.Profession.LIBRARIAN);
 			} else if (var1 == 2) {
-				((Villager)entity).setProfession(Villager.Profession.PRIEST);
+				((Villager)entity).setProfession(Villager.Profession.CLERIC);
 			} else if (var1 == 3) {
-				((Villager)entity).setProfession(Villager.Profession.BLACKSMITH);
+				((Villager)entity).setProfession(Villager.Profession.TOOLSMITH);
 			} else if (var1 == 4) {
 				((Villager)entity).setProfession(Villager.Profession.BUTCHER);
 			} else if (var1 == 5) {
 				((Villager)entity).setProfession(Villager.Profession.NITWIT);
-			}
+			} // TODO: add other professions
 		} else if (entityType == EntityType.SLIME) {
 			((Slime)entity).setSize(var1);
 		} else if (entityType == EntityType.MAGMA_CUBE) {

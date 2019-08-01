@@ -19,6 +19,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
@@ -83,11 +84,7 @@ public class Util {
 					for (int i = 0; i < split.length; i++) {
 						String[] enchantData = split[i].split("-");
 						Enchantment ench;
-						if (enchantData[0].matches("[0-9]+")) {
-							ench = Enchantment.getById(Integer.parseInt(enchantData[0]));
-						} else {
-							ench = Enchantment.getByName(enchantData[0].toUpperCase());
-						}
+						ench = Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toUpperCase()));
 						if (ench != null && enchantData[1].matches("[0-9]+")) {
 							enchants.put(ench, Integer.parseInt(enchantData[1]));
 						}
@@ -103,7 +100,10 @@ public class Util {
 			}
 			ItemTypeAndData itemTypeAndData = MagicSpells.getItemNameResolver().resolve(s);
 			if (itemTypeAndData != null) {
-				item = new ItemStack(itemTypeAndData.id, 1, itemTypeAndData.data);
+				item = new ItemStack(itemTypeAndData.type, 1);
+				if (item.getItemMeta() instanceof Damageable) {
+					((Damageable)item.getItemMeta()).setDamage(itemTypeAndData.data);
+				}
 			} else {
 				return null;
 			}
@@ -173,12 +173,7 @@ public class Util {
 				for (String enchant : enchants) {
 					String[] data = enchant.split(" ");
 					Enchantment e = null;
-					try {
-						int id = Integer.parseInt(data[0]);
-						e = Enchantment.getById(id);
-					} catch (NumberFormatException ex) {
-						e = Enchantment.getByName(data[0].toUpperCase());
-					}
+					e = Enchantment.getByKey(NamespacedKey.minecraft(data[0].toUpperCase()));
 					if (e != null) {
 						int level = 0;
 						if (data.length > 1) {
@@ -486,11 +481,7 @@ public class Util {
 	}
 	
 	public static Enchantment getEnchantmentType(String type) {
-		if (type.matches("^[0-9]+$")) {
-			return Enchantment.getById(Integer.parseInt(type));
-		} else {
-			return Enchantment.getByName(type.toUpperCase());
-		}
+		return Enchantment.getByKey(NamespacedKey.minecraft(type.toUpperCase()));
 	}
 	
 	public static void sendFakeBlockChange(Player player, Block block, MagicMaterial mat) {
@@ -763,12 +754,27 @@ public class Util {
 		}
 	}
 	
-	public static void createFire(Block block, byte d) {
+	/*
+	 @NotUsed
+	 public static void createFire(Block block, byte d) {
 		block.setTypeIdAndData(Material.FIRE.getId(), d, false);
+		block.setType(Material.FIRE);
+		block.setBlockData();
+	}*/
+	
+	static Map<EntityType, Material> spawnEggMap = new HashMap<>();
+	static {
+		Material mat = null;
+		for (EntityType type : EntityType.values()) {
+			mat = Material.getMaterial(type.toString() + '_' + "SPAWN_EGG");
+			if (mat != null) {
+				spawnEggMap.put(type, mat);
+			}
+		}
 	}
 	
 	public static ItemStack getEggItemForEntityType(EntityType type) {
-		return new ItemStack(Material.MONSTER_EGG, 1, type.getTypeId());
+		return new ItemStack(spawnEggMap.get(type));
 	}
 	
 	public static String getStringNumber(double number, int places) {

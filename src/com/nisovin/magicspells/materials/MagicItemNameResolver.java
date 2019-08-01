@@ -64,11 +64,11 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		if (string.contains(":")) {
 			String[] split = string.split(":");
 			if (split[0].matches("[0-9]+")) {
-				item.id = Integer.parseInt(split[0]);
+				item.type = Integer.parseInt(split[0]);
 			} else {
 				Material mat = Material.getMaterial(split[0].toUpperCase());
 				if (mat == null) return null;
-				item.id = mat.getId();
+				item.type = mat.getId();
 			}
 			if (split[1].matches("[0-9]+")) {
 				item.data = Short.parseShort(split[1]);
@@ -77,11 +77,11 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			}
 		} else {
 			if (string.matches("[0-9]+")) {
-				item.id = Integer.parseInt(string);
+				item.type = Integer.parseInt(string);
 			} else {
 				Material mat = Material.getMaterial(string.toUpperCase());
 				if (mat == null) return null;
-				item.id = mat.getId();
+				item.type = mat.getId();
 			}
 		}
 		return item;
