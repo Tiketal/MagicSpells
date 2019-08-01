@@ -3,7 +3,6 @@ package com.nisovin.magicspells.util;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -91,7 +90,7 @@ public class BlockUtils {
 	}
 
 	public static boolean isTransparent(Spell spell, Block block) {
-		return spell.getLosTransparentBlocks().contains((byte)block.getTypeId());
+		return spell.getLosTransparentBlocks().contains(block.getType());
 	}
 	
 	public static Block getTargetBlock(Spell spell, LivingEntity entity, int range) {

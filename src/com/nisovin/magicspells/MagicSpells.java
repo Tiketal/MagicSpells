@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -49,7 +50,6 @@ import com.nisovin.magicspells.materials.ItemNameResolver;
 import com.nisovin.magicspells.materials.MagicItemNameResolver;
 import com.nisovin.magicspells.spells.PassiveSpell;
 import com.nisovin.magicspells.spells.passive.PassiveManager;
-import com.nisovin.magicspells.util.BossBarManager;
 import com.nisovin.magicspells.util.BossBarManager;
 import com.nisovin.magicspells.util.ExperienceBarManager;
 import com.nisovin.magicspells.util.MagicConfig;
@@ -87,7 +87,7 @@ public class MagicSpells extends JavaPlugin {
 	boolean castWithRightClick;
 	boolean ignoreDefaultBindings;
 	boolean showStrCostOnMissingReagents;
-	HashSet<Byte> losTransparentBlocks; // TODO: fix
+	HashSet<Material> losTransparentBlocks; // TODO: fix
 	List<Integer> ignoreCastItemDurability; // TODO: fix
 	HashMap<EntityType, String> entityNames;
 	int globalCooldown;
@@ -227,9 +227,10 @@ public class MagicSpells extends JavaPlugin {
 		checkWorldPvpFlag = config.getBoolean("general.check-world-pvp-flag", true);
 		checkScoreboardTeams = config.getBoolean("general.check-scoreboard-teams", false);
 		showStrCostOnMissingReagents = config.getBoolean("general.show-str-cost-on-missing-reagents", true);
-		losTransparentBlocks = new HashSet<Byte>(config.getByteList("general.los-transparent-blocks", new ArrayList<Byte>()));
+		
+		losTransparentBlocks = new HashSet<Material>(config.getMaterialList("general.los-transparent-blocks", new ArrayList<Material>()));
 		if (losTransparentBlocks.size() == 0) {
-			losTransparentBlocks.add((byte)0);
+			losTransparentBlocks.add(Material.AIR);
 		}
 		ignoreCastItemDurability = config.getIntList("general.ignore-cast-item-durability", new ArrayList<Integer>());
 		globalCooldown = config.getInt("general.global-cooldown", 500);
@@ -689,7 +690,7 @@ public class MagicSpells extends JavaPlugin {
 	 * Gets a list of blocks that are considered transparent
 	 * @return list of block types
 	 */
-	public static HashSet<Byte> getTransparentBlocks() {
+	public static HashSet<Material> getTransparentBlocks() {
 		return plugin.losTransparentBlocks;
 	}
 	

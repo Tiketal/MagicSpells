@@ -2,9 +2,11 @@ package com.nisovin.magicspells.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -230,6 +232,23 @@ public class MagicConfig {
 		if (mainConfig.contains(path)) {
 			List<String> l = mainConfig.getStringList(path);
 			if (l != null) {
+				return l;
+			}
+		}
+		return def;
+	}
+	
+	public List<Material> getMaterialList(String path, List<Material> def) {
+		if (mainConfig.contains(path)) {
+			List<String> s = mainConfig.getStringList(path);
+			if (s != null) {
+				List<Material> l = new ArrayList<Material>();
+				Material mat = null;
+				for (String str : s) {
+					mat = Material.getMaterial(str.toUpperCase());
+					if (mat != null) l.add(mat);
+				}
+				
 				return l;
 			}
 		}

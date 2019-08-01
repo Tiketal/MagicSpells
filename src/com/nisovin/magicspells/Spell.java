@@ -91,7 +91,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 	protected boolean beneficial;
 	private DamageCause targetDamageCause;
 	private double targetDamageAmount;
-	protected HashSet<Byte> losTransparentBlocks;
+	protected HashSet<Material> losTransparentBlocks;
 
 	protected int castTime;
 	protected boolean interruptOnMove;
@@ -308,8 +308,8 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		this.targetDamageAmount = config.getDouble(section + "." + spellName + ".target-damage-amount", 0);
 		this.losTransparentBlocks = MagicSpells.getTransparentBlocks();
 		if (config.contains(section + "." + spellName + ".los-transparent-blocks")) {
-			this.losTransparentBlocks = new HashSet<Byte>(config.getByteList(section + "." + spellName + ".los-transparent-blocks", null));
-			this.losTransparentBlocks.add((byte)0);
+			this.losTransparentBlocks = new HashSet<Material>(config.getMaterialList(section + "." + spellName + ".los-transparent-blocks", null));
+			this.losTransparentBlocks.add(Material.AIR);
 		}
 		
 		// graphical effects
@@ -1438,12 +1438,12 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		return BlockUtils.getLastTwoTargetBlock(this, entity, spellPowerAffectsRange ? Math.round(range * power) : range);
 	}
 	
-	public HashSet<Byte> getLosTransparentBlocks() {
+	public HashSet<Material> getLosTransparentBlocks() {
 		return losTransparentBlocks;
 	}
 	
 	public boolean isTransparent(Block block) {
-		return losTransparentBlocks.contains((byte)block.getTypeId());
+		return losTransparentBlocks.contains(block.getType());
 	}
 	
 	protected void playSpellEffects(Entity pos1, Entity pos2) {
