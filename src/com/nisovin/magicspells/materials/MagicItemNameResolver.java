@@ -7,23 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.TreeSpecies;
-import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Orientable;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.material.Dye;
-import org.bukkit.material.Leaves;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Tree;
-import org.bukkit.material.Wool;
 
 import com.nisovin.magicspells.MagicSpells;
 
 public class MagicItemNameResolver implements ItemNameResolver {
 
 	Map<String, Material> materialMap = new HashMap<String, Material>();
-	Map<String, MaterialData> materialDataMap = new HashMap<String, MaterialData>();
+//	Map<String, MaterialData> materialDataMap = new HashMap<String, MaterialData>();
 	Random rand = new Random();
 	
 	public MagicItemNameResolver() {
@@ -63,26 +59,18 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		ItemTypeAndData item = new ItemTypeAndData();
 		if (string.contains(":")) {
 			String[] split = string.split(":");
-			if (split[0].matches("[0-9]+")) {
-				item.type = Integer.parseInt(split[0]);
-			} else {
-				Material mat = Material.getMaterial(split[0].toUpperCase());
-				if (mat == null) return null;
-				item.type = mat.getId();
-			}
+			Material mat = Material.getMaterial(split[0].toUpperCase());
+			if (mat == null) return null;
+			item.type = mat;
 			if (split[1].matches("[0-9]+")) {
 				item.data = Short.parseShort(split[1]);
 			} else {
 				return null;
 			}
 		} else {
-			if (string.matches("[0-9]+")) {
-				item.type = Integer.parseInt(string);
-			} else {
-				Material mat = Material.getMaterial(string.toUpperCase());
-				if (mat == null) return null;
-				item.type = mat.getId();
-			}
+			Material mat = Material.getMaterial(string.toUpperCase());
+			if (mat == null) return null;
+			item.type = mat;
 		}
 		return item;
 	}
@@ -92,16 +80,17 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		if (string == null || string.isEmpty()) return null;
 		
 		// first check for predefined material datas
-		MaterialData matData = materialDataMap.get(string.toLowerCase());
+		/*MaterialData matData = materialDataMap.get(string.toLowerCase());
 		if (matData != null) {
 			if (matData.getItemType().isBlock()) {
 				return new MagicBlockMaterial(matData);
 			} else {
 				return new MagicItemMaterial(matData);
 			}
-		}
+		}*/
 		
 		// split type and data
+		// <type>:<data> or <type> <data>
 		String stype;
 		String sdata;
 		if (string.contains(":")) {
@@ -119,17 +108,14 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		
 		Material type = materialMap.get(stype);
 		if (type == null) {
-			return resolveUnknown(stype, sdata);
+			return null;
 		}
 		
 		if (type.isBlock()) {
-			return new MagicBlockMaterial(resolveBlockData(type, sdata));
+			return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
 		} else {
-			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
-			MaterialData itemData = resolveItemData(type, sdata);
-			if (itemData != null) {
-				return new MagicItemMaterial(itemData);
-			}
+			
+//TODO			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
 			short durability = 0;
 			try {
 				durability = Short.parseShort(sdata);
@@ -159,18 +145,20 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		
 		Material type = materialMap.get(stype);
 		if (type == null) {
-			return resolveUnknown(stype, sdata);
+			return null;
 		}
 		
 		if (type.isBlock()) {
 			if (sdata.equals("*")) {
-				return new MagicBlockAnyDataMaterial(new MaterialData(type));
+// TODO ex: *_log, *_wood
 			} else {
-				return new MagicBlockMaterial(resolveBlockData(type, sdata));
+				return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
 			}
 		} else {
 			return null;
 		}
+		
+		return null;
 	}
 	
 	private MagicMaterial resolveRandomBlock(String string) {
@@ -185,7 +173,8 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		return new MagicBlockRandomMaterial(materials.toArray(new MagicMaterial[materials.size()]));
 	}
 	
-	private MaterialData resolveBlockData(Material type, String sdata) {
+	// TODO: block data
+	/*private MagicBlockMaterial resolveBlockData(Material type, String sdata) {
 		if (type == Material.LOG || type == Material.SAPLING || type == Material.WOOD) {
 			return getTree(sdata);
 		} else if (type == Material.LEAVES) {
@@ -197,17 +186,32 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		} else {
 			return new MaterialData(type);
 		}
-	}
+	}*/
 	
-	private MaterialData resolveItemData(Material type, String sdata) {
+	/*private MaterialData resolveItemData(Material type, String sdata) {
 		if (type == Material.INK_SACK) {
 			return getDye(sdata);
 		} else {
 			return null;
 		}
+	}*/
+	
+	// TODO
+	private BlockData resolveBlockData(Material type, String data) {
+		BlockData bd = type.createBlockData();
+		
+		if (bd instanceof Orientable) {
+			
+		} else if (bd instanceof Directional) {
+			
+		} else if (bd instanceof Ageable) {
+			
+		}
+		
+		return bd;
 	}
 	
-	private MagicMaterial resolveUnknown(String stype, String sdata) {
+	/*private MagicMaterial resolveUnknown(String stype, String sdata) {
 		try {
 			int type = Integer.parseInt(stype);
 			if (sdata.equals("*")) {
@@ -219,8 +223,10 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		} catch (NumberFormatException e) {
 			return null;
 		}
-	}
+	}*/
 	
+	// TODO
+	/*
 	private Dye getDye(String data) {
 		Dye dye = new Dye();
 		dye.setColor(getDyeColor(data));
@@ -249,52 +255,73 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		}
 	}
 	
-	private Tree getTree(String data) {
-		TreeSpecies species = TreeSpecies.GENERIC;
-		BlockFace dir = BlockFace.UP;
+	private MagicBlockMaterial getTree(String data) {
+		Material mat = null;
+		BlockData bd = null;
 		if (data != null && data.length() > 0) {
 			String[] split = data.split("[: ]");
 			if (split.length >= 1) {
-				species = getTreeSpecies(split[0]);
+				mat = getTreeMaterial(split[0]);
 			}
 			if (split.length >= 2) {
-				if (split[1].equalsIgnoreCase("east")) {
-					dir = BlockFace.EAST;
-				} else if (split[1].equalsIgnoreCase("west")) {
-					dir = BlockFace.WEST;
-				} else if (split[1].equalsIgnoreCase("north")) {
-					dir = BlockFace.NORTH;
-				} else if (split[1].equalsIgnoreCase("south")) {
-					dir = BlockFace.SOUTH;
-				} else if (split[1].equalsIgnoreCase("random")) {
-					int r = rand.nextInt(3);
-					if (r == 0) {
-						dir = BlockFace.EAST;
-					} else if (r == 1) {
-						dir = BlockFace.NORTH;
-					}
-				}
+				bd = getOrientation(mat, split[1]);
 			}
 		}
-		return new Tree(species, dir);
+		return new MagicBlockMaterial(mat, bd);
 	}
 	
-	private Leaves getLeaves(String data) {
-		return new Leaves(getTreeSpecies(data));
+	private BlockData getOrientation(Material mat, String data) {
+		BlockData bd = mat.createBlockData();
+		((Orientable)bd).setAxis(Axis.Y);
+		
+		if (data.equalsIgnoreCase("east") || data.equalsIgnoreCase("west")) {
+			((Orientable)bd).setAxis(Axis.X);
+		} else if (data.equalsIgnoreCase("north") || data.equalsIgnoreCase("south")) {
+			((Orientable)bd).setAxis(Axis.Z);
+		} else if (data.equalsIgnoreCase("random")) {
+			int r = rand.nextInt(3);
+			if (r == 0) {
+				((Orientable)bd).setAxis(Axis.X);
+			} else if (r == 1) {
+				((Orientable)bd).setAxis(Axis.Z);
+			}
+		}
+		
+		return bd;
+	}
+	
+	private Material getTreeMaterial(String data) {
+		data = data.toUpperCase();
+		if (data.contains("RANDOM")) {
+			data = data.replace("RANDOM", 
+					TreeSpecies.values()[rand.nextInt(TreeSpecies.values().length)].toString());
+		}
+		return Material.getMaterial(data);
+	}
+	
+	private Material getLeaves(String data) {
+		TreeSpecies species = getTreeSpecies(data);
+		if (species == TreeSpecies.GENERIC) {
+			data = "OAK";
+		}
+		
+		return Material.getMaterial(data.toUpperCase()+ '_' + "_LEAVES");
 	}
 	
 	private TreeSpecies getTreeSpecies(String data) {
-		if (data.equalsIgnoreCase("birch")) {
-			return TreeSpecies.BIRCH;
-		} else if (data.equalsIgnoreCase("jungle")) {
-			return TreeSpecies.JUNGLE;
-		} else if (data.equalsIgnoreCase("redwood")) {
-			return TreeSpecies.REDWOOD;
-		} else if (data.equalsIgnoreCase("random")) {
+		if (data.equalsIgnoreCase("random")) {
 			return TreeSpecies.values()[rand.nextInt(TreeSpecies.values().length)];
-		} else {
+		}
+		
+		TreeSpecies species = null;
+		try {
+			species = TreeSpecies.valueOf(data.toUpperCase());
+		} catch (IllegalArgumentException e) {}
+		
+		if (species == null) {
 			return TreeSpecies.GENERIC;
 		}
-	}
+		return species;
+	}*/
 
 }

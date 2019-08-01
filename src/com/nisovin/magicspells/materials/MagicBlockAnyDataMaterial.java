@@ -1,16 +1,13 @@
 package com.nisovin.magicspells.materials;
 
-import org.bukkit.material.MaterialData;
+import org.bukkit.Material;
 
+// TODO
+@Deprecated
 public class MagicBlockAnyDataMaterial extends MagicBlockMaterial {
 
-	public MagicBlockAnyDataMaterial(MaterialData data) {
-		super(data);
+	public MagicBlockAnyDataMaterial(Material type) {
+		super(type);
 	}
 	
-	@Override
-	public boolean equals(MaterialData data) {
-		return data.getItemType() == this.data.getItemType();
-	}
-
 }

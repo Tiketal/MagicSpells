@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 public class MagicItemWithNameMaterial extends MagicMaterial {
 
@@ -19,11 +18,6 @@ public class MagicItemWithNameMaterial extends MagicMaterial {
 	@Override
 	public Material getMaterial() {
 		return material.getMaterial();
-	}
-	
-	@Override
-	public MaterialData getMaterialData() {
-		return material.getMaterialData();
 	}
 
 	@Override
@@ -47,7 +41,7 @@ public class MagicItemWithNameMaterial extends MagicMaterial {
 	public boolean equals(Object o) {
 		if (o instanceof MagicItemWithNameMaterial) {
 			MagicItemWithNameMaterial m = (MagicItemWithNameMaterial)o;
-			return m.getMaterialData().equals(getMaterialData()) && m.name.equals(name);
+			return m.getMaterial().equals(getMaterial()) && m.name.equals(name);
 		}
 		return false;
 	}

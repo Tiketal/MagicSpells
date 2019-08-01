@@ -485,11 +485,11 @@ public class Util {
 	}
 	
 	public static void sendFakeBlockChange(Player player, Block block, MagicMaterial mat) {
-		player.sendBlockChange(block.getLocation(), mat.getMaterial(), mat.getMaterialData().getData());
+		player.sendBlockChange(block.getLocation(), mat.getMaterial().createBlockData());
 	}
 	
 	public static void restoreFakeBlockChange(Player player, Block block) {
-		player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
+		player.sendBlockChange(block.getLocation(), block.getBlockData());
 	}
 	
 	public static void setFacing(Player player, Vector vector) {

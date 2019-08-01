@@ -4,24 +4,23 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 public class MagicBlockMaterial extends MagicMaterial {
-	MaterialData data;
+	BlockData data;
 	
-	public MagicBlockMaterial(MaterialData data) {
+	public MagicBlockMaterial(Material type, BlockData data) {
+		this.type = type;
 		this.data = data;
 	}
 	
-	@Override
-	public Material getMaterial() {
-		return data.getItemType();
+	public MagicBlockMaterial(Material type) {
+		this(type, null);
 	}
 	
-	@Override
-	public MaterialData getMaterialData() {
+	public BlockData getBlockData() {
 		return data;
 	}
 	
@@ -29,17 +28,18 @@ public class MagicBlockMaterial extends MagicMaterial {
 	public void setBlock(Block block, boolean applyPhysics) {
 		BlockState state = block.getState();
 		state.setType(getMaterial());
-		state.setData(getMaterialData());
+		state.setBlockData(getBlockData());
 		state.update(true, applyPhysics);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public FallingBlock spawnFallingBlock(Location location) {
-		return location.getWorld().spawnFallingBlock(location, getMaterial(), getMaterialData().getData());
+		return location.getWorld().spawnFallingBlock(location, getMaterial(), (byte)0);
 	}
 
 	@Override
 	public ItemStack toItemStack(int quantity) {
-		return getMaterialData().toItemStack(quantity);
+		return new ItemStack(type, quantity);
 	}
 }
