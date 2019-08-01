@@ -8,8 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Powerable;
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fireball;
@@ -26,6 +26,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import com.nisovin.magicspells.util.BlockUtils;
 import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 
@@ -45,7 +46,7 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	
 	@Override
 	public void toggleLeverOrButton(Block block) {
-		if (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON) {
+		if (BlockUtils.isButton(block.getType())) {
 			BlockState state = block.getState();
 			Button button = (Button)state.getData();
 			button.setPowered(true);
@@ -60,7 +61,8 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 
 	@Override
 	public void pressPressurePlate(Block block) {
-		block.setData((byte) (block.getData() ^ 0x1));
+		((Powerable)block.getBlockData()).setPowered(true);
+//		block.setData((byte) (block.getData() ^ 0x1));
 	}
 
 	@Override

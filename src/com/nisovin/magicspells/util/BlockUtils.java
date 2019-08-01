@@ -211,4 +211,14 @@ public class BlockUtils {
 				type == Material.HEAVY_WEIGHTED_PRESSURE_PLATE ||
 				type == Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
 	}
+
+	public static boolean isButton(Material type) {
+		return  type == Material.STONE_BUTTON ||
+				type == Material.ACACIA_BUTTON ||
+				type == Material.BIRCH_BUTTON ||
+				type == Material.DARK_OAK_BUTTON ||
+				type == Material.JUNGLE_BUTTON ||
+				type == Material.OAK_BUTTON ||
+				type == Material.SPRUCE_BUTTON;
+	}
 }

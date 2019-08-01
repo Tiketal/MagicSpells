@@ -76,7 +76,7 @@ public class TelekinesisSpell extends TargetedSpell implements TargetedLocationS
 	}
 	
 	private boolean activate(Player caster, Block target) {
-		if (target.getType() == Material.LEVER || isButton(target.getType())) {
+		if (target.getType() == Material.LEVER || BlockUtils.isButton(target.getType())) {
 			if (checkPlugins(caster, target)) {
 				MagicSpells.getVolatileCodeHandler().toggleLeverOrButton(target);
 				return true;
@@ -88,16 +88,6 @@ public class TelekinesisSpell extends TargetedSpell implements TargetedLocationS
 			}
 		}		
 		return false;
-	}
-	
-	private boolean isButton(Material type) {
-		return  type == Material.STONE_BUTTON ||
-				type == Material.ACACIA_BUTTON ||
-				type == Material.BIRCH_BUTTON ||
-				type == Material.DARK_OAK_BUTTON ||
-				type == Material.JUNGLE_BUTTON ||
-				type == Material.OAK_BUTTON ||
-				type == Material.SPRUCE_BUTTON;
 	}
 	
 	private boolean checkPlugins(Player caster, Block target) {
