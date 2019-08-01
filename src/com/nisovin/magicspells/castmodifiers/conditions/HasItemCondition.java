@@ -6,12 +6,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.castmodifiers.Condition;
 
 public class HasItemCondition extends Condition {
 
-	int id;
+	Material mat;
 	short data;
 	boolean checkData;
 	String name;
@@ -32,7 +33,7 @@ public class HasItemCondition extends Condition {
 			}
 			if (var.contains(":")) {
 				String[] vardata = var.split(":");
-				id = Integer.parseInt(vardata[0]);
+				mat = Material.getMaterial(vardata[0]);
 				if (vardata[1].equals("*")) {
 					data = 0;
 					checkData = false;
@@ -41,7 +42,7 @@ public class HasItemCondition extends Condition {
 					checkData = true;
 				}
 			} else {
-				id = Integer.parseInt(var);
+				mat = Material.getMaterial(var);
 				checkData = false;
 			}
 			return true;
@@ -61,14 +62,14 @@ public class HasItemCondition extends Condition {
 							thisname = item.getItemMeta().getDisplayName();
 						}
 					} catch (Exception e) {}
-					if (item.getTypeId() == id && (!checkData || item.getDurability() == data) && (!checkName || strEquals(thisname, name))) {
+					if (item.getType() == mat && (!checkData || ((Damageable)item.getItemMeta()).getDamage() == data) && (!checkName || strEquals(thisname, name))) {
 						return true;
 					}
 				}
 			}
 			return false;
 		} else {
-			return player.getInventory().contains(Material.getMaterial(id));
+			return player.getInventory().contains(mat);
 		}
 	}
 	

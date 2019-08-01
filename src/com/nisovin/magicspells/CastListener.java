@@ -1,7 +1,9 @@
 package com.nisovin.magicspells;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,6 +30,53 @@ public class CastListener implements Listener {
 		this.plugin = plugin;
 	}
 	
+	private static Set<Material> interactables = new HashSet<>();
+	static {
+		interactables.add(Material.CHEST); 
+		interactables.add(Material.TRAPPED_CHEST);
+		interactables.add(Material.ENDER_CHEST);
+		interactables.add(Material.FURNACE); 
+		interactables.add(Material.HOPPER);
+		interactables.add(Material.LEVER);
+		interactables.add(Material.STONE_BUTTON);
+		interactables.add(Material.ACACIA_BUTTON);
+		interactables.add(Material.BIRCH_BUTTON);
+		interactables.add(Material.DARK_OAK_BUTTON);
+		interactables.add(Material.JUNGLE_BUTTON);
+		interactables.add(Material.OAK_BUTTON);
+		interactables.add(Material.SPRUCE_BUTTON);
+		interactables.add(Material.ACACIA_DOOR);
+		interactables.add(Material.BIRCH_DOOR);
+		interactables.add(Material.DARK_OAK_DOOR);
+		interactables.add(Material.JUNGLE_DOOR);
+		interactables.add(Material.OAK_DOOR);
+		interactables.add(Material.SPRUCE_DOOR);
+		interactables.add(Material.ENCHANTING_TABLE);
+		interactables.add(Material.CRAFTING_TABLE);
+		interactables.add(Material.ACACIA_TRAPDOOR);
+		interactables.add(Material.BIRCH_TRAPDOOR);
+		interactables.add(Material.DARK_OAK_TRAPDOOR);
+		interactables.add(Material.JUNGLE_TRAPDOOR);
+		interactables.add(Material.OAK_TRAPDOOR);
+		interactables.add(Material.SPRUCE_TRAPDOOR);
+		interactables.add(Material.BLACK_BED);
+		interactables.add(Material.BLUE_BED);
+		interactables.add(Material.BROWN_BED);
+		interactables.add(Material.CYAN_BED);
+		interactables.add(Material.GRAY_BED);
+		interactables.add(Material.GREEN_BED);
+		interactables.add(Material.LIGHT_BLUE_BED);
+		interactables.add(Material.LIGHT_GRAY_BED);
+		interactables.add(Material.LIME_BED);
+		interactables.add(Material.MAGENTA_BED);
+		interactables.add(Material.ORANGE_BED);
+		interactables.add(Material.PINK_BED);
+		interactables.add(Material.PURPLE_BED);
+		interactables.add(Material.RED_BED);
+		interactables.add(Material.WHITE_BED);
+		interactables.add(Material.YELLOW_BED);
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -37,24 +86,12 @@ public class CastListener implements Listener {
 		boolean noInteract = false;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Material m = event.getClickedBlock().getType();
-			if (m == Material.WOODEN_DOOR || 
-					m == Material.TRAP_DOOR ||
-					m == Material.BED || 
-					m == Material.WORKBENCH ||
-					m == Material.CHEST || 
-					m == Material.TRAPPED_CHEST ||
-					m == Material.ENDER_CHEST ||
-					m == Material.FURNACE || 
-					m == Material.HOPPER ||
-					m == Material.LEVER ||
-					m == Material.STONE_BUTTON ||
-					m == Material.WOOD_BUTTON ||
-					m == Material.ENCHANTMENT_TABLE) {
+			if (interactables.contains(m)) {
 				noInteract = true;
 			} else if (event.hasItem() && event.getItem().getType().isBlock()) {
 				noInteract = true;
 			}
-			if (m == Material.ENCHANTMENT_TABLE) {
+			if (m == Material.ENCHANTING_TABLE) {
 				// force exp bar back to show exp when trying to enchant
 				MagicSpells.getExpBarManager().update(player, player.getLevel(), player.getExp());
 			}

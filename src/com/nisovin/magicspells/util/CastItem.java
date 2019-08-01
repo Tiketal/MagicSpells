@@ -102,7 +102,7 @@ public class CastItem {
 		}
 	}
 	
-	public Material getItemTypeId() {
+	public Material getItemType() {
 		return this.type;
 	}
 	

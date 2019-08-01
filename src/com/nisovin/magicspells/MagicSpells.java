@@ -232,7 +232,7 @@ public class MagicSpells extends JavaPlugin {
 		if (losTransparentBlocks.size() == 0) {
 			losTransparentBlocks.add(Material.AIR);
 		}
-		ignoreCastItemDurability = config.getIntList("general.ignore-cast-item-durability", new ArrayList<Integer>());
+		ignoreCastItemDurability = config.getMaterialList("general.ignore-cast-item-durability", new ArrayList<Material>());
 		globalCooldown = config.getInt("general.global-cooldown", 500);
 		castOnAnimate = config.getBoolean("general.cast-on-animate", false);
 		useExpBarAsCastTimeBar = config.getBoolean("general.use-exp-bar-as-cast-time-bar", true);

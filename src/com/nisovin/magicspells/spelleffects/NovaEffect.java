@@ -16,8 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.materials.MagicBlockMaterial;
 import com.nisovin.magicspells.materials.MagicMaterial;
-import com.nisovin.magicspells.materials.MagicUnknownMaterial;
 import com.nisovin.magicspells.util.BlockUtils;
 import com.nisovin.magicspells.util.SpellAnimation;
 import com.nisovin.magicspells.util.Util;
@@ -32,11 +32,11 @@ class NovaEffect extends SpellEffect {
 	public void loadFromString(String string) {
 		if (string != null && !string.isEmpty()) {
 			String[] params = string.split(" ");
-			int type = 51;
+			Material type = Material.FIRE;
 			byte data = 0;
 			if (params.length >= 1) {
 				try {
-					type = Integer.parseInt(params[0]);
+					type = Material.getMaterial(params[0]);
 				} catch (NumberFormatException e) {					
 				}
 			}
@@ -46,7 +46,7 @@ class NovaEffect extends SpellEffect {
 				} catch (NumberFormatException e) {
 				}
 			}
-			mat = new MagicUnknownMaterial(type, data);
+			mat = new MagicBlockMaterial(type); // TODO add data for orientation
 			if (params.length >= 3) {
 				try {
 					radius = Integer.parseInt(params[2]);
@@ -128,16 +128,16 @@ class NovaEffect extends SpellEffect {
 					for (int z = bz - tick; z <= bz + tick; z++) {
 						if (Math.abs(x-bx) == tick || Math.abs(z-bz) == tick) {
 							Block b = center.getWorld().getBlockAt(x,y,z);
-							if (b.getType() == Material.AIR || b.getType() == Material.LONG_GRASS) {
+							if (b.getType() == Material.AIR || b.getType() == Material.TALL_GRASS) {
 								Block under = b.getRelative(BlockFace.DOWN);
-								if (under.getType() == Material.AIR || under.getType() == Material.LONG_GRASS) {
+								if (under.getType() == Material.AIR || under.getType() == Material.TALL_GRASS) {
 									b = under;
 								}
 								for (Player p : nearby) {
 									Util.sendFakeBlockChange(p, b, mat);
 								}
 								blocks.add(b);
-							} else if (b.getRelative(BlockFace.UP).getType() == Material.AIR || b.getRelative(BlockFace.UP).getType() == Material.LONG_GRASS) {
+							} else if (b.getRelative(BlockFace.UP).getType() == Material.AIR || b.getRelative(BlockFace.UP).getType() == Material.TALL_GRASS) {
 								b = b.getRelative(BlockFace.UP);
 								for (Player p : nearby) {
 									Util.sendFakeBlockChange(p, b, mat);

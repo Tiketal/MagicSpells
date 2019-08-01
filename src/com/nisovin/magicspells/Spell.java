@@ -929,7 +929,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 	public boolean isValidItemForCastCommand(ItemStack item) {
 		if (!requireCastItemOnCommand || castItems == null) {
 			return true;
-		} else if (item == null && castItems.length == 1 && castItems[0].getItemTypeId() == 0) {
+		} else if (item == null && castItems.length == 1 && castItems[0].getItemType() == Material.AIR) {
 			return true;
 		} else {
 			for (CastItem castItem : castItems) {

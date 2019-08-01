@@ -17,7 +17,7 @@ public class MagicBlockMaterial extends MagicMaterial {
 	}
 	
 	public MagicBlockMaterial(Material type) {
-		this(type, null);
+		this(type, type.createBlockData());
 	}
 	
 	public BlockData getBlockData() {

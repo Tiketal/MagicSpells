@@ -229,7 +229,7 @@ public class MenuSpell extends TargetedSpell implements TargetedEntitySpell, Tar
 	
 	@EventHandler
 	public void onInvClick(InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(title)) {
+		if (event.getView().getTitle().equals(title)) {
 			event.setCancelled(true);		
 			if (event.getClick() == ClickType.LEFT) {
 				final Player player = (Player)event.getWhoClicked();

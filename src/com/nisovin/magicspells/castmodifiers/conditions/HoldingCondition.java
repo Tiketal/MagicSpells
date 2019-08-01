@@ -2,6 +2,7 @@ package com.nisovin.magicspells.castmodifiers.conditions;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
@@ -11,7 +12,7 @@ import com.nisovin.magicspells.castmodifiers.Condition;
 
 public class HoldingCondition extends Condition {
 
-	int[] ids;
+	Material[] materials;
 	short[] datas;
 	boolean[] checkData;
 	String[] names;
@@ -21,7 +22,7 @@ public class HoldingCondition extends Condition {
 	public boolean setVar(String var) {
 		try {
 			String[] vardata = var.split(",");
-			ids = new int[vardata.length];
+			materials = new Material[vardata.length];
 			datas = new short[vardata.length];
 			checkData = new boolean[vardata.length];
 			names = new String[vardata.length];
@@ -39,7 +40,7 @@ public class HoldingCondition extends Condition {
 				}
 				if (vardata[i].contains(":")) {
 					String[] subvardata = vardata[i].split(":");
-					ids[i] = Integer.parseInt(subvardata[0]);
+					materials[i] = Material.getMaterial(subvardata[0]);
 					if (subvardata[1].equals("*")) {
 						datas[i] = 0;
 						checkData[i] = false;
@@ -48,7 +49,7 @@ public class HoldingCondition extends Condition {
 						checkData[i] = true;
 					}
 				} else {
-					ids[i] = Integer.parseInt(vardata[i]);
+					materials[i] = Material.getMaterial(vardata[i]);
 					datas[i] = 0;
 					checkData[i] = false;
 				}
@@ -88,7 +89,7 @@ public class HoldingCondition extends Condition {
 	
 	private boolean check(ItemStack item) {
 		if (item == null) return false;
-		int thisid = item == null ? 0 : item.getTypeId();
+		Material thismat = item == null ? Material.AIR : item.getType();
 		short thisdata = item == null ? 0 : item.getDurability();
 		String thisname = null;
 		try {
@@ -96,8 +97,8 @@ public class HoldingCondition extends Condition {
 				thisname = item.getItemMeta().getDisplayName();
 			}
 		} catch (Exception e) {}
-		for (int i = 0; i < ids.length; i++) {
-			if (ids[i] == thisid && (!checkData[i] || datas[i] == thisdata) && (!checkName[i] || strEquals(names[i], thisname))) {
+		for (int i = 0; i < materials.length; i++) {
+			if (materials[i] == thismat && (!checkData[i] || datas[i] == thisdata) && (!checkName[i] || strEquals(names[i], thisname))) {
 				return true;
 			}
 		}

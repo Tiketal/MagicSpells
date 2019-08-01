@@ -90,7 +90,7 @@ public class LilywalkSpell extends BuffSpell {
 	
 		@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
 		public void onBlockBreak(BlockBreakEvent event) {
-			if (lilywalkers.size() > 0 && event.getBlock().getType() == Material.WATER_LILY) {
+			if (lilywalkers.size() > 0 && event.getBlock().getType() == Material.LILY_PAD) {
 				for (Lilies lilies : lilywalkers.values()) {
 					if (lilies.contains(event.getBlock())) {
 						event.setCancelled(true);
@@ -132,8 +132,8 @@ public class LilywalkSpell extends BuffSpell {
 		private void setToLily(Block block) {
 			if (block.getType() == Material.AIR) {
 				BlockState state = block.getRelative(BlockFace.DOWN).getState();
-				if ((state.getType() == Material.WATER || state.getType() == Material.STATIONARY_WATER) && BlockUtils.getWaterLevel(state) == 0) {
-					block.setType(Material.WATER_LILY);
+				if ((state.getType() == Material.WATER || state.getType() == Material.WATER) && BlockUtils.getWaterLevel(state) == 0) {
+					block.setType(Material.LILY_PAD);
 					blocks.add(block);
 				}
 			}

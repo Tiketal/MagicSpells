@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -269,7 +270,7 @@ public class Spellbook {
 		if (item != null) {
 			castItem = new CastItem(item);
 		} else {
-			castItem = new CastItem(0);
+			castItem = new CastItem(Material.AIR);
 		}
 		ArrayList<Spell> spells = itemSpells.get(castItem);
 		if (spells != null && (spells.size() > 1 || (spells.size() == 1 && plugin.allowCycleToNoSpell))) {
@@ -539,7 +540,7 @@ public class Spellbook {
 		if (bindings != null) {
 			removed = bindings.remove(castItem);
 			if (bindings.size() == 0) {
-				bindings.add(new CastItem(-1));
+				bindings.add(new CastItem()); // TODO new CastItem(-1)
 			}
 		}
 		

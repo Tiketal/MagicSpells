@@ -33,7 +33,7 @@ public class FrostwalkSpell extends BuffSpell {
 
 	@Override
 	public boolean castBuff(Player player, float power, String[] args) {
-		frostwalkers.put(player.getName(), new BlockPlatform(Material.ICE, Material.STATIONARY_WATER, player.getLocation().getBlock().getRelative(0,-1,0), size, !leaveFrozen, "square"));
+		frostwalkers.put(player.getName(), new BlockPlatform(Material.ICE, Material.WATER, player.getLocation().getBlock().getRelative(0,-1,0), size, !leaveFrozen, "square"));
 		return true;
 	}
 
@@ -46,7 +46,7 @@ public class FrostwalkSpell extends BuffSpell {
 			} else {
 				Block block;
 				boolean teleportUp = false;
-				if (event.getTo().getY() > event.getFrom().getY() && event.getTo().getY() % 1 > .62 && event.getTo().getBlock().getType() == Material.STATIONARY_WATER && event.getTo().getBlock().getRelative(0,1,0).getType() == Material.AIR) {
+				if (event.getTo().getY() > event.getFrom().getY() && event.getTo().getY() % 1 > .62 && event.getTo().getBlock().getType() == Material.WATER && event.getTo().getBlock().getRelative(0,1,0).getType() == Material.AIR) {
 					block = event.getTo().getBlock();
 					teleportUp = true;
 				} else {

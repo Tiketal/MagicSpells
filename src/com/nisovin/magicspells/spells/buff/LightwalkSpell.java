@@ -21,7 +21,7 @@ import com.nisovin.magicspells.util.Util;
 public class LightwalkSpell extends BuffSpell {
 	
 	private HashMap<String, Block> lightwalkers;
-	private MagicMaterial mat = new MagicBlockMaterial(new MaterialData(Material.GLOWSTONE));
+	private MagicMaterial mat = new MagicBlockMaterial(Material.GLOWSTONE);
 
 	public LightwalkSpell(MagicConfig config, String spellName) {
 		super(config, spellName);
@@ -63,15 +63,15 @@ public class LightwalkSpell extends BuffSpell {
 			mat == Material.GRAVEL ||
 			mat == Material.STONE ||
 			mat == Material.COBBLESTONE ||
-			mat == Material.WOOD || 
-			mat == Material.LOG || 
+			// TODO mat == Material.WOOD || 
+			//TODO mat == Material.LOG || 
 			mat == Material.NETHERRACK ||
 			mat == Material.SOUL_SAND ||
 			mat == Material.SAND ||
 			mat == Material.SANDSTONE ||
 			mat == Material.GLASS ||
-			mat == Material.WOOL ||
-			mat == Material.DOUBLE_STEP ||
+			//TODO mat == Material.WOOL ||
+			//mat == Material.DOUBLE_STEP ||
 			mat == Material.BRICK ||
 			mat == Material.OBSIDIAN;
 	}
