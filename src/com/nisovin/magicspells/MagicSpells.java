@@ -88,7 +88,7 @@ public class MagicSpells extends JavaPlugin {
 	boolean ignoreDefaultBindings;
 	boolean showStrCostOnMissingReagents;
 	HashSet<Material> losTransparentBlocks; // TODO: fix
-	List<Integer> ignoreCastItemDurability; // TODO: fix
+	List<Material> ignoreCastItemDurability; // TODO: fix
 	HashMap<EntityType, String> entityNames;
 	int globalCooldown;
 	boolean castOnAnimate;
@@ -707,7 +707,7 @@ public class MagicSpells extends JavaPlugin {
 	 * @param type the type to check
 	 * @return whether to ignore durability
 	 */
-	public static boolean ignoreCastItemDurability(int type) {
+	public static boolean ignoreCastItemDurability(Material type) {
 		if (plugin.ignoreCastItemDurability != null && plugin.ignoreCastItemDurability.contains(type)) {
 			return true;
 		} else {
