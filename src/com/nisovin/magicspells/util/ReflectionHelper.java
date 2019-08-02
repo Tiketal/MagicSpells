@@ -88,4 +88,19 @@ public class ReflectionHelper<E> {
 		}
 	}
 	
+	/**
+	 * Returns a field that matches the type
+	 * @param type
+	 * @param object
+	 * @return
+	 */
+	public static Field getFieldByType(Class<?> type, Object object) {
+		for (Field field : object.getClass().getFields()) {
+			if (type.isAssignableFrom(field.getType())) {
+				return field;
+			}
+		}
+		return null;
+	}
+	
 }

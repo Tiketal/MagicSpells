@@ -1,12 +1,14 @@
 package com.nisovin.magicspells.volatilecode;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.server.v1_14_R1.*;
 import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.*;
+import net.minecraft.server.v1_14_R1.PlayerChunkMap.EntityTracker;
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntity.*;
 
 import org.bukkit.Bukkit;
@@ -14,6 +16,7 @@ import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
@@ -32,8 +35,10 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell.PlayerDisguiseData;
@@ -74,10 +79,10 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		public ReflectionPlayerInfoData(GameProfile profile, int num, EnumGamemode mode, IChatBaseComponent icbc) {
 			
 			try {
-				outCls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo");
+				outCls = Class.forName("net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo");
 				outObj = outCls.newInstance();
 				
-				inCls = Class.forName("net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
+				inCls = Class.forName("net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
 				inConstructor = inCls.getConstructors()[0];
 				
 				inObj = inConstructor.newInstance(outObj, profile, num, mode, icbc);
@@ -136,10 +141,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		if (entityType == EntityType.PLAYER) {
 			entity = new EntityHuman(world, getGameProfile(name, disguise.getPlayerDisguiseData())) {
 				@Override
-				public boolean a(int arg0, String arg1) {
-					return false;
-				}
-				@Override
 				public void sendMessage(IChatBaseComponent arg0) {
 				}
 				@Override
@@ -151,7 +152,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					return false;
 				}
 				@Override
-				public boolean z() {
+				public boolean isCreative() {
 					return false;
 				}
 			};
@@ -164,36 +165,36 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
 			if (var >= 1) {
-				entity = new EntityZombieVillager(world);
-				((EntityZombieVillager)entity).setProfession(var);
+				entity = new EntityZombieVillager(EntityTypes.ZOMBIE_VILLAGER, world);
+// TODO: Support for all villager types				((EntityZombieVillager)entity).setVillagerData(VillagerData.class);
 			}
 			
 		} else if (entityType == EntityType.SKELETON) {
-			entity = new EntitySkeleton(world);
+			entity = new EntitySkeleton(EntityTypes.SKELETON, world);
 			if (flag) {
-				entity = new EntitySkeletonWither(world);
+				entity = new EntitySkeletonWither(EntityTypes.WITHER_SKELETON,world);
 			}
 			
 		} else if (entityType == EntityType.IRON_GOLEM) {
-			entity = new EntityIronGolem(world);
+			entity = new EntityIronGolem(EntityTypes.IRON_GOLEM, world);
 			
 		} else if (entityType == EntityType.SNOWMAN) {
-			entity = new EntitySnowman(world);
+			entity = new EntitySnowman(EntityTypes.SNOW_GOLEM, world);
 			
 		} else if (entityType == EntityType.CREEPER) {
-			entity = new EntityCreeper(world);
+			entity = new EntityCreeper(EntityTypes.CREEPER, world);
 			if (flag) {
 				((EntityCreeper)entity).setPowered(true);
 			}
 			
 		} else if (entityType == EntityType.SPIDER) {
-			entity = new EntitySpider(world);
+			entity = new EntitySpider(EntityTypes.SPIDER, world);
 			
 		} else if (entityType == EntityType.CAVE_SPIDER) {
-			entity = new EntityCaveSpider(world);
+			entity = new EntityCaveSpider(EntityTypes.CAVE_SPIDER, world);
 			
 		} else if (entityType == EntityType.WOLF) {
-			entity = new EntityWolf(world);
+			entity = new EntityWolf(EntityTypes.WOLF, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			if (var > 0) {
 				((EntityWolf)entity).setTamed(true);
@@ -202,75 +203,77 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 			
 		} else if (entityType == EntityType.OCELOT) {
-			entity = new EntityOcelot(world);
+			entity = new EntityOcelot(EntityTypes.OCELOT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (var == -1) {
+			// TODO:
+			/*if (var == -1) {
 				((EntityOcelot)entity).setCatType(random.nextInt(4));
 			} else if (var >= 0 && var < 4) {
 				((EntityOcelot)entity).setCatType(var);
-			}
+			}*/
 			
 		} else if (entityType == EntityType.BLAZE) {
-			entity = new EntityBlaze(world);
+			entity = new EntityBlaze(EntityTypes.BLAZE, world);
 			
 		} else if (entityType == EntityType.GIANT) {
-			entity = new EntityGiantZombie(world);
+			entity = new EntityGiantZombie(EntityTypes.GIANT, world);
 			
 		} else if (entityType == EntityType.ENDERMAN) {
-			entity = new EntityEnderman(world);
+			entity = new EntityEnderman(EntityTypes.ENDERMAN, world);
 			
 		} else if (entityType == EntityType.SILVERFISH) {
-			entity = new EntitySilverfish(world);
+			entity = new EntitySilverfish(EntityTypes.SILVERFISH, world);
 			
 		} else if (entityType == EntityType.WITCH) {
-			entity = new EntityWitch(world);
+			entity = new EntityWitch(EntityTypes.WITCH, world);
 			
 		} else if (entityType == EntityType.VILLAGER) {
-			entity = new EntityVillager(world);
+			entity = new EntityVillager(EntityTypes.VILLAGER, world);
 			if (flag) {
 				((EntityVillager)entity).setAge(-24000);
 			}
-			((EntityVillager)entity).setProfession(var);
+			// TODO:
+			/*((EntityVillager)entity).setProfession(var);*/
 			
 		} else if (entityType == EntityType.PIG_ZOMBIE) {
-			entity = new EntityPigZombie(world);
+			entity = new EntityPigZombie(EntityTypes.ZOMBIE_PIGMAN, world);
 			if (flag) {
 				((EntityPigZombie)entity).setBaby(true);
 			}
 			
 		} else if (entityType == EntityType.SLIME) {
-			entity = new EntitySlime(world);
+			entity = new EntitySlime(EntityTypes.SLIME, world);
 			((EntitySlime)entity).setSize(2, false);
 			
 		} else if (entityType == EntityType.MAGMA_CUBE) {
-			entity = new EntityMagmaCube(world);
+			entity = new EntityMagmaCube(EntityTypes.MAGMA_CUBE, world);
 			((EntitySlime)entity).setSize(2, false);
 			
 		} else if (entityType == EntityType.BAT) {
-			entity = new EntityBat(world);
+			entity = new EntityBat(EntityTypes.BAT, world);
 			((EntityBat)entity).setAsleep(false);
 			
 		} else if (entityType == EntityType.CHICKEN) {
-			entity = new EntityChicken(world);
+			entity = new EntityChicken(EntityTypes.CHICKEN, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			
 		} else if (entityType == EntityType.COW) {
-			entity = new EntityCow(world);
+			entity = new EntityCow(EntityTypes.COW, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			
 		} else if (entityType == EntityType.MUSHROOM_COW) {
-			entity = new EntityMushroomCow(world);
+			entity = new EntityMushroomCow(EntityTypes.MOOSHROOM, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			
 		} else if (entityType == EntityType.PIG) {
-			entity = new EntityPig(world);
+			entity = new EntityPig(EntityTypes.PIG, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			if (var == 1) {
 				((EntityPig)entity).setSaddle(true);
 			}
 			
 		} else if (entityType == EntityType.SHEEP) {
-			entity = new EntitySheep(world);
+			entity = new EntitySheep(EntityTypes.SHEEP, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			if (var == -1) {
 				((EntitySheep)entity).setColor(EnumColor.fromColorIndex(random.nextInt(16)));
@@ -279,55 +282,55 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 			
 		} else if (entityType == EntityType.SQUID) {
-			entity = new EntitySquid(world);
+			entity = new EntitySquid(EntityTypes.SQUID, world);
 			
 		} else if (entityType == EntityType.GHAST) {
-			entity = new EntityGhast(world);
+			entity = new EntityGhast(EntityTypes.GHAST, world);
 			
 		} else if (entityType == EntityType.RABBIT) {
-			entity = new EntityRabbit(world);
+			entity = new EntityRabbit(EntityTypes.RABBIT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			((EntityRabbit)entity).setRabbitType(var);
 			
 		} else if (entityType == EntityType.POLAR_BEAR) {
-			entity = new EntityPolarBear(world);
+			entity = new EntityPolarBear(EntityTypes.POLAR_BEAR, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			// TODO: Figure out animations for attacking
 			
 		} else if (entityType == EntityType.GUARDIAN) {
-			entity = new EntityGuardian(world);
+			entity = new EntityGuardian(EntityTypes.GUARDIAN, world);
 			
 		} else if (entityType == EntityType.ELDER_GUARDIAN) {
-			entity = new EntityGuardianElder(world);
+			entity = new EntityGuardianElder(EntityTypes.ELDER_GUARDIAN, world);
 			
 		} else if (entityType == EntityType.ENDERMITE) {
-			entity = new EntityEndermite(world);
+			entity = new EntityEndermite(EntityTypes.ENDERMITE, world);
 			
 		} else if (entityType == EntityType.VINDICATOR) {
-			entity = new EntityVindicator(world);
+			entity = new EntityVindicator(EntityTypes.VINDICATOR, world);
 			
 		} else if (entityType == EntityType.VEX) {
-			entity = new EntityVex(world);
+			entity = new EntityVex(EntityTypes.VEX, world);
 			
 		} else if (entityType == EntityType.EVOKER) {
-			entity = new EntityEvoker(world);
+			entity = new EntityEvoker(EntityTypes.EVOKER, world);
 			
 		} else if (entityType == EntityType.HUSK) {
-			entity = new EntityZombieHusk(world);
+			entity = new EntityZombieHusk(EntityTypes.HUSK, world);
 			
 		} else if (entityType == EntityType.STRAY) {
-			entity = new EntitySkeletonStray(world);
+			entity = new EntitySkeletonStray(EntityTypes.STRAY, world);
 			
 		} else if (entityType == EntityType.WITHER) {
-			entity = new EntityWither(world);
+			entity = new EntityWither(EntityTypes.WITHER, world);
 			
 		} else if (entityType == EntityType.LLAMA) {
-			entity = new EntityLlama(world);
+			entity = new EntityLlama(EntityTypes.LLAMA, world);
 			((EntityLlama)entity).setVariant(var);
 			// TODO: Add support for different colours
 			
 		} else if (entityType == EntityType.HORSE) {
-			entity = new EntityHorse(world);
+			entity = new EntityHorse(EntityTypes.HORSE, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			// TODO
 			//((EntityHorse)entity).getDataWatcher().watch(19, Byte.valueOf((byte)disguise.getVar1()));
@@ -337,18 +340,20 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			//}
 			
 		} else if (entityType == EntityType.ENDER_DRAGON) {
-			entity = new EntityEnderDragon(world);
+			entity = new EntityEnderDragon(EntityTypes.ENDER_DRAGON, world);
 						
 		} else if (entityType == EntityType.FALLING_BLOCK) {
-			int id = disguise.getVar1();
+			// TODO: Change to material vars
+			/*int id = disguise.getVar1();
 			int data = disguise.getVar2(); // TODO: fix this
-			entity = new EntityFallingBlock(world, 0, 0, 0, Block.getById(id > 0 ? id : 1).getBlockData());
+			entity = new EntityFallingBlock(world, 0, 0, 0, Material.getMaterial()Block.getById(id > 0 ? id : 1).getBlockData());*/
 			
 		} else if (entityType == EntityType.DROPPED_ITEM) {
-			int id = disguise.getVar1();
+			// TODO: Change to material vars
+			/*int id = disguise.getVar1();
 			int data = disguise.getVar2();
-			entity = new EntityItem(world);
-			((EntityItem)entity).setItemStack(new net.minecraft.server.v1_11_R1.ItemStack(Item.getById(id > 0 ? id : 1), 1, data));
+			entity = new EntityItem(EntityTypes.ITEM, world);
+			((EntityItem)entity).setItemStack(new net.minecraft.server.v1_14_R1.ItemStack(Item.getById(id > 0 ? id : 1), 1, data));*/
 			
 		}
 		
@@ -356,7 +361,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			
 			String nameplateText = disguise.getNameplateText();
 			if (entity instanceof EntityInsentient && nameplateText != null && !nameplateText.isEmpty()) {
-				((EntityInsentient)entity).setCustomName(nameplateText);
+				((EntityInsentient)entity).setCustomName(new ChatComponentText(nameplateText));
 				((EntityInsentient)entity).setCustomNameVisible(disguise.alwaysShowNameplate());
 			}
 			
@@ -556,7 +561,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					if (dir > 127) dir -= 256;
 					refPacketRelEntityMoveLook.setByte(newpacket, "e", (byte)dir);
 					event.setPacket(clone);
-					PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(entId, 0.15, 0, 0.15);
+					PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(entId, new Vec3D(0.15, 0, 0.15));
 					((CraftPlayer)event.getPlayer()).getHandle().playerConnection.sendPacket(packet28);
 				} else if (mounts.containsKey(entId)) {
 					PacketContainer clone = packetContainer.deepClone();
@@ -573,7 +578,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					if (dir > 127) dir -= 256;
 					refPacketEntityLook.setByte(newpacket, "e", (byte)dir);
 					event.setPacket(clone);
-					PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(entId, 0.15, 0, 0.15);
+					PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(entId, new Vec3D(0.15, 0, 0.15));
 					((CraftPlayer)event.getPlayer()).getHandle().playerConnection.sendPacket(packet28);
 				} else if (mounts.containsKey(entId)) {
 					PacketContainer clone = packetContainer.deepClone();
@@ -590,7 +595,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					if (dir > 127) dir -= 256;
 					refPacketRelEntityTeleport.setByte(newpacket, "e", (byte)dir);
 					event.setPacket(clone);
-					PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(entId, 0.15, 0, 0.15);
+					PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(entId, new Vec3D(0.15, 0, 0.15));
 					((CraftPlayer)event.getPlayer()).getHandle().playerConnection.sendPacket(packet28);
 				} else if (mounts.containsKey(entId)) {
 					PacketContainer clone = packetContainer.deepClone();
@@ -634,8 +639,25 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 		}
 		PacketPlayOutEntityDestroy packet29 = new PacketPlayOutEntityDestroy(entityId);
-		final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
-		tracker.a(((CraftPlayer)disguised).getHandle(), packet29);
+		/*try { // an attempt at fixing
+			for (Player viewer : Bukkit.getOnlinePlayers()) {
+				protocolManager.sendServerPacket(viewer, new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY, packet29), false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		
+//		final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
+		Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)disguised.getWorld()).getHandle());
+		EntityTracker tracker = null;
+		try {
+			tracker = (EntityTracker)field.get(((CraftWorld)disguised.getWorld()).getHandle());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		tracker.broadcast(packet29);
+//		tracker.a(((CraftPlayer)disguised).getHandle(), packet29);
 	}
 	
 	private void broadcastPacketDisguised(Player disguised, PacketType packetId, Packet<?> packet) {
@@ -693,7 +715,14 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		if (entity != null) {
 			List<Packet<?>> packets = getPacketsToSend(disguised, disguise, entity);
 			if (packets != null && packets.size() > 0) {
-				final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
+//				final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
+				Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)disguised.getWorld()).getHandle());
+				EntityTracker tracker = null;
+				try {
+					tracker = (EntityTracker)field.get(((CraftWorld)disguised.getWorld()).getHandle());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				for (Packet<?> packet : packets) {
 					if (packet instanceof PacketPlayOutEntityMetadata) {
 						broadcastPacketDisguised(disguised, PacketType.Play.Server.ENTITY_METADATA, packet);
@@ -704,7 +733,8 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					} else if (packet instanceof PacketPlayOutSpawnEntityLiving) {
 						broadcastPacketDisguised(disguised, PacketType.Play.Server.SPAWN_ENTITY_LIVING, packet);
 					} else {
-						tracker.a(((CraftPlayer)disguised).getHandle(), packet);
+//						tracker.a(((CraftPlayer)disguised).getHandle(), packet);
+						tracker.broadcast(packet);
 					}
 				}
 			}
@@ -725,11 +755,10 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				list.add(refPacketInfo.inObj);
 				//list.add(packetinfo.new PlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName())));
 				
-				refPacketPlayerInfo.set(packetinfo, "b", list);
-				@SuppressWarnings("deprecation")
-				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(0, EnumDifficulty.HARD, WorldType.NORMAL, EnumGamemode.getById(disguised.getGameMode().getValue()));
+				refPacketPlayerInfo.set(packetinfo, "b", list); disguised.getWorld().getEnvironment();
+				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(getNMSEquivalent(disguised.getWorld().getEnvironment()), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
 				List<AttributeInstance> l = new ArrayList<AttributeInstance>();
-				AttributeInstance a = ((CraftPlayer)disguised).getHandle().getAttributeInstance(GenericAttributes.maxHealth);
+				AttributeInstance a = ((CraftPlayer)disguised).getHandle().getAttributeInstance(GenericAttributes.MAX_HEALTH);
 				if (a != null) {
 					l.add(a);
 				}
@@ -753,6 +782,17 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				}, 20);
 			}
 		}
+	}
+	
+	private DimensionManager getNMSEquivalent(org.bukkit.World.Environment type) {
+		if (type == org.bukkit.World.Environment.NORMAL) {
+			return DimensionManager.OVERWORLD;
+		} else if (type == org.bukkit.World.Environment.NETHER) {
+			return DimensionManager.NETHER;
+		} else if (type == org.bukkit.World.Environment.THE_END) {
+			return DimensionManager.THE_END;
+		} else
+			return null;
 	}
 	
 	private List<Packet<?>> getPacketsToSend(Player disguised, DisguiseSpell.Disguise disguise, Entity entity) {
@@ -792,7 +832,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			PacketPlayOutEntityMetadata packet40 = new PacketPlayOutEntityMetadata(disguised.getEntityId(), entity.getDataWatcher(), false);
 			packets.add(packet40);
 			if (dragons.contains(disguised.getEntityId())) {
-				PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(disguised.getEntityId(), 0.15, 0, 0.15);
+				PacketPlayOutEntityVelocity packet28 = new PacketPlayOutEntityVelocity(disguised.getEntityId(), new Vec3D(0.15, 0, 0.15));
 				packets.add(packet28);
 			}
 			
@@ -800,11 +840,11 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				addEquipmentPackets(disguised, packets);
 			}
 		} else if (entity instanceof EntityFallingBlock) {
-			PacketPlayOutSpawnEntity packet23 = new PacketPlayOutSpawnEntity(entity, 70, disguise.getVar1() | ((byte)disguise.getVar2()) << 16);
+			PacketPlayOutSpawnEntity packet23 = new PacketPlayOutSpawnEntity(entity, 70 /*, disguise.getVar1() | ((byte)disguise.getVar2()) << 16*/);
 			refPacketSpawnEntity.setInt(packet23, "a", disguised.getEntityId());
 			packets.add(packet23);
 		} else if (entity instanceof EntityItem) {
-			PacketPlayOutSpawnEntity packet23 = new PacketPlayOutSpawnEntity(entity, 2, 1);
+			PacketPlayOutSpawnEntity packet23 = new PacketPlayOutSpawnEntity(entity, 2/*, 1*/);
 			refPacketSpawnEntity.setInt(packet23, "a", disguised.getEntityId());
 			packets.add(packet23);
 			PacketPlayOutEntityMetadata packet40 = new PacketPlayOutEntityMetadata(disguised.getEntityId(), entity.getDataWatcher(), true);
@@ -812,7 +852,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		}
 		
 		if (disguise.isRidingBoat()) {
-			EntityBoat boat = new EntityBoat(entity.world);
+			EntityBoat boat = new EntityBoat(EntityTypes.BOAT, entity.world);
 			int boatEntId;
 			if (mounts.containsKey(disguised.getEntityId())) {
 				boatEntId = mounts.get(disguised.getEntityId());
@@ -888,7 +928,23 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	@Override
 	protected void sendPlayerSpawnPackets(Player player) {
 		PacketPlayOutNamedEntitySpawn packet20 = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-		final EntityTracker tracker = ((CraftWorld)player.getWorld()).getHandle().tracker;
-		tracker.a(((CraftPlayer)player).getHandle(), packet20);
+		/*try {
+			for (Player viewer : Bukkit.getOnlinePlayers()) {
+				protocolManager.sendServerPacket(viewer, new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN, packet), false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+//		final EntityTracker tracker = ((CraftWorld)player.getWorld()).getHandle().tracker;
+		Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)player.getWorld()).getHandle());
+		EntityTracker tracker = null;
+		try {
+			tracker = (EntityTracker)field.get(((CraftWorld)player.getWorld()).getHandle());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		tracker.broadcast(packet20);
+//		tracker.a(((CraftPlayer)player).getHandle(), packet20);*/
 	}
 }
