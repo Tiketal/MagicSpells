@@ -3,6 +3,7 @@ main: com.nisovin.magicspells.MagicSpells
 version: VERSION_STRING
 author: nisovin
 softdepend: [Vault,ProtocolLib,WorldGuard,Residence]
+api-version: 1.14
 commands:
     magicspellcast:
         description: Cast a spell
