@@ -10,6 +10,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -52,7 +53,7 @@ public class LeftClickBlockTypeListener extends PassiveListener {
 		if (list != null) {
 			Spellbook spellbook = MagicSpells.getSpellbook(event.getPlayer());
 			for (PassiveSpell spell : list) {
-				if (spell.ignoreCancelled() && event.isCancelled()) continue;
+				if (spell.ignoreCancelled() && event.useInteractedBlock() == Event.Result.DENY) continue;
 				if (spellbook.hasSpell(spell, false)) {
 					boolean casted = spell.activate(event.getPlayer(), event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5));
 					if (casted && spell.cancelDefaultAction()) {
