@@ -11,7 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
@@ -126,11 +126,11 @@ public class DisarmSpell extends TargetedSpell implements TargetedEntitySpell {
 	
 	private ItemStack getItemInHand(LivingEntity entity) {
 		if (entity instanceof Player) {
-			return ((Player)entity).getItemInHand();
+			return ((Player)entity).getInventory().getItemInMainHand();
 		} else {
 			EntityEquipment equip = entity.getEquipment();
 			if (equip != null) {
-				return equip.getItemInHand();
+				return equip.getItemInMainHand();
 			}
 		}
 		return null;
@@ -138,11 +138,11 @@ public class DisarmSpell extends TargetedSpell implements TargetedEntitySpell {
 	
 	private void setItemInHand(LivingEntity entity, ItemStack item) {
 		if (entity instanceof Player) {
-			((Player)entity).setItemInHand(item);
+			((Player)entity).getInventory().setItemInMainHand(item);
 		} else {
 			EntityEquipment equip = entity.getEquipment();
 			if (equip != null) {
-				equip.setItemInHand(item);
+				equip.setItemInMainHand(item);
 			}
 		}
 	}
@@ -168,12 +168,13 @@ public class DisarmSpell extends TargetedSpell implements TargetedEntitySpell {
 	}
 	
 	@EventHandler
-	public void onItemPickup(PlayerPickupItemEvent event) {
+	public void onItemPickup(EntityPickupItemEvent event) {
+		if (!(event.getEntity() instanceof Player)) return;
 		if (!preventTheft || event.isCancelled()) return;
 		
 		Item item = event.getItem();
 		if (disarmedItems.containsKey(item)) {
-			if (disarmedItems.get(item).equals(event.getPlayer().getName())) {
+			if (disarmedItems.get(item).equals(((Player)event.getEntity()).getName())) {
 				disarmedItems.remove(item);
 			} else {
 				event.setCancelled(true);

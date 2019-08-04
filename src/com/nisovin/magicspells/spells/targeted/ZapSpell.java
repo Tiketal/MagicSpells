@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -121,7 +122,7 @@ public class ZapSpell extends TargetedSpell implements TargetedLocationSpell {
 			if (dropNormal) {
 				target.breakNaturally();
 			} else {
-				target.getWorld().dropItemNaturally(target.getLocation(), target.getState().getData().toItemStack(1));
+				target.getWorld().dropItemNaturally(target.getLocation(), new ItemStack(target.getType()));
 			}
 		}
 		

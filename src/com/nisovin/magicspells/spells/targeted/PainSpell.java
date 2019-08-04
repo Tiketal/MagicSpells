@@ -2,6 +2,7 @@ package com.nisovin.magicspells.spells.targeted;
 
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -87,10 +88,10 @@ public class PainSpell extends TargetedSpell implements TargetedEntitySpell, Spe
 		dam = event.getFinalDamage();
 		if (ignoreArmor) {
 			double health = target.getHealth();
-			if (health > target.getMaxHealth()) health = target.getMaxHealth();
+			if (health > target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) health = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			health = health - dam;
 			if (health < 0) health = 0;
-			if (health > target.getMaxHealth()) health = target.getMaxHealth();
+			if (health > target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) health = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			if (health == 0 && player != null) {
 				MagicSpells.getVolatileCodeHandler().setKiller(target, player);
 			}

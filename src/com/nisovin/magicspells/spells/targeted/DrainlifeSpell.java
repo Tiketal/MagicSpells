@@ -5,6 +5,7 @@ import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -96,10 +97,10 @@ public class DrainlifeSpell extends TargetedSpell implements TargetedEntitySpell
 			take = event.getFinalDamage();
 			if (ignoreArmor) {
 				double health = target.getHealth();
-				if (health > target.getMaxHealth()) health = target.getMaxHealth();
+				if (health > target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) health = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 				health -= take;
 				if (health < 0) health = 0;
-				if (health > target.getMaxHealth()) health = target.getMaxHealth();
+				if (health > target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) health = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 				if (health == 0 && player != null) {
 					MagicSpells.getVolatileCodeHandler().setKiller(target, player);
 				}
@@ -152,7 +153,7 @@ public class DrainlifeSpell extends TargetedSpell implements TargetedEntitySpell
 	private void giveToCaster(Player player, double give) {
 		if (giveType.equals("health")) {
 			double h = player.getHealth() + give;
-			if (h > player.getMaxHealth()) h = player.getMaxHealth();
+			if (h > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) h = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			player.setHealth(h);
 		} else if (giveType.equals("mana")) {
 			MagicSpells.getManaHandler().addMana(player, (int)give, ManaChangeReason.OTHER);

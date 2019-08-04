@@ -1,6 +1,7 @@
 package com.nisovin.magicspells.spells.targeted;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +17,18 @@ import com.nisovin.magicspells.spelleffects.EffectPosition;
 import com.nisovin.magicspells.spells.TargetedLocationSpell;
 import com.nisovin.magicspells.spells.TargetedSpell;
 import com.nisovin.magicspells.util.MagicConfig;
-import com.sk89q.worldedit.CuboidClipboard;
+
+import com.sk89q.jnbt.NBTInputStream;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.schematic.SchematicFormat;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.MCEditSchematicReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 
 public class PasteSpell extends TargetedSpell implements TargetedLocationSpell {
 
@@ -111,9 +118,23 @@ public class PasteSpell extends TargetedSpell implements TargetedLocationSpell {
 	
 	private boolean pasteInstant(Location target) {
 		try {
-			CuboidClipboard cuboid = SchematicFormat.MCEDIT.load(file);
-			EditSession session = new EditSession(new BukkitWorld(target.getWorld()), maxBlocks);
-			cuboid.paste(session, new Vector(target.getX(), target.getY(), target.getZ()), !pasteAir, pasteEntities);
+			NBTInputStream in = new NBTInputStream(new FileInputStream(file));
+			MCEditSchematicReader reader = new MCEditSchematicReader(in);
+			Clipboard cuboid = reader.read();
+			reader.close();
+			ClipboardHolder holder = new ClipboardHolder(cuboid);
+			EditSession session = WorldEdit.getInstance()
+					.getEditSessionFactory()
+					.getEditSession(
+							new BukkitWorld(target.getWorld()), maxBlocks
+							);
+			Operation op = holder
+					.createPaste(session)
+					.to(BlockVector3.at(target.getBlockX(), target.getBlockY(), target.getBlockZ()))
+					.ignoreAirBlocks(!pasteAir)
+					.copyEntities(pasteEntities)
+					.build();
+			Operations.completeLegacy(op);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -142,10 +163,14 @@ public class PasteSpell extends TargetedSpell implements TargetedLocationSpell {
 		
 		public Builder(Location target) throws Exception {
 			this.center = target.getBlock();
+
+			NBTInputStream in = new NBTInputStream(new FileInputStream(file));
+			MCEditSchematicReader reader = new MCEditSchematicReader(in);
+			Clipboard clipboard = reader.read();
+			reader.close();
 			
-			CuboidClipboard clipboard = SchematicFormat.MCEDIT.load(file);
-			Vector size = clipboard.getSize();
-			Vector offset = clipboard.getOffset();
+			BlockVector3 size = clipboard.getDimensions();
+			BlockVector3 offset = clipboard.getRegion().getMinimumPoint().subtract(clipboard.getOrigin());
 
 			List<BlockState> air = new ArrayList<BlockState>();
 			List<BlockState> solids = new ArrayList<BlockState>();
@@ -154,12 +179,12 @@ public class PasteSpell extends TargetedSpell implements TargetedLocationSpell {
 			for (int y = 0; y < size.getBlockY(); y++) {
 				for (int x = 0; x < size.getBlockX(); x++) {
 					for (int z = 0; z < size.getBlockZ(); z++) {
-						BaseBlock b = clipboard.getBlock(new Vector(x, y, z));
+						com.sk89q.worldedit.world.block.BaseBlock b = clipboard.getFullBlock(BlockVector3.at(x, y, z));
 						int blockX = target.getBlockX() + x + offset.getBlockX();
 						int blockY = target.getBlockY() + y + offset.getBlockY();
 						int blockZ = target.getBlockZ() + z + offset.getBlockZ();
 						Block block = target.getWorld().getBlockAt(blockX, blockY, blockZ);
-						if (b.getId() != 0 || (pasteAir && block.getType() != Material.AIR)) {
+						if (b.getBlockType() != BlockTypes.AIR || (pasteAir && block.getType() != Material.AIR)) {
 							BlockState state = block.getState();
 							setBlockStateFromWorldEditBlock(state, b);
 							if (state.getType() == Material.AIR) {
@@ -203,11 +228,8 @@ public class PasteSpell extends TargetedSpell implements TargetedLocationSpell {
 			}, 1, tickInterval);
 		}
 		
-		@SuppressWarnings("deprecation")
-		private void setBlockStateFromWorldEditBlock(BlockState state, BaseBlock block) {
-			//TODO: update worldedit and fix
-			/*state.setTypeId(block.getId());
-			state.setRawData((byte)block.getData());*/
+		private void setBlockStateFromWorldEditBlock(BlockState state, com.sk89q.worldedit.world.block.BaseBlock block) {
+			state.setType(Material.getMaterial(block.getBlockType().getName().toUpperCase()));
 		}
 		
 	}

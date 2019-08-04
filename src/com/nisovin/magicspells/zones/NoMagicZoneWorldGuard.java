@@ -6,6 +6,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -37,7 +39,10 @@ public class NoMagicZoneWorldGuard extends NoMagicZone {
 			if (worldGuard != null) {
 				World w = Bukkit.getServer().getWorld(worldName);
 				if (w != null) {
-					RegionManager rm = worldGuard.getRegionManager(w);
+					RegionManager rm = WorldGuard.getInstance()
+							.getPlatform()
+							.getRegionContainer()
+							.get(BukkitAdapter.adapt(w));
 					if (rm != null) {
 						region = rm.getRegion(regionName);
 					}
@@ -46,8 +51,7 @@ public class NoMagicZoneWorldGuard extends NoMagicZone {
 		}
 		// check if contains
 		if (region != null) {
-			com.sk89q.worldedit.Vector v = new com.sk89q.worldedit.Vector(location.getX(), location.getY(), location.getZ());
-			return region.contains(v);
+			return region.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		} else {
 			MagicSpells.error("Failed to access WorldGuard region '" + regionName + "'");
 			return false;

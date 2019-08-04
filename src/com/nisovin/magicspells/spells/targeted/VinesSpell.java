@@ -8,8 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Vine;
 
 import com.nisovin.magicspells.spells.TargetedSpell;
 import com.nisovin.magicspells.util.MagicConfig;
@@ -105,10 +105,9 @@ public class VinesSpell extends TargetedSpell {
 		if (block.getType() == Material.AIR) {
 			BlockState state = block.getState();
 			state.setType(Material.VINE);
-			if (state.getData() instanceof Vine) {
-				Vine data = (Vine)state.getData();
-				data.putOnFace(face);
-				state.setData(data);
+			if (state.getBlockData() instanceof MultipleFacing) {
+				MultipleFacing data = (MultipleFacing)state.getBlockData();
+				data.setFace(face, true);
 			}
 			state.update(true, false);
 		}
