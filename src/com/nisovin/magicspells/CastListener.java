@@ -207,7 +207,7 @@ public class CastListener implements Listener {
 	}
 	
 	private void castSpell(Player player) {		
-		ItemStack inHand = player.getItemInHand();
+		ItemStack inHand = player.getInventory().getItemInMainHand();
 		if (!plugin.allowCastWithFist && (inHand == null || inHand.getType() == Material.AIR)) return;
 		
 		Spell spell = MagicSpells.getSpellbook(player).getActiveSpell(inHand);

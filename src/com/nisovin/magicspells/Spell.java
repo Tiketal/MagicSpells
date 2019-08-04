@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,6 +29,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -1111,8 +1113,8 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 			return false;
 		}
 		if (durabilityCost > 0) {
-			ItemStack inHand = player.getItemInHand();
-			if (inHand == null || inHand.getDurability() >= inHand.getType().getMaxDurability()) {
+			ItemStack inHand = player.getInventory().getItemInMainHand();
+			if (inHand == null || ((Damageable)inHand.getItemMeta()).getDamage() >= inHand.getType().getMaxDurability()) {
 				return false;
 			}
 		}
@@ -1188,7 +1190,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		if (healthCost != 0) {
 			double h = player.getHealth() - healthCost;
 			if (h < 0) h = 0;
-			if (h > player.getMaxHealth()) h = player.getMaxHealth();
+			if (h > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue()) h = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
 			player.setHealth(h);
 		}
 		if (manaCost != 0) {
@@ -1204,15 +1206,15 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 			ExperienceUtils.changeExp(player, -experienceCost);
 		}
 		if (durabilityCost != 0) {
-			ItemStack inHand = player.getItemInHand();
+			ItemStack inHand = player.getInventory().getItemInMainHand();
 			if (inHand != null && inHand.getType().getMaxDurability() > 0) {
-				short newDura = (short) (inHand.getDurability() + durabilityCost);
+				short newDura = (short) (((Damageable)inHand.getItemMeta()).getDamage() + durabilityCost);
 				if (newDura < 0) newDura = 0;
 				if (newDura >= inHand.getType().getMaxDurability()) {
-					player.setItemInHand(null);
+					player.getInventory().setItemInMainHand(null);
 				} else {
-					inHand.setDurability(newDura);
-					player.setItemInHand(inHand);
+					((Damageable)inHand).setDamage(newDura);
+					player.getInventory().setItemInMainHand(inHand);
 				}
 			}
 		}
@@ -1373,8 +1375,8 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 						// check for teams
 						if (target != null && target instanceof Player && MagicSpells.plugin.checkScoreboardTeams) {
 							Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-							Team playerTeam = scoreboard.getPlayerTeam(player);
-							Team targetTeam = scoreboard.getPlayerTeam((Player)target);
+							Team playerTeam = scoreboard.getEntryTeam(player.getName());
+							Team targetTeam = scoreboard.getEntryTeam(((Player)target).getName());
 							if (playerTeam != null && targetTeam != null) {
 								if (playerTeam.equals(targetTeam)) {
 									if (!playerTeam.allowFriendlyFire() && !this.isBeneficial()) {
