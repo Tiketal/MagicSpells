@@ -25,7 +25,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.util.BlockUtils;
-import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 
 public class VolatileCodeDisabled implements VolatileCodeHandle {

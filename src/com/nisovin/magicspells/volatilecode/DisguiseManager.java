@@ -1,4 +1,4 @@
-package com.nisovin.magicspells.util;
+package com.nisovin.magicspells.volatilecode;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell;
+import com.nisovin.magicspells.util.MagicConfig;
 
 public abstract class DisguiseManager implements Listener {
 

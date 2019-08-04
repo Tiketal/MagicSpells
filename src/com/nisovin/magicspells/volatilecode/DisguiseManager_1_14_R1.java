@@ -43,7 +43,6 @@ import com.mojang.authlib.properties.Property;
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell.PlayerDisguiseData;
-import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.ReflectionHelper;
 

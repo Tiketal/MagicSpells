@@ -45,7 +45,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.util.BoundingBox;
-import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 
 public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {

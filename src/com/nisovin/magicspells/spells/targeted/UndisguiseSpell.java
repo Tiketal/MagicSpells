@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import com.nisovin.magicspells.spelleffects.EffectPosition;
 import com.nisovin.magicspells.spells.TargetedEntitySpell;
 import com.nisovin.magicspells.spells.TargetedSpell;
-import com.nisovin.magicspells.util.DisguiseManager;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.TargetInfo;
+import com.nisovin.magicspells.volatilecode.DisguiseManager;
 
 public class UndisguiseSpell extends TargetedSpell implements TargetedEntitySpell {
 
