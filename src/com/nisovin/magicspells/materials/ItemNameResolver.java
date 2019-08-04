@@ -8,9 +8,6 @@ import org.bukkit.Material;
 public interface ItemNameResolver {
 
 	static Random rand = new Random();
-
-	@Deprecated
-	public ItemTypeAndData resolve(String string);
 	
 	public MagicMaterial resolveItem(String string);
 	

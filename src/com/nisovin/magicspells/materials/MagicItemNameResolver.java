@@ -65,41 +65,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		materialMap.putAll(toAdd);
 	}
 	
-	/**
-	 * Parses and resolves strings of the form {@literal <material name>}[:data]
-	 * @param string
-	 * @return
-	 */
-	@Override
-	public ItemTypeAndData resolve(String string) {
-		if (string == null || string.isEmpty()) return null;
-		ItemTypeAndData item = new ItemTypeAndData();
-		
-		// parse data elements if they exist
-		if (string.contains(":")) {
-			String[] split = string.split(":");
-			
-			// index 0 is always the material name
-			Material mat = Material.getMaterial(split[0].toUpperCase());
-			if (mat == null) return null;
-			item.type = mat;
-			
-			// data is always numeric TODO: add support for non-numeric
-			if (split[1].matches("[0-9]+")) {
-				item.data = Short.parseShort(split[1]);
-			} else {
-				return null;
-			}
-			
-		// no data
-		} else {
-			Material mat = Material.getMaterial(string.toUpperCase());
-			if (mat == null) return null;
-			item.type = mat;
-		}
-		return item;
-	}
-	
 	private static Pattern pattern = Pattern.compile(
 			"([\\w|\\*]+)(?:\\((\\w+:\\w+(?:,\\w+:\\w+)*)\\))*", // ([\w|\*]+)(?:\((\w+:\w+(?:,\w+:\w+)*)\))*
 			Pattern.CASE_INSENSITIVE
