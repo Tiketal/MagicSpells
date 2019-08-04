@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

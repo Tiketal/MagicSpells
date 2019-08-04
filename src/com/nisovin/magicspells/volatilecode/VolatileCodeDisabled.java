@@ -20,8 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.material.Button;
-import org.bukkit.material.Lever;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -46,15 +44,9 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	
 	@Override
 	public void toggleLeverOrButton(Block block) {
-		if (BlockUtils.isButton(block.getType())) {
+		if (BlockUtils.isButton(block.getType()) || block.getType() == Material.LEVER) {
+			((Powerable)block.getBlockData()).setPowered(true);
 			BlockState state = block.getState();
-			Button button = (Button)state.getData();
-			button.setPowered(true);
-			state.update();
-		} else if (block.getType() == Material.LEVER) {
-			BlockState state = block.getState();
-			Lever lever = (Lever)state.getData();
-			lever.setPowered(!lever.isPowered());
 			state.update();
 		}
 	}
@@ -62,6 +54,7 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	@Override
 	public void pressPressurePlate(Block block) {
 		((Powerable)block.getBlockData()).setPowered(true);
+		block.getState().update();
 //		block.setData((byte) (block.getData() ^ 0x1));
 	}
 

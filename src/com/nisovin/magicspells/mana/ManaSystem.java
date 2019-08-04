@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.castmodifiers.ModifierSet;
@@ -288,7 +289,7 @@ public class ManaSystem extends ManaHandler {
 				} else if (dur == 0) {
 					dur = 1;
 				}
-				item.setDurability((short)dur);
+				((Damageable)item.getItemMeta()).setDamage(dur);
 				player.getInventory().setItem(manaBarToolSlot, item);
 			}
 		}

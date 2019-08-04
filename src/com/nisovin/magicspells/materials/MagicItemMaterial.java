@@ -24,4 +24,12 @@ public class MagicItemMaterial extends MagicMaterial {
 		}
 		return item;
 	}
+
+	@Override
+	public boolean equals(ItemStack item) {
+		return type == item.getType() && (item.getItemMeta() instanceof Damageable) 
+				? duraData == ((Damageable)item.getItemMeta()).getDamage()
+				: true;
+	}
+	
 }

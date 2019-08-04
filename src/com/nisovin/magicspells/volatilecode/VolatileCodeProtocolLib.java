@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
@@ -19,7 +20,7 @@ public class VolatileCodeProtocolLib extends VolatileCodeDisabled {
 
 	@Override
 	public void playSound(Location location, String sound, float volume, float pitch, String category) {
-		PacketContainer packet = protocolManager.createPacket(62);
+		PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.NAMED_SOUND_EFFECT);
 		packet.getStrings().write(0, sound);
 		int p = (int)(pitch * 63D);
 		if (p < 0) p = 0;
@@ -36,7 +37,7 @@ public class VolatileCodeProtocolLib extends VolatileCodeDisabled {
 	@Override
 	public void playSound(Player player, String sound, float volume, float pitch, String category) {
 		Location loc = player.getLocation();
-		PacketContainer packet = protocolManager.createPacket(62);
+		PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.NAMED_SOUND_EFFECT);
 		packet.getStrings().write(0, sound);
 		int p = (int)(pitch * 63D);
 		if (p < 0) p = 0;
@@ -56,7 +57,7 @@ public class VolatileCodeProtocolLib extends VolatileCodeDisabled {
 	
 	@Override
 	public void playParticleEffect(Location location, String name, float spreadHoriz, float spreadVert, float speed, int count, int radius, float yOffset) {
-		PacketContainer packet = protocolManager.createPacket(63);
+		PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.WORLD_PARTICLES);
 		packet.getStrings().write(0, name);
 		packet.getFloat()
 			.write(0, (float)location.getX())

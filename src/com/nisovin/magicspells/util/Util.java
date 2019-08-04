@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,7 +39,6 @@ import org.bukkit.util.Vector;
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.Spell;
 import com.nisovin.magicspells.Spellbook;
-import com.nisovin.magicspells.materials.ItemNameResolver.ItemTypeAndData;
 import com.nisovin.magicspells.materials.MagicMaterial;
 
 public class Util {
@@ -98,7 +98,13 @@ public class Util {
 					color = Integer.parseInt(temp[1], 16);
 				}
 			}
-			ItemTypeAndData itemTypeAndData = MagicSpells.getItemNameResolver().resolve(s);
+			MagicMaterial mat = MagicSpells.getItemNameResolver().resolveItem(s);
+			if (mat != null) {
+				item = mat.toItemStack();
+			} else {
+				return null;
+			}
+			/*ItemTypeAndData itemTypeAndData = MagicSpells.getItemNameResolver().resolve(s);
 			if (itemTypeAndData != null) {
 				item = new ItemStack(itemTypeAndData.type, 1);
 				if (item.getItemMeta() instanceof Damageable) {
@@ -106,7 +112,7 @@ public class Util {
 				}
 			} else {
 				return null;
-			}
+			}*/
 			if (name != null || lore != null || color >= 0) {
 				try {
 					ItemMeta meta = item.getItemMeta();
@@ -210,12 +216,7 @@ public class Util {
 				for (String potionEffect : potionEffects) {
 					String[] data = potionEffect.split(" ");
 					PotionEffectType t = null;
-					try {
-						int id = Integer.parseInt(data[0]);
-						t = PotionEffectType.getById(id);
-					} catch (NumberFormatException e) {
-						t = PotionEffectType.getByName(data[0].toUpperCase());
-					}
+					t = PotionEffectType.getByName(data[0].toUpperCase());
 					if (t != null) {
 						int level = 0;
 						if (data.length > 1) {
@@ -242,7 +243,7 @@ public class Util {
 			
 			// skull owner
 			if (config.contains("skullowner") && config.isString("skullowner") && meta instanceof SkullMeta) {
-				((SkullMeta)meta).setOwner(config.getString("skullowner"));
+				((SkullMeta)meta).setOwningPlayer(Bukkit.getOfflinePlayer(UUID.fromString(config.getString("skullowner"))));
 			}
 			
 			// flower pot
@@ -281,15 +282,6 @@ public class Util {
 			
 			// banner
 			if (meta instanceof BannerMeta) {
-				if (config.contains("color") && config.isString("color")) {
-					String s = config.getString("color").toLowerCase();
-					for (DyeColor c : DyeColor.values()) {
-						if (c != null && c.name().replace("_", "").toLowerCase().equals(s)) {
-							((BannerMeta)meta).setBaseColor(c);
-							break;
-						}
-					}
-				}
 				if (config.contains("patterns") && config.isList("patterns")) {
 					List<String> patterns = config.getStringList("patterns");
 					for (String patternData : patterns) {
@@ -329,6 +321,7 @@ public class Util {
 			
 			// unbreakable
 			if (config.getBoolean("unbreakable", false)) {
+				item.getItemMeta().setUnbreakable(true);
 				item = MagicSpells.getVolatileCodeHandler().setUnbreakable(item);
 			}
 			
@@ -446,8 +439,7 @@ public class Util {
 	static Map<String, EntityType> entityTypeMap = new HashMap<String, EntityType>();
 	static {
 		for (EntityType type : EntityType.values()) {
-			if (type != null && type.getName() != null) {
-				entityTypeMap.put(type.getName().toLowerCase(), type);
+			if (type != null && type.name() != null) {
 				entityTypeMap.put(type.name().toLowerCase(), type);
 				entityTypeMap.put(type.name().toLowerCase().replace("_", ""), type);
 			}
@@ -473,11 +465,7 @@ public class Util {
 	}
 	
 	public static PotionEffectType getPotionEffectType(String type) {
-		if (type.matches("^[0-9]+$")) {
-			return PotionEffectType.getById(Integer.parseInt(type));
-		} else {
-			return PotionEffectType.getByName(type);
-		}
+		return PotionEffectType.getByName(type);
 	}
 	
 	public static Enchantment getEnchantmentType(String type) {

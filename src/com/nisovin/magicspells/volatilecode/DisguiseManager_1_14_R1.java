@@ -22,6 +22,7 @@ import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerAnimationEvent;
@@ -131,7 +132,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	private Entity getEntity(Player player, DisguiseSpell.Disguise disguise) {
 		EntityType entityType = disguise.getEntityType();
 		boolean flag = disguise.getFlag();
-		int var = disguise.getVar1();
+		String var = disguise.getVar1();
 		Location location = player.getLocation();
 		Entity entity = null;
 		float yOffset = 0;
@@ -164,10 +165,11 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				((EntityZombie)entity).setBaby(true);
 			}
 		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
-			if (var >= 1) {
+				String biome = disguise.getVar2();
 				entity = new EntityZombieVillager(EntityTypes.ZOMBIE_VILLAGER, world);
-// TODO: Support for all villager types				((EntityZombieVillager)entity).setVillagerData(VillagerData.class);
-			}
+				((EntityZombieVillager)entity).setVillagerData(new VillagerData(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(biome)), IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var)), 0));
+				// biome, profession, level (master, apprentice, etc) 
+//				((EntityZombieVillager)entity).setVillagerData(VillagerData.class);	
 			
 		} else if (entityType == EntityType.SKELETON) {
 			entity = new EntitySkeleton(EntityTypes.SKELETON, world);
@@ -196,10 +198,10 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.WOLF) {
 			entity = new EntityWolf(EntityTypes.WOLF, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (var > 0) {
+			if (!(var.equals("angry") || var.isEmpty())) {
 				((EntityWolf)entity).setTamed(true);
 				((EntityWolf)entity).setOwnerUUID(player.getUniqueId());
-				//((EntityWolf)entity).setCollarColor(var);
+				((EntityWolf)entity).setCollarColor(EnumColor.valueOf(var.toUpperCase()));
 			}
 			
 		} else if (entityType == EntityType.OCELOT) {
@@ -232,8 +234,8 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			if (flag) {
 				((EntityVillager)entity).setAge(-24000);
 			}
-			// TODO:
-			/*((EntityVillager)entity).setProfession(var);*/
+			String biome = disguise.getVar2();
+			((EntityVillager)entity).setVillagerData(new VillagerData(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(biome)), IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var)), 0));
 			
 		} else if (entityType == EntityType.PIG_ZOMBIE) {
 			entity = new EntityPigZombie(EntityTypes.ZOMBIE_PIGMAN, world);
@@ -268,17 +270,17 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.PIG) {
 			entity = new EntityPig(EntityTypes.PIG, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (var == 1) {
+			if (var.equals("saddled")) {
 				((EntityPig)entity).setSaddle(true);
 			}
 			
 		} else if (entityType == EntityType.SHEEP) {
 			entity = new EntitySheep(EntityTypes.SHEEP, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (var == -1) {
+			if (var.equals("random")) {
 				((EntitySheep)entity).setColor(EnumColor.fromColorIndex(random.nextInt(16)));
-			} else if (var >= 0 && var < 16) {
-				((EntitySheep)entity).setColor(EnumColor.fromColorIndex(var));
+			} else {
+				((EntitySheep)entity).setColor(EnumColor.valueOf(var.toUpperCase()));
 			}
 			
 		} else if (entityType == EntityType.SQUID) {
@@ -290,7 +292,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.RABBIT) {
 			entity = new EntityRabbit(EntityTypes.RABBIT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			((EntityRabbit)entity).setRabbitType(var);
+			((EntityRabbit)entity).setRabbitType(getRabbitType(var));
 			
 		} else if (entityType == EntityType.POLAR_BEAR) {
 			entity = new EntityPolarBear(EntityTypes.POLAR_BEAR, world);
@@ -326,8 +328,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			
 		} else if (entityType == EntityType.LLAMA) {
 			entity = new EntityLlama(EntityTypes.LLAMA, world);
-			((EntityLlama)entity).setVariant(var);
-			// TODO: Add support for different colours
+			((EntityLlama)entity).setVariant(getLlamaType(var));
 			
 		} else if (entityType == EntityType.HORSE) {
 			entity = new EntityHorse(EntityTypes.HORSE, world);
@@ -343,18 +344,14 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			entity = new EntityEnderDragon(EntityTypes.ENDER_DRAGON, world);
 						
 		} else if (entityType == EntityType.FALLING_BLOCK) {
-			// TODO: Change to material vars
-			/*int id = disguise.getVar1();
-			int data = disguise.getVar2(); // TODO: fix this
-			entity = new EntityFallingBlock(world, 0, 0, 0, Material.getMaterial()Block.getById(id > 0 ? id : 1).getBlockData());*/
+			String type = disguise.getVar1();
+			entity = new EntityFallingBlock(world, 0, 0, 0, IRegistry.BLOCK.get(new MinecraftKey(type)).getBlockData());
 			
 		} else if (entityType == EntityType.DROPPED_ITEM) {
-			// TODO: Change to material vars
-			/*int id = disguise.getVar1();
-			int data = disguise.getVar2();
+			String type = disguise.getVar1();
 			entity = new EntityItem(EntityTypes.ITEM, world);
-			((EntityItem)entity).setItemStack(new net.minecraft.server.v1_14_R1.ItemStack(Item.getById(id > 0 ? id : 1), 1, data));*/
-			
+			((EntityItem)entity).setItemStack(new net.minecraft.server.v1_14_R1.ItemStack(IRegistry.ITEM.get(new MinecraftKey(type)), 1));
+			IRegistry.ITEM.get(new MinecraftKey(type));
 		}
 		
 		if (entity != null) {
@@ -503,7 +500,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					PacketType.Play.Server.PLAYER_INFO,
 					PacketType.Play.Server.ENTITY_EQUIPMENT,
 					PacketType.Play.Server.REL_ENTITY_MOVE,
-					PacketType.Play.Server.ENTITY_MOVE_LOOK,
+					PacketType.Play.Server.REL_ENTITY_MOVE_LOOK,
 					PacketType.Play.Server.ENTITY_LOOK,
 					PacketType.Play.Server.ENTITY_METADATA,
 					PacketType.Play.Server.ENTITY_TELEPORT,
@@ -756,7 +753,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				//list.add(packetinfo.new PlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list); disguised.getWorld().getEnvironment();
-				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(getNMSEquivalent(disguised.getWorld().getEnvironment()), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
+				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(IRegistry.DIMENSION_TYPE.get(new MinecraftKey(disguised.getWorld().getEnvironment().name())), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
 				List<AttributeInstance> l = new ArrayList<AttributeInstance>();
 				AttributeInstance a = ((CraftPlayer)disguised).getHandle().getAttributeInstance(GenericAttributes.MAX_HEALTH);
 				if (a != null) {
@@ -784,15 +781,40 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		}
 	}
 	
-	private DimensionManager getNMSEquivalent(org.bukkit.World.Environment type) {
-		if (type == org.bukkit.World.Environment.NORMAL) {
-			return DimensionManager.OVERWORLD;
-		} else if (type == org.bukkit.World.Environment.NETHER) {
-			return DimensionManager.NETHER;
-		} else if (type == org.bukkit.World.Environment.THE_END) {
-			return DimensionManager.THE_END;
-		} else
-			return null;
+	private int getRabbitType(String str) {
+		switch (str) {
+			case "brown":
+				return 0;
+			case "white":
+				return 1;
+			case "black":
+				return 2;
+			case "black_and_white":
+				return 3;
+			case "gold":
+				return 4;
+			case "salt_and_pepper":
+				return 5;
+			case "the_killer_bunny":
+				return 99;
+			default:
+				return 0;
+		}
+	}
+	
+	private int getLlamaType(String str) {
+		switch (str) {
+			case "creamy":
+				return 0;
+			case "white":
+				return 1;
+			case "brown":
+				return 2;
+			case "gray":
+				return 3;
+			default:
+				return 0;
+		}
 	}
 	
 	private List<Packet<?>> getPacketsToSend(Player disguised, DisguiseSpell.Disguise disguise, Entity entity) {

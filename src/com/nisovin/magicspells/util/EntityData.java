@@ -2,21 +2,21 @@ package com.nisovin.magicspells.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import com.nisovin.magicspells.MagicSpells;
 
+// TODO add 1.9+ mobs
 public class EntityData {
 
 	private EntityType entityType;
 	private boolean flag = false;
-	private int var1 = 0;
-	private int var2 = 0;
+	private String var1 = "";
+	private String var2 = "";
 	private int var3 = 0;
 	
 	public EntityData(String type) {		
@@ -31,31 +31,52 @@ public class EntityData {
 			
 		// zombie villager
 		} else if (type.toLowerCase().startsWith("zombie ")) {
-			String prof = type.toLowerCase().replace("zombie ", "");
-			if (prof.matches("^[0-5]$")) {
-				var1 = Integer.parseInt(prof);
-			} else if (prof.toLowerCase().startsWith("green")) {
-				var1 = 5;
+			String[] split = type.toLowerCase().split(" ");
+			String prof = split[1];
+			String biome = split[2];
+			if (prof.toLowerCase().startsWith("green")) {
+				var1 = "nitwit";
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var1 = getIdFromProfession(prof.toUpperCase());
+					var1 = prof;
 				} catch (Exception e) {
 					MagicSpells.error("Invalid zombie profession: " + prof);
+					var1 = "none";
 				}
 			}
+			
+			try {
+				Villager.Type.valueOf(biome.toUpperCase());
+				var2 = biome;
+			} catch (Exception e) {
+				MagicSpells.error("Invalid village biome: " + biome);
+				var2 = "plains";
+			}
+			
 			type = "zombie_villager";
 		} else if (type.toLowerCase().endsWith(" zombie")) {
-			String prof = type.toLowerCase().replace(" zombie", "");
+			String[] split = type.toLowerCase().split(" ");
+			String prof = split[0];
+			String biome = split[1];
 			if (prof.toLowerCase().startsWith("green")) {
-				var1 = 5;
+				var1 = "nitwit";
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var1 = getIdFromProfession(prof.toUpperCase());
+					var1 = prof;
 				} catch (Exception e) {
 					MagicSpells.error("Invalid zombie profession: " + prof);
+					var1 = "none";
 				}
+			}
+
+			try {
+				Villager.Type.valueOf(biome.toUpperCase());
+				var2 = biome;
+			} catch (Exception e) {
+				MagicSpells.error("Invalid village biome: " + biome);
+				var2 = "plains";
 			}
 			type = "zombie_villager";
 			
@@ -66,42 +87,62 @@ public class EntityData {
 			
 		// villager
 		} else if (type.toLowerCase().startsWith("villager ")) {
-			String prof = type.toLowerCase().replace("villager ", "");
-			if (prof.matches("^[0-5]$")) {
-				var1 = Integer.parseInt(prof);
-			} else if (prof.toLowerCase().startsWith("green")) {
-				var1 = 5;
+			String[] split = type.toLowerCase().split(" ");
+			String prof = split[1];
+			String biome = split[2];
+			if (prof.toLowerCase().startsWith("green")) {
+				var1 = "nitwit";
 			} else {
 				try {
 					Villager.Profession.valueOf(prof.toUpperCase());
-					var1 = getIdFromProfession(prof.toUpperCase());
+					var1 = prof;
+				} catch (Exception e) {
+					MagicSpells.error("Invalid villager profession: " + prof);
+					var1 = "none";
+				}
+			}
+
+			try {
+				Villager.Type.valueOf(biome.toUpperCase());
+				var2 = biome;
+			} catch (Exception e) {
+				MagicSpells.error("Invalid village biome: " + biome);
+				var2 = "plains";
+			}
+			type = "villager";
+		} else if (type.toLowerCase().endsWith(" villager")) {
+			String[] split = type.toLowerCase().split(" ");
+			String prof = split[1];
+			String biome = split[2];
+			if (prof.toLowerCase().startsWith("green")) {
+				var1 = "nitwit";
+			} else {
+				try {
+					Villager.Profession.valueOf(prof.toUpperCase());
+					var1 = prof;
 				} catch (Exception e) {
 					MagicSpells.error("Invalid villager profession: " + prof);
 				}
 			}
-			type = "villager";
-		} else if (type.toLowerCase().endsWith(" villager")) {
-			String prof = type.toLowerCase().replace(" villager", "");
-			if (prof.toLowerCase().startsWith("green")) {
-				var1 = 5;
-			} else {
-				try {
-					Villager.Profession.valueOf(prof.toUpperCase());
-					var1 = getIdFromProfession(prof.toUpperCase());
-				} catch (Exception e) {
-					MagicSpells.error("Invalid villager profession: " + prof);
-				}
+
+			try {
+				Villager.Type.valueOf(biome.toUpperCase());
+				var2 = biome;
+			} catch (Exception e) {
+				MagicSpells.error("Invalid village biome: " + biome);
+				var2 = "plains";
 			}
 			type = "villager";
 			
 		// sheep
 		} else if (type.toLowerCase().endsWith(" sheep")) {
-			String color = type.toLowerCase().replace(" sheep", "");
+			String color = type.toLowerCase().replace(" sheep", "").replace(" ", "_");
 			if (color.equalsIgnoreCase("random")) {
-				var1 = -1;
+				var1 = "random";
 			} else {
 				try {
-					var1 = getIdFromDyeColor(color.toUpperCase().replace(" ", "_"));
+					DyeColor.valueOf(color.toUpperCase());
+					var1 = color;
 				} catch (IllegalArgumentException e) {
 					MagicSpells.error("Invalid sheep color: " + color);
 				}
@@ -110,43 +151,46 @@ public class EntityData {
 			
 		// rabbit
 		} else if (type.toLowerCase().endsWith(" rabbit")) {
-			String rabbitType = type.toLowerCase().replace(" rabbit", "");
-			var1 = 0;
-			if (rabbitType.equals("white")) {
-				var1 = 1;
-			} else if (rabbitType.equals("black")) {
-				var1 = 2;
-			} else if (rabbitType.equals("blackwhite")) {
-				var1 = 3;
-			} else if (rabbitType.equals("gold")) {
-				var1 = 4;
+			String rabbitType = type.toLowerCase().replace(" rabbit", "").replace(' ', '_');
+			if (rabbitType.equals("blackwhite")) {
+				rabbitType = "black_and_white";
 			} else if (rabbitType.equals("saltpepper")) {
-				var1 = 5;
+				rabbitType = "salt_and_pepper";
 			} else if (rabbitType.equals("killer")) {
-				var1 = 99;
+				rabbitType = "the_killer_rabbit";
+			}
+			try {
+				Rabbit.Type.valueOf(rabbitType.toUpperCase());
+				var1 = rabbitType;
+			} catch (IllegalArgumentException e) {
+				MagicSpells.error("Invalid rabbit type: " + rabbitType);
 			}
 			type = "rabbit";
 			
 		// wolf
 		} else if (type.toLowerCase().startsWith("wolf ")) {
-			String color = type.toLowerCase().replace("wolf ", "");
+			String color = type.toLowerCase().replace("wolf ", "").replace(' ', '_');
+			var1 = "";
 			if (color.equals("angry")) {
-				var1 = -1;
-			} else if (color.matches("[0-9a-fA-F]+")) {
-				var1 = Integer.parseInt(color, 16);
+				var1 = color;
+			} else {
+				try {
+					DyeColor.valueOf(color.toUpperCase());
+					var1 = color;
+				} catch (IllegalArgumentException e) {
+					MagicSpells.error("Invalid collar color: " + color);
+				}
 			}
 			type = "wolf";
 		
 		// pig
 		} else if (type.toLowerCase().equalsIgnoreCase("saddled pig")) {
-			var1 = 1;
+			var1 = "saddled";
 			type = "pig";
 			
 		// horse
 		} else if (type.toLowerCase().contains("horse")) {
 			List<String> data = new ArrayList<String>(Arrays.asList(type.split(" ")));
-			var1 = 0;
-			var2 = 0;
 			if (data.get(0).equalsIgnoreCase("horse")) {
 				data.remove(0);
 				type = "horse";
@@ -163,9 +207,7 @@ public class EntityData {
 			}
 			while (data.size() > 0) {
 				String d = data.remove(0);
-				if (d.matches("^[0-9]+$")) {
-					var2 = Integer.parseInt(d);
-				} else if (d.equalsIgnoreCase("iron")) {
+				if (d.equalsIgnoreCase("iron")) {
 					var3 = 1;
 				} else if (d.equalsIgnoreCase("gold")) {
 					var3 = 2;
@@ -187,51 +229,80 @@ public class EntityData {
 		// different aliases
 		} else if (type.equalsIgnoreCase("dragon")) {
 			type = "ender_dragon";
-		} else if (type.toLowerCase().contains("ocelot")) {
-			type = type.toLowerCase().replace("ocelot", "ozelot");
 		} else if (type.equalsIgnoreCase("snowgolem")) {
 			type = "snowman";
 			
 		// block and item
 		} else if (type.toLowerCase().startsWith("block") || type.toLowerCase().startsWith("fallingblock")) {
-			String data = type.split(" ")[1];
-			if (data.contains(":")) {
-				String[] subdata = data.split(":");
-				var1 = Integer.parseInt(subdata[0]);
-				var2 = Integer.parseInt(subdata[1]);
-			} else {
-				var1 = Integer.parseInt(data);
+			String data = type.split(" ")[1].replace(' ', '_');
+			try {
+				if (Material.valueOf(data.toUpperCase()).isBlock()) {
+					var1 = data;
+				} else {
+					throw new IllegalArgumentException();
+				}
+			} catch (IllegalArgumentException e) {
+				MagicSpells.error("Invalid block type: " + data);
 			}
 			type = "falling_block";
 		} else if (type.toLowerCase().startsWith("item")) {
-			String data = type.split(" ")[1];
-			if (data.contains(":")) {
-				String[] subdata = data.split(":");
-				var1 = Integer.parseInt(subdata[0]);
-				var2 = Integer.parseInt(subdata[1]);
-			} else {
-				var1 = Integer.parseInt(data);
+			String data = type.split(" ")[1].replace(' ', '_');
+			try {
+				Material.valueOf(data.toUpperCase());
+				var1 = data;
+			} catch (IllegalArgumentException e) {
+				MagicSpells.error("Invalid item type: " + data);
 			}
 			type = "item";
 		}
 		
-		// ocelot types
-		if (type.toLowerCase().matches("ozelot [0-3]")) {
-			var1 = Integer.parseInt(type.split(" ")[1]);
-			type = "ozelot";
-		} else if (type.toLowerCase().equals("ozelot random") || type.toLowerCase().equals("random ozelot")) {
-			var1 = -1;
-			type = "ozelot";
+		// cats
+		if (type.toLowerCase().startsWith("cat ")) {
+			String[] data = type.toLowerCase().replace("cat ", "").split(" ");
+			String catType = data[0];
+			
+			if (catType.equals("allblack")) {
+				catType = "all_black";
+			
+			} else if (catType.equals("britishshorthair") || catType.equals("british")) {
+				catType = "british_shorthair";
+			}
+			
+			String color = "red";
+			if (data.length > 1) {
+				color = data[1];
+			}
+			
+			// cat type
+			if (catType.equals("random")) {
+				var1 = "random";
+			} else {
+				try {
+					Cat.Type.valueOf(catType.toUpperCase());
+					var1 = catType;
+				} catch (IllegalArgumentException e) {
+					MagicSpells.error("Invalid cat type: " + catType);
+				}
+			}
+			
+			try {
+				DyeColor.valueOf(color.toUpperCase());
+				var2 = color;
+			} catch (IllegalArgumentException e) {
+				MagicSpells.error("Invalid collar color: " + color);
+			}
+			
+			type = "cat";
 		}
 		
 		// slime and magma cube size
 		if (type.equals("slime") || type.equals("lavaslime")) {
-			var1 = 1;
+			var1 = "1";
 		} else if (type.startsWith("slime") || type.startsWith("magmacube") || type.startsWith("lavaslime")) {
 			String[] data = type.split(" ");
 			type = data[0];
 			if (type.equals("magmacube")) type = "lavaslime";
-			var1 = Integer.parseInt(data[1]);
+			var1 = data[1];
 		}
 		
 		// parse entity type
@@ -254,11 +325,11 @@ public class EntityData {
 		return flag;
 	}
 	
-	public int getVar1() {
+	public String getVar1() {
 		return var1;
 	}
 	
-	public int getVar2() {
+	public String getVar2() {
 		return var2;
 	}
 	
@@ -274,122 +345,46 @@ public class EntityData {
 		if (entityType == EntityType.ZOMBIE) {
 			((Zombie)entity).setBaby(flag);
 		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
-			if (var1 == 0) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.FARMER);
-			} else if (var1 == 1) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.LIBRARIAN);
-			} else if (var1 == 2) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.CLERIC);
-			} else if (var1 == 3) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.TOOLSMITH);
-			} else if (var1 == 4) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.BUTCHER);
-			} else if (var1 == 5) {
-				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.NITWIT);
-			} // TODO: add other professions
+			if (var1.equals("random")) {
+				
+			} else {
+				((ZombieVillager)entity).setVillagerProfession(Villager.Profession.valueOf(var1.toUpperCase()));
+			}
 		} else if (entityType == EntityType.CREEPER) {
 			if (flag) {
 				((Creeper)entity).setPowered(true);
 			}
 		} else if (entityType == EntityType.WOLF) {
-			if (var1 == -1) {
+			if (var1.equals("angry")) {
 				((Wolf)entity).setAngry(true);
 			}
-		} else if (entityType == EntityType.OCELOT) {
-			if (var1 == 0) {
-				((Ocelot)entity).setCatType(Ocelot.Type.WILD_OCELOT);
-			} else if (var1 == 1) {
-				((Ocelot)entity).setCatType(Ocelot.Type.BLACK_CAT);
-			} else if (var1 == 2) {
-				((Ocelot)entity).setCatType(Ocelot.Type.RED_CAT);
-			} else if (var1 == 3) {
-				((Ocelot)entity).setCatType(Ocelot.Type.SIAMESE_CAT);
-			} // TODO: change to cat
-		} else if (entityType == EntityType.VILLAGER) {
-			if (var1 == 0) {
-				((Villager)entity).setProfession(Villager.Profession.FARMER);
-			} else if (var1 == 1) {
-				((Villager)entity).setProfession(Villager.Profession.LIBRARIAN);
-			} else if (var1 == 2) {
-				((Villager)entity).setProfession(Villager.Profession.CLERIC);
-			} else if (var1 == 3) {
-				((Villager)entity).setProfession(Villager.Profession.TOOLSMITH);
-			} else if (var1 == 4) {
-				((Villager)entity).setProfession(Villager.Profession.BUTCHER);
-			} else if (var1 == 5) {
-				((Villager)entity).setProfession(Villager.Profession.NITWIT);
-			} // TODO: add other professions
-		} else if (entityType == EntityType.SLIME) {
-			((Slime)entity).setSize(var1);
-		} else if (entityType == EntityType.MAGMA_CUBE) {
-			((MagmaCube)entity).setSize(var1);
-		} else if (entityType == EntityType.PIG) {
-			((Pig)entity).setSaddle(var1 == 1);
-		} else if (entityType == EntityType.SHEEP) {
-			DyeColor c = getDyeColorFromId(var1);
-			if (c != null) {
-				((Sheep)entity).setColor(c);
+		} else if (entityType == EntityType.CAT) {
+			if (var1.equals("random")) {
+				
+			} else {
+				((Cat)entity).setCatType(Cat.Type.valueOf(var1.toUpperCase()));
 			}
+		} else if (entityType == EntityType.VILLAGER) {
+			if (var1.equals("random")) {
+				
+			} else {
+				((Villager)entity).setProfession(Villager.Profession.valueOf(var1.toUpperCase()));
+			}
+		} else if (entityType == EntityType.SLIME) {
+			((Slime)entity).setSize(Integer.parseInt(var1));
+		} else if (entityType == EntityType.MAGMA_CUBE) {
+			((MagmaCube)entity).setSize(Integer.parseInt(var1));
+		} else if (entityType == EntityType.PIG) {
+			((Pig)entity).setSaddle(var1.equals("saddled"));
+		} else if (entityType == EntityType.SHEEP) {
+			((Sheep)entity).setColor(DyeColor.valueOf(var1.toUpperCase()));
 		} else if (entityType == EntityType.RABBIT) {
-			if (var1 == 0) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.BROWN);
-			} else if (var1 == 1) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.WHITE);
-			} else if (var1 == 2) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.BLACK);
-			} else if (var1 == 3) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.BLACK_AND_WHITE);
-			} else if (var1 == 4) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.GOLD);
-			} else if (var1 == 5) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.SALT_AND_PEPPER);
-			} else if (var1 == 99) {
-				((Rabbit)entity).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
+			if (var1.equals("random")) {
+				
+			} else {
+				((Rabbit)entity).setRabbitType(Rabbit.Type.valueOf(var1.toUpperCase()));
 			}
 		}
 		return entity;
-	}
-	
-	private int getIdFromProfession(String prof) {
-		switch (prof) {
-		case "FARMER":
-			return 0;
-		case "LIBRARIAN":
-			return 1;
-		case "PRIEST":
-			return 2;
-		case "BLACKSMITH":
-			return 3;
-		case "BUTCHER":
-			return 4;
-		case "NITWIT":
-			return 5;
-		default:
-			return 0;
-		}
-	}
-	
-	private int getIdFromDyeColor(String color) {
-		Map<DyeColor, Integer> colors = new HashMap<DyeColor, Integer>();
-
-		int i = 0;
-		for (DyeColor c : DyeColor.values()) {
-			colors.put(c, i);
-			i++;
-		}
-		
-		return colors.get(DyeColor.valueOf(color));
-	}
-	
-	private DyeColor getDyeColorFromId(int id) {
-		Map<Integer, DyeColor> colors = new HashMap<Integer, DyeColor>();
-		
-		int i = 0;
-		for (DyeColor c : DyeColor.values()) {
-			colors.put(i, c);
-			i++;
-		}
-		
-		return colors.get(id);
 	}
 }

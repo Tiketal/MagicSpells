@@ -6,12 +6,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.bukkit.Axis;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Levelled;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.Orientable;
+import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.type.Farmland;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -23,10 +32,12 @@ public class MagicItemNameResolver implements ItemNameResolver {
 	Random rand = new Random();
 	
 	public MagicItemNameResolver() {
+		// associate string name with Material enum
 		for (Material mat : Material.values()) {
 			materialMap.put(mat.name().toLowerCase(), mat);
 		}
 		
+		// load item aliases
 		File file = new File(MagicSpells.getInstance().getDataFolder(), "itemnames.yml");
 		if (!file.exists()) {
 			MagicSpells.getInstance().saveResource("itemnames.yml", false);
@@ -44,6 +55,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			e.printStackTrace();
 		}
 		
+		// add underscore-less aliases
 		Map<String, Material> toAdd = new HashMap<String, Material>();
 		for (String s : materialMap.keySet()) {
 			if (s.contains("_")) {
@@ -53,20 +65,33 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		materialMap.putAll(toAdd);
 	}
 	
+	/**
+	 * Parses and resolves strings of the form {@literal <material name>}[:data]
+	 * @param string
+	 * @return
+	 */
 	@Override
 	public ItemTypeAndData resolve(String string) {
 		if (string == null || string.isEmpty()) return null;
 		ItemTypeAndData item = new ItemTypeAndData();
+		
+		// parse data elements if they exist
 		if (string.contains(":")) {
 			String[] split = string.split(":");
+			
+			// index 0 is always the material name
 			Material mat = Material.getMaterial(split[0].toUpperCase());
 			if (mat == null) return null;
 			item.type = mat;
+			
+			// data is always numeric TODO: add support for non-numeric
 			if (split[1].matches("[0-9]+")) {
 				item.data = Short.parseShort(split[1]);
 			} else {
 				return null;
 			}
+			
+		// no data
 		} else {
 			Material mat = Material.getMaterial(string.toUpperCase());
 			if (mat == null) return null;
@@ -75,11 +100,23 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		return item;
 	}
 	
+	private static Pattern pattern = Pattern.compile(
+			"([\\w|\\*]+)(?:\\((\\w+:\\w+(?:,\\w+:\\w+)*)\\))*", // ([\w|\*]+)(?:\((\w+:\w+(?:,\w+:\w+)*)\))*
+			Pattern.CASE_INSENSITIVE
+			);
+	
+	/**
+	 * Parses and resolves strings of the form 
+	 * {@literal <material name>}{(state:data{,state:data}*)}?
+	 * @param string
+	 * @return MagicMaterial equivalent
+	 */
 	@Override
 	public MagicMaterial resolveItem(String string) {
 		if (string == null || string.isEmpty()) return null;
 		
-		// first check for predefined material datas
+		
+		// first check for predefined material datas - UNUSED
 		/*MaterialData matData = materialDataMap.get(string.toLowerCase());
 		if (matData != null) {
 			if (matData.getItemType().isBlock()) {
@@ -89,33 +126,28 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			}
 		}*/
 		
-		// split type and data
-		// <type>:<data> or <type> <data>
-		String stype;
-		String sdata;
-		if (string.contains(":")) {
-			String[] split = string.split(":", 2);
-			stype = split[0].toLowerCase();
-			sdata = split[1].toLowerCase();
-		} else if (string.contains(" ")) {
-			String[] split = string.split(" ", 2);
-			sdata = split[0].toLowerCase();
-			stype = split[1].toLowerCase();
-		} else {
-			stype = string.toLowerCase();
-			sdata = "";
-		}
+		Matcher matcher = pattern.matcher(string);
+		if (!matcher.matches()) return null;
 		
+		// split type and data
+		String stype = matcher.group(1).toLowerCase();
+		String sdata = matcher.group(2); // can be null if empty
+		if (sdata == null) sdata = "";
+		
+		// check for correct material
 		Material type = materialMap.get(stype);
 		if (type == null) {
 			return null;
 		}
 		
+		// create MagicMaterial equivalent
 		if (type.isBlock()) {
 			return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
 		} else {
 			
 //TODO			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
+			
+			// items with durability/data values
 			short durability = 0;
 			try {
 				durability = Short.parseShort(sdata);
@@ -124,41 +156,45 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		}
 	}
 	
+	/**
+	 * Parses and resolves strings of the form
+	 * {@literal <material name>}{(state:data{,state:data}*)}?
+	 * @param string
+	 * @return MagicMaterial equivalent
+	 */
 	@Override
 	public MagicMaterial resolveBlock(String string) {
 		if (string == null || string.isEmpty()) return null;
 		
+		// random blocks
 		if (string.contains("|")) {
 			return resolveRandomBlock(string);
 		}
 		
-		String stype;
-		String sdata;
-		if (string.contains(":")) {
-			String[] split = string.split(":", 2);
-			stype = split[0].toLowerCase();
-			sdata = split[1];
-		} else {
-			stype = string.toLowerCase();
-			sdata = "";
-		}
+		Matcher matcher = pattern.matcher(string);
+		if (!matcher.matches()) return null;
 		
+		// split type and data
+		String stype = matcher.group(1).toLowerCase();
+		String sdata = matcher.group(2); // can be null if empty
+		if (sdata == null) sdata = "";
+		
+		// wildcards ex: *_log or *_wood TODO
+		
+		
+		// check for correct material
 		Material type = materialMap.get(stype);
 		if (type == null) {
 			return null;
 		}
-		
+
+		// create MagicMaterial
 		if (type.isBlock()) {
-			if (sdata.equals("*")) {
-// TODO ex: *_log, *_wood
-			} else {
-				return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
-			}
+			return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
 		} else {
 			return null;
 		}
 		
-		return null;
 	}
 	
 	private MagicMaterial resolveRandomBlock(String string) {
@@ -196,16 +232,85 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		}
 	}*/
 	
-	// TODO
+	/**
+	 * Parse block data if applicable
+	 * @param type
+	 * @param data in the form: state:data{,state:data}*
+	 * @return
+	 */
 	private BlockData resolveBlockData(Material type, String data) {
 		BlockData bd = type.createBlockData();
+		if (data.isEmpty()) return bd;
 		
-		if (bd instanceof Orientable) {
+		// parse data
+		String[] split = data.split(",");
+		String[] args = null;
+		
+		for (String tag : split) {
+			args = tag.split(":");
 			
-		} else if (bd instanceof Directional) {
-			
-		} else if (bd instanceof Ageable) {
-			
+			try {
+				if (args[0].equalsIgnoreCase("age") 
+						&& bd instanceof Ageable) {
+					
+					int arg1 = Integer.parseInt(split[1]);
+					((Ageable)bd).setAge(arg1);
+					
+				} else if ((args[0].equalsIgnoreCase("orientation") 
+						|| args[0].equalsIgnoreCase("orient") 
+						|| args[0].equalsIgnoreCase("direction")
+						|| args[0].equalsIgnoreCase("dir"))) {
+
+					BlockFace dir = BlockFace.valueOf(args[1].toUpperCase());
+					if (bd instanceof Directional) {
+						((Directional)bd).setFacing(dir);
+						
+					} else if (bd instanceof Orientable) {
+						if (dir == BlockFace.UP || dir == BlockFace.DOWN) {
+							((Orientable)bd).setAxis(Axis.Y);
+							
+						} else if (dir == BlockFace.EAST || dir == BlockFace.WEST) {
+							((Orientable)bd).setAxis(Axis.X);
+							
+						} else if (dir == BlockFace.NORTH || dir == BlockFace.SOUTH) {
+							((Orientable)bd).setAxis(Axis.Z);
+							
+						}
+					}
+					
+				} else if (args[0].equalsIgnoreCase("level")
+						&& bd instanceof Levelled) {
+					int lvl = Integer.parseInt(args[1]);
+					((Levelled)bd).setLevel(lvl);
+					
+				} else if ((args[0].equalsIgnoreCase("lit") || args[0].equalsIgnoreCase("light"))
+						&& bd instanceof Lightable) {
+					boolean lit = Boolean.parseBoolean(args[1]);
+					((Lightable)bd).setLit(lit);
+					
+				} else if ((args[0].equalsIgnoreCase("water") || args[0].equalsIgnoreCase("waterlogged"))
+						&& bd instanceof Waterlogged) {
+					boolean water = Boolean.parseBoolean(args[1]);
+					((Waterlogged)bd).setWaterlogged(water);;
+				
+				} else if (args[0].equalsIgnoreCase("moisture")
+						&& bd instanceof Farmland) {
+					int moisture = Integer.parseInt(args[1]);
+					((Farmland)bd).setMoisture(moisture);
+					
+				} else if ((args[0].equalsIgnoreCase("powered") || args[0].equalsIgnoreCase("power"))
+						&& bd instanceof Powerable) {
+					boolean powered = Boolean.parseBoolean(args[1]);
+					((Powerable)bd).setPowered(powered);
+					
+				} else {
+					// error message: invalid tag
+					MagicSpells.error("Invalid block data: " + tag);
+				}
+			} catch (Exception e) {
+				// error message: invalid tag
+				MagicSpells.error("Invalid block data: " + tag);
+			}
 		}
 		
 		return bd;

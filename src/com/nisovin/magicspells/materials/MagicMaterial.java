@@ -3,6 +3,7 @@ package com.nisovin.magicspells.materials;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -29,27 +30,14 @@ public abstract class MagicMaterial {
 	public abstract ItemStack toItemStack(int quantity);
 	
 	public final boolean equals(Block block) {
-		return equals(block.getState().getData());
+		return getMaterial() == block.getType() && equals(block.getState().getBlockData());
 	}
 	
-	/*public boolean equals(MaterialData matData) {
-		MaterialData d = getMaterialData();
-		if (d != null) {
-			return d.equals(matData);
-		} else {
-			return false;
-		}
-	}*/
-	
-	/*public boolean equals(ItemStack itemStack) {
-		MaterialData d = getMaterialData();
-		if (d != null) {
-			ItemStack i = d.toItemStack();
-			return i.getType() == itemStack.getType() && i.getDurability() == itemStack.getDurability();
-		} else {
-			return false;
-		}
-	}*/
+	public boolean equals(BlockData data) {
+		return (this instanceof MagicBlockMaterial)
+				? ((MagicBlockMaterial)this).getBlockData().equals(data)
+				: false;
+	}
 	
 	public boolean equals(ItemStack itemStack) {
 		boolean result = itemStack.getType() == type;

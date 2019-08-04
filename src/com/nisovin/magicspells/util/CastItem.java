@@ -9,6 +9,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.MagicSpells;
 
@@ -43,7 +44,7 @@ public class CastItem {
 			if (this.type == Material.AIR || MagicSpells.ignoreCastItemDurability(type)) {
 				this.data = 0;
 			} else {
-				this.data = item.getDurability();
+				this.data = (short)((Damageable)item.getItemMeta()).getDamage();
 			}
 			if (this.type != Material.AIR && !MagicSpells.ignoreCastItemNames() && item.hasItemMeta()) {
 				ItemMeta meta = item.getItemMeta();
@@ -111,7 +112,10 @@ public class CastItem {
 	}
 	
 	public boolean equals(ItemStack i) {
-		return i.getType() == type && i.getDurability() == data && (MagicSpells.ignoreCastItemNames() || namesEqual(i)) && (MagicSpells.ignoreCastItemEnchants() || compareEnchants(this.enchants, i.getEnchantments()));
+		return i.getType() == type && 
+				((i.getItemMeta() instanceof Damageable)
+				? ((Damageable)i.getItemMeta()).getDamage() == data
+				: true) && (MagicSpells.ignoreCastItemNames() || namesEqual(i)) && (MagicSpells.ignoreCastItemEnchants() || compareEnchants(this.enchants, i.getEnchantments()));
 	}
 	
 	private boolean namesEqual(ItemStack i) {

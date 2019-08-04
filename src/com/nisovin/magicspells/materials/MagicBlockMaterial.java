@@ -13,7 +13,7 @@ public class MagicBlockMaterial extends MagicMaterial {
 	
 	public MagicBlockMaterial(Material type, BlockData data) {
 		this.type = type;
-		this.data = data;
+		this.data = data.clone();
 	}
 	
 	public MagicBlockMaterial(Material type) {
@@ -31,15 +31,28 @@ public class MagicBlockMaterial extends MagicMaterial {
 		state.setBlockData(getBlockData());
 		state.update(true, applyPhysics);
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public FallingBlock spawnFallingBlock(Location location) {
-		return location.getWorld().spawnFallingBlock(location, getMaterial(), (byte)0);
+		return location.getWorld().spawnFallingBlock(location, getBlockData());
 	}
 
 	@Override
 	public ItemStack toItemStack(int quantity) {
 		return new ItemStack(type, quantity);
+	}
+	
+	public boolean equals(BlockData data) {
+		return this.data.equals(data);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof MagicBlockMaterial) {
+			MagicBlockMaterial m = (MagicBlockMaterial)o;
+			return this.getMaterial() == m.getMaterial() && this.data.equals(data);
+		} else {
+			return false;
+		}
 	}
 }

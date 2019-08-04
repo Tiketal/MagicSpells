@@ -2,6 +2,7 @@ package com.nisovin.magicspells.materials;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,6 +19,12 @@ public class MagicItemWithNameMaterial extends MagicMaterial {
 	@Override
 	public Material getMaterial() {
 		return material.getMaterial();
+	}
+	
+	public BlockData getBlockData() {
+		return (material instanceof MagicBlockMaterial)
+				? ((MagicBlockMaterial)material).getBlockData()
+				: null;
 	}
 
 	@Override
@@ -41,7 +48,10 @@ public class MagicItemWithNameMaterial extends MagicMaterial {
 	public boolean equals(Object o) {
 		if (o instanceof MagicItemWithNameMaterial) {
 			MagicItemWithNameMaterial m = (MagicItemWithNameMaterial)o;
-			return m.getMaterial().equals(getMaterial()) && m.name.equals(name);
+			return m.getMaterial() == getMaterial() && m.name.equals(name)
+					&& (m.getBlockData() == null) 
+					? getBlockData() == null
+					: m.getBlockData().equals(getBlockData());
 		}
 		return false;
 	}

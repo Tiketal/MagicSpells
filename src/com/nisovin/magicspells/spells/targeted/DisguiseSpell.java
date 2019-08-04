@@ -20,9 +20,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -199,8 +199,9 @@ public class DisguiseSpell extends TargetedSpell implements TargetedEntitySpell 
 	}
 	
 	@EventHandler
-	public void onPickup(PlayerPickupItemEvent event) {
-		if (preventPickups && disguised.containsKey(event.getPlayer().getName().toLowerCase())) {
+	public void onPickup(EntityPickupItemEvent event) {
+		if (event.getEntity() instanceof Player 
+				&& preventPickups && disguised.containsKey(((Player)event.getEntity()).getName().toLowerCase())) {
 			event.setCancelled(true);
 		}
 	}
@@ -289,15 +290,14 @@ public class DisguiseSpell extends TargetedSpell implements TargetedEntitySpell 
 		private boolean disguiseSelf;
 		private boolean ridingBoat;
 		private boolean flag;
-		private int var1;
-		private int var2;
+		private String var1;
+		private String var2;
 		private int var3;
-		private String var4;
 		private DisguiseSpell spell;
 		
 		private int taskId;
 		
-		public Disguise(Player player, EntityType entityType, String nameplateText, PlayerDisguiseData playerDisguiseData, boolean alwaysShowNameplate, boolean disguiseSelf, boolean ridingBoat, boolean flag, int var1, int var2, int var3, int duration, DisguiseSpell spell) {
+		public Disguise(Player player, EntityType entityType, String nameplateText, PlayerDisguiseData playerDisguiseData, boolean alwaysShowNameplate, boolean disguiseSelf, boolean ridingBoat, boolean flag, String var1, String var2, int var3, int duration, DisguiseSpell spell) {
 			this.player = player;
 			this.entityType = entityType;
 			this.nameplateText = nameplateText;
@@ -347,11 +347,11 @@ public class DisguiseSpell extends TargetedSpell implements TargetedEntitySpell 
 			return flag;
 		}
 		
-		public int getVar1() {
+		public String getVar1() {
 			return var1;
 		}
 		
-		public int getVar2() {
+		public String getVar2() {
 			return var2;
 		}
 		

@@ -63,7 +63,7 @@ public class VariableManager implements Listener {
 						objective.unregister();
 						objective = null;
 					}
-					objective = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(objName, objName);
+					objective = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(objName, objName, objName);
 					objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', scoreName));
 					if (scorePos.equalsIgnoreCase("nameplate")) {
 						objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
@@ -75,8 +75,8 @@ public class VariableManager implements Listener {
 				}
 				
 				String bossBar = section.getString(var + ".boss-bar", null);
-				String barColor = section.getString(var + ".bar-color", "PURPLE");
-				String barStyle = section.getString(var + ".bar-style", "SOLID");
+				String barColor = section.getString(var + ".bar-color", "Purple");
+				String barStyle = section.getString(var + ".bar-style", "Solid");
 				
 				boolean expBar = section.getBoolean(var + ".exp-bar", false);
 				variable.init(def, min, max, perm, objective, bossBar, barColor, barStyle, expBar);
