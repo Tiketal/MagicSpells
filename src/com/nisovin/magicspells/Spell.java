@@ -1190,7 +1190,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		if (healthCost != 0) {
 			double h = player.getHealth() - healthCost;
 			if (h < 0) h = 0;
-			if (h > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue()) h = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
+			if (h > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) h = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			player.setHealth(h);
 		}
 		if (manaCost != 0) {

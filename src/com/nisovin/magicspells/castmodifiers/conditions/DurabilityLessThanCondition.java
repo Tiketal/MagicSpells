@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.castmodifiers.Condition;
 
@@ -25,6 +26,8 @@ public class DurabilityLessThanCondition extends Condition {
 				slot = 2;
 			} else if (data[0].equalsIgnoreCase("boots")) {
 				slot = 3;
+			} else if (data[0].equalsIgnoreCase("offhand")) {
+				slot = 4;
 			} else {
 				slot = -1;
 			}
@@ -38,7 +41,7 @@ public class DurabilityLessThanCondition extends Condition {
 	public boolean check(Player player) {
 		ItemStack item = null;
 		if (slot == -1) {
-			item = player.getItemInHand();
+			item = player.getInventory().getItemInMainHand();
 		} else if (slot == 0) {
 			item = player.getInventory().getHelmet();
 		} else if (slot == 1) {
@@ -47,11 +50,13 @@ public class DurabilityLessThanCondition extends Condition {
 			item = player.getInventory().getLeggings();
 		} else if (slot == 3) {
 			item = player.getInventory().getBoots();
+		} else if (slot == 4) {
+			item = player.getInventory().getItemInOffHand();
 		}
 		if (item != null) {
 			int max = item.getType().getMaxDurability();
 			if (max > 0) {
-				return max - item.getDurability() < durability;
+				return max - ((Damageable)item.getItemMeta()).getDamage() < durability;
 			}
 		} else {
 			return true;

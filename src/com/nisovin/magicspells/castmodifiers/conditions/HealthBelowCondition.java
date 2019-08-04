@@ -1,6 +1,7 @@
 package com.nisovin.magicspells.castmodifiers.conditions;
 
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -33,7 +34,7 @@ public class HealthBelowCondition extends Condition {
 	@Override
 	public boolean check(Player player, LivingEntity target) {
 		if (percent) {
-			return target.getHealth() / target.getMaxHealth() * 100 < health;
+			return target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 100 < health;
 		} else {
 			return target.getHealth() < health;
 		}

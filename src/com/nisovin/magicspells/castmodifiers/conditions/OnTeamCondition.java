@@ -20,7 +20,7 @@ public class OnTeamCondition extends Condition {
 
 	@Override
 	public boolean check(Player player) {
-		Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
+		Team team = Bukkit.getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
 		return team != null && team.getName().equals(teamName);
 	}
 

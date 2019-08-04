@@ -7,6 +7,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.castmodifiers.Condition;
 
@@ -90,7 +91,7 @@ public class HoldingCondition extends Condition {
 	private boolean check(ItemStack item) {
 		if (item == null) return false;
 		Material thismat = item == null ? Material.AIR : item.getType();
-		short thisdata = item == null ? 0 : item.getDurability();
+		short thisdata = item == null ? 0 : (short)((Damageable)item.getItemMeta()).getDamage();
 		String thisname = null;
 		try {
 			if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
