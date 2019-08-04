@@ -103,7 +103,7 @@ public class SpellbookSpell extends CommandSpell {
 					if (target == null || !spellbookBlock.equals(target)) {
 						// fail: must target a bookcase
 						sendMessage(player, strNoTarget);
-					} else if (bookLocations.contains(target.getLocation())) {
+					} else if (bookLocations.contains(new MagicLocation(target.getLocation()))) {
 						// fail: already a spellbook there
 						sendMessage(player, strHasSpellbook);
 					} else {
@@ -245,6 +245,7 @@ public class SpellbookSpell extends CommandSpell {
 					}
 				}
 			}
+			scanner.close();
 		} catch (FileNotFoundException e) {
 		} 
 	}

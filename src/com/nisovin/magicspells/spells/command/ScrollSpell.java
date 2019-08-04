@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -116,7 +117,7 @@ public class ScrollSpell extends CommandSpell {
 			}
 			
 			// get item in hand
-			ItemStack inHand = player.getItemInHand();
+			ItemStack inHand = player.getInventory().getItemInMainHand();
 			if (inHand.getAmount() != 1 || !itemType.equals(inHand)) {
 				// fail -- incorrect item in hand
 				sendMessage(player, strUsage);
@@ -159,7 +160,7 @@ public class ScrollSpell extends CommandSpell {
 			
 			// create scroll
 			inHand = createScroll(spell, uses, inHand);
-			player.setItemInHand(inHand);
+			player.getInventory().setItemInMainHand(inHand);
 			
 			// done
 			sendMessage(player, formatMessage(strCastSelf, "%s", spell.getName()));
@@ -172,7 +173,9 @@ public class ScrollSpell extends CommandSpell {
 		if (item == null) {
 			item = itemType.toItemStack(1);
 		}
-		item.setDurability((short)0);
+		if (item.getItemMeta() instanceof Damageable) {
+			((Damageable)item.getItemMeta()).setDamage(0);
+		}
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', strScrollName.replace("%s", spell.getName()).replace("%u", (uses>=0?uses+"":"many"))));
 		if (strScrollSubtext != null && !strScrollSubtext.isEmpty()) {
@@ -214,16 +217,18 @@ public class ScrollSpell extends CommandSpell {
 		if ((rightClickCast && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) ||
 			(leftClickCast && (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK))) {
 			Player player = event.getPlayer();
-			ItemStack inHand = player.getItemInHand();
+			ItemStack inHand = player.getInventory().getItemInMainHand();
 			if (itemType.getMaterial() != inHand.getType() || inHand.getAmount() > 1) return;
 			
 			// check for predefined scroll
-			if (inHand.getDurability() > 0 && predefinedScrollSpells != null) {
-				Spell spell = predefinedScrollSpells.get(Integer.valueOf(inHand.getDurability()));
+			if (((inHand.getItemMeta() instanceof Damageable) 
+					? ((Damageable)inHand.getItemMeta()).getDamage() > 0 
+					: false) && predefinedScrollSpells != null) {
+				Spell spell = predefinedScrollSpells.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
 				if (spell != null) {
-					int uses = predefinedScrollUses.get(Integer.valueOf(inHand.getDurability()));
+					int uses = predefinedScrollUses.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
 					inHand = createScroll(spell, uses, inHand);
-					player.setItemInHand(inHand);
+					player.getInventory().setItemInMainHand(inHand);
 				}
 			}
 			
@@ -270,13 +275,13 @@ public class ScrollSpell extends CommandSpell {
 					if (uses > 0) {
 						inHand = createScroll(spell, uses, inHand);
 						if (textContainsUses) {
-							player.setItemInHand(inHand);
+							player.getInventory().setItemInMainHand(inHand);
 						}
 					} else {
 						if (removeScrollWhenDepleted) {
-							player.setItemInHand(null);
+							player.getInventory().setItemInMainHand(null);
 						} else {
-							player.setItemInHand(itemType.toItemStack(1));
+							player.getInventory().setItemInMainHand(itemType.toItemStack(1));
 						}
 					}
 				}
@@ -295,10 +300,12 @@ public class ScrollSpell extends CommandSpell {
 		if (inHand == null || inHand.getType() != itemType.getMaterial()) return;
 		
 		// check for predefined scroll
-		if (inHand.getDurability() > 0 && predefinedScrollSpells != null) {
-			Spell spell = predefinedScrollSpells.get(Integer.valueOf(inHand.getDurability()));
+		if (((inHand.getItemMeta() instanceof Damageable) 
+				? ((Damageable)inHand.getItemMeta()).getDamage() > 0 
+				: false) && predefinedScrollSpells != null) {
+			Spell spell = predefinedScrollSpells.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
 			if (spell != null) {
-				int uses = predefinedScrollUses.get(Integer.valueOf(inHand.getDurability()));
+				int uses = predefinedScrollUses.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
 				inHand = createScroll(spell, uses, inHand);
 				player.getInventory().setItem(event.getNewSlot(), inHand);
 			}

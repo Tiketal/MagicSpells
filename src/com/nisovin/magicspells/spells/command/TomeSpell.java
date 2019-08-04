@@ -79,7 +79,7 @@ public class TomeSpell extends CommandSpell {
 				}
 			}
 			
-			ItemStack item = player.getItemInHand();
+			ItemStack item = player.getInventory().getItemInMainHand();
 			if (item.getType() != Material.WRITTEN_BOOK) {
 				// fail -- no book
 				sendMessage(player, strNoBook);
@@ -96,7 +96,7 @@ public class TomeSpell extends CommandSpell {
 					uses = Integer.parseInt(args[1]);
 				}
 				item = createTome(spell, uses, item);
-				player.setItemInHand(item);
+				player.getInventory().setItemInMainHand(item);
 			}
 		}
 		return PostCastAction.HANDLE_NORMALLY;
@@ -162,7 +162,7 @@ public class TomeSpell extends CommandSpell {
 				sendMessage(event.getPlayer(), formatMessage(strCantLearn, "%s", spell.getName()));
 			} else {
 				// call event
-				SpellLearnEvent learnEvent = new SpellLearnEvent(spell, event.getPlayer(), LearnSource.TOME, event.getPlayer().getItemInHand());
+				SpellLearnEvent learnEvent = new SpellLearnEvent(spell, event.getPlayer(), LearnSource.TOME, event.getPlayer().getInventory().getItemInMainHand());
 				Bukkit.getPluginManager().callEvent(learnEvent);
 				if (learnEvent.isCancelled()) {
 					// fail -- plugin cancelled
@@ -186,7 +186,7 @@ public class TomeSpell extends CommandSpell {
 					}
 					// consume
 					if (uses <= 0 && consumeBook) {
-						event.getPlayer().setItemInHand(null);
+						event.getPlayer().getInventory().setItemInMainHand(null);
 					}
 					playSpellEffects(EffectPosition.DELAYED, event.getPlayer());
 				}

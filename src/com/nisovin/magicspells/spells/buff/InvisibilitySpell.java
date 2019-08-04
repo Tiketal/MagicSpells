@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.events.SpellCastEvent;
@@ -59,7 +59,7 @@ public class InvisibilitySpell extends BuffSpell {
 	private void makeInvisible(Player player) {
 		// make player invisible
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.hidePlayer(player);
+			p.hidePlayer(MagicSpells.plugin, player);
 		}
 		// detarget monsters
 		Creature creature;
@@ -75,8 +75,9 @@ public class InvisibilitySpell extends BuffSpell {
 	
 	
 	@EventHandler
-	public void onPlayerItemPickup(PlayerPickupItemEvent event) {
-		if (preventPickups && invisibles.containsKey(event.getPlayer().getName())) {
+	public void onPlayerItemPickup(EntityPickupItemEvent event) {
+		if (event.getEntity() instanceof Player 
+				&& preventPickups && invisibles.containsKey(event.getEntity().getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -96,12 +97,12 @@ public class InvisibilitySpell extends BuffSpell {
 		for (String name : invisibles.keySet()) {
 			Player p = Bukkit.getPlayerExact(name);
 			if (p != null && !name.equals(player.getName())) {
-				player.hidePlayer(p);
+				player.hidePlayer(MagicSpells.plugin, p);
 			}
 		}
 		if (invisibles.containsKey(player.getName())) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				p.hidePlayer(player);
+				p.hidePlayer(MagicSpells.plugin, player);
 			}
 		}
 	}
@@ -114,7 +115,7 @@ public class InvisibilitySpell extends BuffSpell {
 			c.stop();
 			// force visible
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				p.showPlayer(player);
+				p.showPlayer(MagicSpells.plugin, player);
 			}
 		}
 	}

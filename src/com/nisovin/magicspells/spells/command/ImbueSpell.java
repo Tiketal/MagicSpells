@@ -94,7 +94,7 @@ public class ImbueSpell extends CommandSpell {
 			}
 			
 			// get item
-			ItemStack inHand = player.getItemInHand();
+			ItemStack inHand = player.getInventory().getItemInMainHand();
 			if (!allowedItemTypes.contains(inHand.getType())) {
 				// disallowed item
 				sendMessage(player, strCantImbueItem);
@@ -167,7 +167,7 @@ public class ImbueSpell extends CommandSpell {
 			// imbue item
 			setItemNameAndLore(inHand, spell, uses);
 			setImbueData(inHand, spell.getInternalName() + "," + uses);
-			player.setItemInHand(inHand);
+			player.getInventory().setItemInMainHand(inHand);
 		}
 		return PostCastAction.HANDLE_NORMALLY;
 	}
@@ -200,7 +200,7 @@ public class ImbueSpell extends CommandSpell {
 						uses--;
 						if (uses <= 0) {
 							if (consumeItem) {
-								event.getPlayer().setItemInHand(null);
+								event.getPlayer().getInventory().setItemInMainHand(null);
 							} else {
 								Util.removeLoreData(item);
 								if (nameAndLoreHasUses) {

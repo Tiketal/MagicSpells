@@ -6,6 +6,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -74,14 +75,14 @@ public class SeeHealthSpell extends BuffSpell {
 	private void showHealthBar(Player player, LivingEntity entity) {
 		int slot = player.getInventory().getHeldItemSlot();
 		// get item
-		ItemStack item = player.getItemInHand();
+		ItemStack item = player.getInventory().getItemInMainHand();
 		if (item == null || item.getType() == Material.AIR) {
 			item = new ItemStack(Material.BARRIER, 0); // TODO PISTON_MOVING_PIECE
 		} else {
 			item = item.clone();
 		}
 		// get pct health
-		double pct = (double)entity.getHealth() / (double)entity.getMaxHealth();
+		double pct = (double)entity.getHealth() / (double)entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		// get bar color
 		ChatColor color = ChatColor.WHITE;
 		if (pct <= .2) {
@@ -122,7 +123,7 @@ public class SeeHealthSpell extends BuffSpell {
 	//}
 	
 	private void resetHealthBar(Player player, int slot) {
-		MagicSpells.getVolatileCodeHandler().sendFakeSlotUpdate(player, slot, player.getItemInHand());
+		MagicSpells.getVolatileCodeHandler().sendFakeSlotUpdate(player, slot, player.getInventory().getItemInMainHand());
 	}
 	
 	@EventHandler

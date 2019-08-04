@@ -52,7 +52,7 @@ public class UnbindSpell extends CommandSpell {
 					sendMessage(player, strCantBindSpell);
 					return PostCastAction.ALREADY_HANDLED;
 				} else {
-					CastItem item = new CastItem(player.getItemInHand());
+					CastItem item = new CastItem(player.getInventory().getItemInMainHand());
 					boolean removed = spellbook.removeCastItem(spell, item);
 					if (!removed) {
 						sendMessage(player, strNotBound);

@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.material.MaterialData;
 
 import com.nisovin.magicspells.materials.MagicBlockMaterial;
 import com.nisovin.magicspells.materials.MagicMaterial;
