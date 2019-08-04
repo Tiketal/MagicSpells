@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -65,7 +66,7 @@ public class RightClickBlockTypeListener extends PassiveListener {
 	
 	private List<PassiveSpell> getSpells(Block block) {
 		if (materials.contains(block.getType())) {
-			MaterialData data = block.getState().getData();
+			BlockData data = block.getState().getBlockData();
 			for (MagicMaterial m : types.keySet()) {
 				if (m.equals(data)) {
 					return types.get(m);

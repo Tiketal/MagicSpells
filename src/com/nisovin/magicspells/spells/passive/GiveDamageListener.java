@@ -80,7 +80,7 @@ public class GiveDamageListener extends PassiveListener {
 		}
 		
 		if (!weapons.isEmpty()) {
-			ItemStack item = player.getItemInHand();
+			ItemStack item = player.getInventory().getItemInMainHand();
 			if (item != null && item.getType() != Material.AIR) {
 				List<PassiveSpell> list = getSpells(item);
 				if (list != null) {

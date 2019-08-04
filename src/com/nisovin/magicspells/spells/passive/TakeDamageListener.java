@@ -118,7 +118,7 @@ public class TakeDamageListener extends PassiveListener {
 			if (attacker == null) attacker = getAttacker(event);
 			if (attacker != null && attacker instanceof Player) {
 				Player playerAttacker = (Player)attacker;
-				ItemStack item = playerAttacker.getItemInHand();
+				ItemStack item = playerAttacker.getInventory().getItemInMainHand();
 				if (item != null && item.getType() != Material.AIR) {
 					List<PassiveSpell> list = getSpells(item);
 					if (list != null) {
