@@ -371,11 +371,11 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onArmSwing(PlayerAnimationEvent event) {
 		final Player p = event.getPlayer();
-		final int entityId = p.getEntityId();
+//		final int entityId = p.getEntityId();
 		if (isDisguised(p)) {
 			DisguiseSpell.Disguise disguise = getDisguise(p);
 			EntityType entityType = disguise.getEntityType();
-			EntityPlayer entityPlayer = ((CraftPlayer)p).getHandle(); 
+//			EntityPlayer entityPlayer = ((CraftPlayer)p).getHandle(); 
 			if (entityType == EntityType.IRON_GOLEM) {
 				((CraftWorld)p.getWorld()).getHandle().broadcastEntityEffect(((CraftEntity)p).getHandle(), (byte) 4);
 			} else if (entityType == EntityType.WITCH) {
@@ -434,14 +434,15 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onSneak(PlayerToggleSneakEvent event) {
 		DisguiseSpell.Disguise disguise = getDisguise(event.getPlayer());
 		if (disguise == null) return;
 		EntityType entityType = disguise.getEntityType();
-		EntityPlayer entityPlayer = ((CraftPlayer)event.getPlayer()).getHandle();
+//		EntityPlayer entityPlayer = ((CraftPlayer)event.getPlayer()).getHandle();
 		Player p = event.getPlayer();
-		int entityId = p.getEntityId();
+//		int entityId = p.getEntityId();
 		/*if (entityType == EntityType.WOLF) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);

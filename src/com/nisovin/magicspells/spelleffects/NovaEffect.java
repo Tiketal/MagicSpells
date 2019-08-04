@@ -33,19 +33,19 @@ class NovaEffect extends SpellEffect {
 		if (string != null && !string.isEmpty()) {
 			String[] params = string.split(" ");
 			Material type = Material.FIRE;
-			byte data = 0;
+//			byte data = 0;
 			if (params.length >= 1) {
 				try {
 					type = Material.getMaterial(params[0]);
 				} catch (NumberFormatException e) {					
 				}
 			}
-			if (params.length >= 2) {
+			/*if (params.length >= 2) {
 				try {
 					data = Byte.parseByte(params[1]);
 				} catch (NumberFormatException e) {
 				}
-			}
+			}*/
 			mat = new MagicBlockMaterial(type); // TODO add data for orientation
 			if (params.length >= 3) {
 				try {
