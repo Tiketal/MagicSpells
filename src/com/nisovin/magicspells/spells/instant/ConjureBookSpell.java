@@ -99,8 +99,8 @@ public class ConjureBookSpell extends InstantSpell implements TargetedLocationSp
 			boolean added = false;
 			ItemStack item = getBook(player, args);
 			if (addToInventory) {
-				if (player.getItemInHand() == null || player.getItemInHand().getType() == Material.AIR) {
-					player.setItemInHand(item);
+				if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+					player.getInventory().setItemInMainHand(item);
 					added = true;
 				} else {
 					added = Util.addToInventory(player.getInventory(), item, false, false);

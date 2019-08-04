@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.materials.MagicMaterial;
@@ -80,10 +81,10 @@ public class RepairSpell extends InstantSpell {
 			int repaired = 0;
 			for (String s : toRepair) {
 				if (s.equals("held")) {
-					ItemStack item = player.getItemInHand();
-					if (item != null && isRepairable(item.getType()) && item.getDurability() > 0) {
-						item.setDurability(newDura(item));
-						player.setItemInHand(item);
+					ItemStack item = player.getInventory().getItemInMainHand();
+					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
+						((Damageable)item.getItemMeta()).setDamage(newDura(item));
+						player.getInventory().setItemInMainHand(item);
 						repaired++;
 					}
 				} else if (s.equals("hotbar") || s.equals("inventory")) {
@@ -98,8 +99,8 @@ public class RepairSpell extends InstantSpell {
 					}
 					for (int i = start; i < end; i++) {
 						ItemStack item = items[i];
-						if (item != null && isRepairable(item.getType()) && item.getDurability() > 0) {
-							item.setDurability(newDura(item));
+						if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
+							((Damageable)item.getItemMeta()).setDamage(newDura(item));
 							items[i] = item;
 							repaired++;
 						}
@@ -107,29 +108,29 @@ public class RepairSpell extends InstantSpell {
 					player.getInventory().setContents(items);
 				} else if (s.equals("helmet")) {
 					ItemStack item = player.getInventory().getHelmet();
-					if (item != null && isRepairable(item.getType()) && item.getDurability() > 0) {
-						item.setDurability(newDura(item));
+					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
+						((Damageable)item.getItemMeta()).setDamage(newDura(item));
 						player.getInventory().setHelmet(item);
 						repaired++;
 					}
 				} else if (s.equals("chestplate")) {
 					ItemStack item = player.getInventory().getChestplate();
-					if (item != null && isRepairable(item.getType()) && item.getDurability() > 0) {
-						item.setDurability(newDura(item));
+					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
+						((Damageable)item.getItemMeta()).setDamage(newDura(item));
 						player.getInventory().setChestplate(item);
 						repaired++;
 					}
 				} else if (s.equals("leggings")) {
 					ItemStack item = player.getInventory().getLeggings();
-					if (item != null && isRepairable(item.getType()) && item.getDurability() > 0) {
-						item.setDurability(newDura(item));
+					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
+						((Damageable)item.getItemMeta()).setDamage(newDura(item));
 						player.getInventory().setLeggings(item);
 						repaired++;
 					}
 				} else if (s.equals("boots")) {
 					ItemStack item = player.getInventory().getBoots();
-					if (item != null && isRepairable(item.getType()) && item.getDurability() > 0) {
-						item.setDurability(newDura(item));
+					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
+						((Damageable)item.getItemMeta()).setDamage(newDura(item));
 						player.getInventory().setBoots(item);
 						repaired++;
 					}
@@ -146,7 +147,7 @@ public class RepairSpell extends InstantSpell {
 	}
 	
 	private short newDura(ItemStack item) {
-		short dura = item.getDurability();
+		short dura = (short)((Damageable)item.getItemMeta()).getDamage();
 		dura -= repairAmt;
 		if (dura < 0) dura = 0;
 		return dura;
@@ -168,7 +169,7 @@ public class RepairSpell extends InstantSpell {
 				s.endsWith("AXE") ||
 				s.endsWith("HOE") ||
 				s.endsWith("PICKAXE") ||
-				s.endsWith("SPADE") ||
+				s.endsWith("SHOVEL") ||
 				s.endsWith("SWORD");
 	}
 

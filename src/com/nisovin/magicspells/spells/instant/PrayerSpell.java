@@ -1,6 +1,7 @@
 package com.nisovin.magicspells.spells.instant;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -26,7 +27,7 @@ public class PrayerSpell extends InstantSpell {
 	@Override
 	public PostCastAction castSpell(Player player, SpellCastState state, float power, String[] args) {
 		if (state == SpellCastState.NORMAL) {
-			if (player.getHealth() >= player.getMaxHealth() && amountHealed > 0) {
+			if (player.getHealth() >= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() && amountHealed > 0) {
 				sendMessage(player, strAtFullHealth);
 				return PostCastAction.ALREADY_HANDLED;
 			} else if (player.isValid()) {
@@ -42,8 +43,8 @@ public class PrayerSpell extends InstantSpell {
 						amt = evt.getAmount();
 					}
 					health += amt;
-					if (health > player.getMaxHealth()) {
-						health = player.getMaxHealth();
+					if (health > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+						health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 					} else if (health < 0) {
 						health = 0;
 					}

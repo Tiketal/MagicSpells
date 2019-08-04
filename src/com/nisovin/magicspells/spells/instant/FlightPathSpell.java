@@ -176,7 +176,7 @@ public class FlightPathSpell extends InstantSpell {
 				if (player.getVehicle() != null) {
 					player.getVehicle().eject();
 				}
-				mount.setPassenger(player);
+				mount.addPassenger(player);
 			}
 		}
 		

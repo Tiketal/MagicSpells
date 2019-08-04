@@ -24,9 +24,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
@@ -387,12 +387,15 @@ public class ProjectileSpell extends InstantSpell {
 	
 	public class PickupListener implements Listener {
 		@EventHandler(ignoreCancelled=true)
-		public void onPickupItem(PlayerPickupItemEvent event) {
+		public void onPickupItem(EntityPickupItemEvent event) {
+			if (!(event.getEntity() instanceof Player)) {
+				return;
+			}
 			Item item = event.getItem();
 			ProjectileInfo info = itemProjectiles.get(item);
 			if (info != null) {
 				event.setCancelled(true);
-				projectileHitEntity(item, event.getPlayer(), info);
+				projectileHitEntity(item, (Player)event.getEntity(), info);
 				item.remove();
 				itemProjectiles.remove(item);
 				info.monitor.stop();

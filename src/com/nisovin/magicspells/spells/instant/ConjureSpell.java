@@ -13,12 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -373,18 +373,21 @@ public class ConjureSpell extends InstantSpell implements TargetedEntitySpell, T
 		@EventHandler(priority = EventPriority.LOWEST)
 		void onRightClick(PlayerInteractEvent event) {
 			if (event.hasItem()) {
-				ItemStack item = event.getPlayer().getItemInHand();
+				ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
 				ExpirationResult result = updateExpiresLineIfNeeded(item);
 				if (result == ExpirationResult.EXPIRED) {
 					
-					event.getPlayer().setItemInHand(null);
+					event.getPlayer().getInventory().setItemInMainHand(null);
 					event.setCancelled(true);
 				}
 			}
 		}
 		
 		@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-		void onPickup(PlayerPickupItemEvent event) {
+		void onPickup(EntityPickupItemEvent event) {
+			if (!(event.getEntity() instanceof Player)) {
+				return;
+			}
 			processItemDrop(event.getItem());
 			if (event.getItem().isDead()) {
 				event.setCancelled(true);
