@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.Subspell;
@@ -158,7 +159,9 @@ public class MenuSpell extends TargetedSpell implements TargetedEntitySpell, Tar
 	}
 	
 	String getOptionKey(ItemStack item) {
-		return item.getType().name() + "_" + item.getDurability() + "_" + item.getItemMeta().getDisplayName();
+		return item.getType().name() + "_" + ((item.getItemMeta() instanceof Damageable)
+				? ((Damageable)item.getItemMeta()).getDamage()
+				: 0) + "_" + item.getItemMeta().getDisplayName();
 	}
 	
 	void open(final Player caster, Player opener, LivingEntity entityTarget, Location locTarget, final float power) {

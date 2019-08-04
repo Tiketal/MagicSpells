@@ -99,7 +99,8 @@ public class BowSpell extends Spell {
 		public void onArrowLaunch(EntityShootBowEvent event) {
 			if (event.getEntity().getType() != EntityType.PLAYER) return;
 			Player shooter = (Player)event.getEntity();
-			ItemStack inHand = shooter.getItemInHand();
+			ItemStack inHand = shooter.getInventory().getItemInMainHand();
+			if (inHand == null) inHand = shooter.getInventory().getItemInOffHand();
 			if (inHand == null || inHand.getType() != Material.BOW) return;
 			String bowName = inHand.getItemMeta().getDisplayName();
 			if (bowName != null && !bowName.isEmpty()) {
