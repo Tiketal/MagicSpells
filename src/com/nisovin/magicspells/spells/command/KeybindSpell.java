@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerAnimationEvent;
@@ -156,11 +157,11 @@ public class KeybindSpell extends CommandSpell {
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.isCancelled()) return;
+		if (event.useItemInHand() == Event.Result.DENY) return;
 		
 		Keybinds keybinds = playerKeybinds.get(event.getPlayer().getName());
 		if (keybinds != null && keybinds.hasKeybind(event.getPlayer().getInventory().getHeldItemSlot())) {
-			event.setCancelled(true);
+			event.setUseItemInHand(Event.Result.DENY);
 		}
 	}
 	

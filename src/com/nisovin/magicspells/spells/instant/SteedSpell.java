@@ -32,7 +32,6 @@ public class SteedSpell extends InstantSpell {
 	EntityType type;
 	Horse.Color color = null;
 	Horse.Style style = null;
-	Horse.Variant variant = null;
 	
 	ItemStack armor;
 	
@@ -40,12 +39,19 @@ public class SteedSpell extends InstantSpell {
 	
 	public SteedSpell(MagicConfig config, String spellName) {
 		super(config, spellName);
+		String configType = getConfigString("type", "horse");
 		
-		type = Util.getEntityType(getConfigString("type", "horse"));
-		if (type == EntityType.HORSE) {
+		if (configType.equalsIgnoreCase("random")) {
+			EntityType[] horseTypes = {EntityType.HORSE, EntityType.ZOMBIE_HORSE, EntityType.SKELETON_HORSE, EntityType.DONKEY, EntityType.MULE};
+			type = horseTypes[random.nextInt(horseTypes.length)];
+		} else {
+			type = Util.getEntityType(configType);
+		}
+		
+		if (type == EntityType.HORSE || type == EntityType.ZOMBIE_HORSE 
+				|| type == EntityType.SKELETON_HORSE || type == EntityType.DONKEY || type == EntityType.MULE) {
 			String c = getConfigString("color", null);
 			String s = getConfigString("style", null);
-			String v = getConfigString("variant", null);
 			String a = getConfigString("armor", null);
 			if (c != null) {
 				for (Horse.Color h : Horse.Color.values()) {
@@ -63,17 +69,13 @@ public class SteedSpell extends InstantSpell {
 					}
 				}
 			}
-			if (v != null) {
-				for (Horse.Variant h : Horse.Variant.values()) {
-					if (h.name().equalsIgnoreCase(v)) {
-						variant = h;
-						break;
-					}
-				}
-			}
 			if (a != null) {
 				armor = Util.getItemStackFromString(a);
 			}
+		}
+		
+		if (type == null) {
+			
 		}
 		
 		strAlreadyMounted = getConfigString("str-already-mounted", "You are already mounted!");
@@ -102,11 +104,6 @@ public class SteedSpell extends InstantSpell {
 				} else {
 					((Horse)entity).setStyle(Horse.Style.values()[random.nextInt(Horse.Style.values().length)]);
 				}
-				if (variant != null) {
-					((Horse)entity).setVariant(variant);
-				} else {
-					((Horse)entity).setVariant(Horse.Variant.values()[random.nextInt(Horse.Variant.values().length)]);
-				}
 				((Horse)entity).setTamed(true);
 				((Horse)entity).setOwner(player);
 				((Horse)entity).getInventory().setSaddle(new ItemStack(Material.SADDLE));
@@ -114,7 +111,7 @@ public class SteedSpell extends InstantSpell {
 					((Horse)entity).getInventory().setArmor(armor);
 				}
 			}
-			entity.setPassenger(player);
+			entity.addPassenger(player);
 			playSpellEffects(EffectPosition.CASTER, player);
 			mounted.put(player.getName(), entity.getEntityId());
 		}

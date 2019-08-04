@@ -166,7 +166,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				entity = new EntityZombieVillager(EntityTypes.ZOMBIE_VILLAGER, world);
 				((EntityZombieVillager)entity).setVillagerData(new VillagerData(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(biome)), IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var)), 0));
 				// biome, profession, level (master, apprentice, etc) 
-//				((EntityZombieVillager)entity).setVillagerData(VillagerData.class);	
 			
 		} else if (entityType == EntityType.SKELETON) {
 			entity = new EntitySkeleton(EntityTypes.SKELETON, world);
@@ -204,12 +203,16 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.OCELOT) {
 			entity = new EntityOcelot(EntityTypes.OCELOT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			// TODO:
-			/*if (var == -1) {
-				((EntityOcelot)entity).setCatType(random.nextInt(4));
-			} else if (var >= 0 && var < 4) {
-				((EntityOcelot)entity).setCatType(var);
-			}*/
+			
+		} else if (entityType == EntityType.CAT) {
+			entity = new EntityCat(EntityTypes.CAT, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+
+			if (var.equalsIgnoreCase("random")) {
+				((EntityCat)entity).setCatType(random.nextInt(4));
+			} else {
+				((EntityCat)entity).setCatType(getCatType(var));
+			}
 			
 		} else if (entityType == EntityType.BLAZE) {
 			entity = new EntityBlaze(EntityTypes.BLAZE, world);
@@ -634,13 +637,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 		}
 		PacketPlayOutEntityDestroy packet29 = new PacketPlayOutEntityDestroy(entityId);
-		/*try { // an attempt at fixing
-			for (Player viewer : Bukkit.getOnlinePlayers()) {
-				protocolManager.sendServerPacket(viewer, new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY, packet29), false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		
 //		final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
 		Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)disguised.getWorld()).getHandle());
@@ -795,6 +791,35 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				return 5;
 			case "the_killer_bunny":
 				return 99;
+			default:
+				return 0;
+		}
+	}
+	
+	private int getCatType(String str) {
+		switch (str) {
+			case "tabby":
+				return 0;
+			case "tuxedo":
+				return 1;
+			case "red":
+				return 2;
+			case "siamese":
+				return 3;
+			case "british_shorthair":
+				return 4;
+			case "calico":
+				return 5;
+			case "persian":
+				return 6;
+			case "ragdoll":
+				return 7;
+			case "white":
+				return 8;
+			case "jellie":
+				return 9;
+			case "black":
+				return 10;
 			default:
 				return 0;
 		}

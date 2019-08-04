@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -136,11 +137,11 @@ public class SpellbookSpell extends CommandSpell {
 	
 	@EventHandler(priority=EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.isCancelled()) return;
+		if (event.useItemInHand() == Event.Result.DENY) return;
 		if (event.hasBlock() && spellbookBlock.equals(event.getClickedBlock()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			MagicLocation loc = new MagicLocation(event.getClickedBlock().getLocation());
 			if (bookLocations.contains(loc)) {
-				event.setCancelled(true);
+				event.setUseInteractedBlock(Event.Result.DENY);
 				Player player = event.getPlayer();
 				int i = bookLocations.indexOf(loc);
 				Spellbook spellbook = MagicSpells.getSpellbook(player);

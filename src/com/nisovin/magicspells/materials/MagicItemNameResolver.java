@@ -19,8 +19,10 @@ import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.Rail;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Farmland;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -174,29 +176,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		return new MagicBlockRandomMaterial(materials.toArray(new MagicMaterial[materials.size()]));
 	}
 	
-	// TODO: block data
-	/*private MagicBlockMaterial resolveBlockData(Material type, String sdata) {
-		if (type == Material.LOG || type == Material.SAPLING || type == Material.WOOD) {
-			return getTree(sdata);
-		} else if (type == Material.LEAVES) {
-			return getLeaves(sdata);
-		} else if (type == Material.WOOL) {
-			return getWool(sdata);
-		} else if (sdata.matches("^[0-9]+$")) {
-			return new MaterialData(type, Byte.parseByte(sdata));
-		} else {
-			return new MaterialData(type);
-		}
-	}*/
-	
-	/*private MaterialData resolveItemData(Material type, String sdata) {
-		if (type == Material.INK_SACK) {
-			return getDye(sdata);
-		} else {
-			return null;
-		}
-	}*/
-	
 	/**
 	 * Parse block data if applicable
 	 * @param type
@@ -225,7 +204,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 						|| args[0].equalsIgnoreCase("orient") 
 						|| args[0].equalsIgnoreCase("direction")
 						|| args[0].equalsIgnoreCase("dir"))) {
-
+					
 					BlockFace dir = BlockFace.valueOf(args[1].toUpperCase());
 					if (bd instanceof Directional) {
 						((Directional)bd).setFacing(dir);
@@ -268,6 +247,16 @@ public class MagicItemNameResolver implements ItemNameResolver {
 					boolean powered = Boolean.parseBoolean(args[1]);
 					((Powerable)bd).setPowered(powered);
 					
+				} else if ((args[0].equalsIgnoreCase("type"))
+						&& bd instanceof Slab) {
+					Slab.Type slabType = Slab.Type.valueOf(args[1].toUpperCase());
+					((Slab)bd).setType(slabType);
+					
+				} else if ((args[0].equalsIgnoreCase("shape"))
+						&& bd instanceof Rail) {
+					Rail.Shape shape = Rail.Shape.valueOf(args[1].toUpperCase());
+					((Rail)bd).setShape(shape);
+					
 				} else {
 					// error message: invalid tag
 					MagicSpells.error("Invalid block data: " + tag);
@@ -293,105 +282,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		} catch (NumberFormatException e) {
 			return null;
 		}
-	}*/
-	
-	// TODO
-	/*
-	private Dye getDye(String data) {
-		Dye dye = new Dye();
-		dye.setColor(getDyeColor(data));
-		return dye;
-	}
-	
-	private Wool getWool(String data) {
-		return new Wool(getDyeColor(data));
-	}
-	
-	private DyeColor getDyeColor(String data) {
-		if (data != null && data.equalsIgnoreCase("random")) {
-			return DyeColor.values()[rand.nextInt(DyeColor.values().length)];
-		} else {
-			DyeColor color = DyeColor.WHITE;
-			if (data != null && data.length() > 0) {
-				data = data.replace("_", "").replace(" ", "").toLowerCase();
-				for (DyeColor c : DyeColor.values()) {
-					if (data.equals(c.name().replace("_", "").toLowerCase())) {
-						color = c;
-						break;
-					}
-				}
-			}
-			return color;
-		}
-	}
-	
-	private MagicBlockMaterial getTree(String data) {
-		Material mat = null;
-		BlockData bd = null;
-		if (data != null && data.length() > 0) {
-			String[] split = data.split("[: ]");
-			if (split.length >= 1) {
-				mat = getTreeMaterial(split[0]);
-			}
-			if (split.length >= 2) {
-				bd = getOrientation(mat, split[1]);
-			}
-		}
-		return new MagicBlockMaterial(mat, bd);
-	}
-	
-	private BlockData getOrientation(Material mat, String data) {
-		BlockData bd = mat.createBlockData();
-		((Orientable)bd).setAxis(Axis.Y);
-		
-		if (data.equalsIgnoreCase("east") || data.equalsIgnoreCase("west")) {
-			((Orientable)bd).setAxis(Axis.X);
-		} else if (data.equalsIgnoreCase("north") || data.equalsIgnoreCase("south")) {
-			((Orientable)bd).setAxis(Axis.Z);
-		} else if (data.equalsIgnoreCase("random")) {
-			int r = rand.nextInt(3);
-			if (r == 0) {
-				((Orientable)bd).setAxis(Axis.X);
-			} else if (r == 1) {
-				((Orientable)bd).setAxis(Axis.Z);
-			}
-		}
-		
-		return bd;
-	}
-	
-	private Material getTreeMaterial(String data) {
-		data = data.toUpperCase();
-		if (data.contains("RANDOM")) {
-			data = data.replace("RANDOM", 
-					TreeSpecies.values()[rand.nextInt(TreeSpecies.values().length)].toString());
-		}
-		return Material.getMaterial(data);
-	}
-	
-	private Material getLeaves(String data) {
-		TreeSpecies species = getTreeSpecies(data);
-		if (species == TreeSpecies.GENERIC) {
-			data = "OAK";
-		}
-		
-		return Material.getMaterial(data.toUpperCase()+ '_' + "_LEAVES");
-	}
-	
-	private TreeSpecies getTreeSpecies(String data) {
-		if (data.equalsIgnoreCase("random")) {
-			return TreeSpecies.values()[rand.nextInt(TreeSpecies.values().length)];
-		}
-		
-		TreeSpecies species = null;
-		try {
-			species = TreeSpecies.valueOf(data.toUpperCase());
-		} catch (IllegalArgumentException e) {}
-		
-		if (species == null) {
-			return TreeSpecies.GENERIC;
-		}
-		return species;
 	}*/
 
 }

@@ -3,8 +3,6 @@ package com.nisovin.magicspells.variables;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-
 public class PlayerVariable extends Variable {
 
 	Map<String, Double> map = new HashMap<String, Double>();
@@ -21,7 +19,7 @@ public class PlayerVariable extends Variable {
 		if (value != newvalue) {
 			map.put(player, newvalue);
 			if (objective != null) {
-				objective.getScore(Bukkit.getOfflinePlayer(player)).setScore((int)newvalue);
+				objective.getScore(player).setScore((int)newvalue);
 			}
 			return true;
 		} else {
@@ -33,7 +31,7 @@ public class PlayerVariable extends Variable {
 	public void set(String player, double amount) {
 		map.put(player, amount);
 		if (objective != null) {
-			objective.getScore(Bukkit.getOfflinePlayer(player)).setScore((int)amount);
+			objective.getScore(player).setScore((int)amount);
 		}
 	}
 
@@ -50,7 +48,7 @@ public class PlayerVariable extends Variable {
 	public void reset(String player) {
 		map.remove(player);
 		if (objective != null) {
-			objective.getScore(Bukkit.getOfflinePlayer(player)).setScore((int)defaultValue);
+			objective.getScore(player).setScore((int)defaultValue);
 		}
 	}
 
