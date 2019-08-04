@@ -25,40 +25,18 @@ public class BossBarManager {
 	}
 	
 	private BarColor getBarColor(String color) {
-		color = color.toUpperCase();
-		
-		switch (color) {
-		case "BLUE":
-			return BarColor.BLUE;
-		case "GREEN":
-			return BarColor.GREEN;
-		case "PINK":
-			return BarColor.PINK;
-		case "RED":
-			return BarColor.RED;
-		case "WHITE":
-			return BarColor.WHITE;
-		case "YELLOW":
-			return BarColor.YELLOW;
-		default:
+		try {
+			return BarColor.valueOf(color.toUpperCase());
+		} catch (IllegalArgumentException e) {
 			return BarColor.PURPLE;
 		}
 	}
 	
 	private BarStyle getBarStyle(String style) {
 		style = style.replace(" ", "_");
-		style = style.toUpperCase();
-		
-		switch (style) {
-		case "SEGMENTED_10":
-			return BarStyle.SEGMENTED_10;
-		case "SEGMENTED_12":
-			return BarStyle.SEGMENTED_12;
-		case "SEGMENTED_20":
-			return BarStyle.SEGMENTED_20;
-		case "SEGMENTED_6":
-			return BarStyle.SEGMENTED_6;
-		default:
+		try {
+			return BarStyle.valueOf(style.toUpperCase());
+		} catch (IllegalArgumentException e) {
 			return BarStyle.SOLID;
 		}
 	}
