@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.minecraft.server.v1_14_R1.*;
 import net.minecraft.server.v1_14_R1.PacketPlayOutTitle.EnumTitleAction;
@@ -23,6 +25,7 @@ import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftFallingBlock;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
@@ -44,6 +47,9 @@ import org.bukkit.util.Vector;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.materials.MagicBlockMaterial;
+import com.nisovin.magicspells.materials.MagicItemMaterial;
+import com.nisovin.magicspells.materials.MagicMaterial;
 import com.nisovin.magicspells.util.BoundingBox;
 import com.nisovin.magicspells.util.MagicConfig;
 
@@ -107,8 +113,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 			packet63Fields[7] = PacketPlayOutWorldParticles.class.getDeclaredField("h");
 			packet63Fields[8] = PacketPlayOutWorldParticles.class.getDeclaredField("i");
 			packet63Fields[9] = PacketPlayOutWorldParticles.class.getDeclaredField("j");
-//			packet63Fields[10] = PacketPlayOutWorldParticles.class.getDeclaredField("k");
-			for (int i = 0; i <= 10; i++) {
+			for (int i = 0; i <= 9; i++) {
 				packet63Fields[i].setAccessible(true);
 			}
 		} catch (Exception e) {
@@ -253,32 +258,15 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	
 	private void playSound(Player player, Location loc, String sound, float volume, float pitch, String category) {
 		PacketPlayOutCustomSoundEffect packet = new  PacketPlayOutCustomSoundEffect(
-				new MinecraftKey(sound), getSoundCategory(category),
+				new MinecraftKey(sound.toLowerCase()), getSoundCategory(category),
 				new Vec3D(loc.getX(), loc.getY(), loc.getZ()), volume, pitch);
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 	}
 	
 	private SoundCategory getSoundCategory(String category) {
-		category = category.toUpperCase();
-		
-		switch (category) {
-		case "AMBIENT":
-			return SoundCategory.AMBIENT;
-		case "BLOCKS":
-			return SoundCategory.BLOCKS;
-		case "HOSTILE":
-			return SoundCategory.HOSTILE;
-		case "MUSIC":
-			return SoundCategory.MUSIC;
-		case "NEUTRAL":
-			return SoundCategory.NEUTRAL;
-		case "PLAYERS":
-			return SoundCategory.PLAYERS;
-		case "RECORDS":
-			return SoundCategory.RECORDS;
-		case "VOICE":
-			return SoundCategory.VOICE;
-		default:
+		try {
+			return SoundCategory.valueOf(category.toUpperCase());
+		} catch (IllegalArgumentException e) {
 			return SoundCategory.MASTER;
 		}
 	}
@@ -445,44 +433,95 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 		}
 	}
 	
-	private PacketPlayOutWorldParticles createParticlesPacket(Location location, String name, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
+	private static Pattern pattern = Pattern.compile(
+			"(\\w+)(?:\\(([a-z0-9:\\(\\),]+)\\))?", // (\w+)(?:\(([a-z0-9:\(\),]+)\))?
+			Pattern.CASE_INSENSITIVE);
+	
+	private PacketPlayOutWorldParticles createParticlesPacket(Location location, String particleRaw, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
 		PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
-		Object particle = particleMap.get(name);
-		int[] data = null;
-		if (name.contains("_")) {
-			String[] split = name.split("_");
-			name = split[0];
-			particle = particleMap.get(name);
-			if (split.length > 1) {
-				String[] split2 = split[1].split(":");
-				data = new int[split2.length];
-				for (int i = 0; i < data.length; i++) {
-					data[i] = Integer.parseInt(split2[i]);
-				}
-			}
+		Matcher matcher = pattern.matcher(particleRaw);
+		if (!matcher.matches()) {
+			MagicSpells.error("Invalid particle: " + particleRaw);
+			return null;
 		}
+		
+		String name = matcher.group(1);
+		String data = matcher.group(2);
+
+		Object particle = particleMap.get(name);
+		
 		if (particle == null) {
 			MagicSpells.error("Invalid particle: " + name);
 			return null;
 		}
-		try {
-			packet63Fields[0].set(packet, particle);
-			packet63Fields[1].setFloat(packet, (float)location.getX());
-			packet63Fields[2].setFloat(packet, (float)location.getY() + yOffset);
-			packet63Fields[3].setFloat(packet, (float)location.getZ());
-			packet63Fields[4].setFloat(packet, spreadX);
-			packet63Fields[5].setFloat(packet, spreadY);
-			packet63Fields[6].setFloat(packet, spreadZ);
-			packet63Fields[7].setFloat(packet, speed);
-			packet63Fields[8].setInt(packet, count);
-			packet63Fields[9].setBoolean(packet, radius >= 30);
-			if (data != null) {
-				packet63Fields[10].set(packet,data);
+		
+		// for block, item, falling_dust, and dust
+		// parameterized particle
+		if (data != null) {
+			if (name.equals("dust")) {
+				float[] rgbo = getRGBO(data.toLowerCase());
+ 				// r g b opacity
+				particle = new ParticleParamRedstone(rgbo[0], rgbo[1], rgbo[2], rgbo[3]);
+			
+			} else {
+				MagicMaterial mat = MagicSpells.getItemNameResolver().resolveBlock(data);;
+				if (name.equals("block")) {
+					particle = new ParticleParamBlock(Particles.BLOCK,
+							((CraftBlockData)((MagicBlockMaterial)mat).getBlockData()).getState());
+				
+				} else if (name.equals("falling_dust")) {
+					particle = new ParticleParamBlock(Particles.FALLING_DUST,
+							((CraftBlockData)((MagicBlockMaterial)mat).getBlockData()).getState());
+					
+				} else if (name.equals("item")) {
+					if (data != null) {
+						particle = new ParticleParamItem(Particles.ITEM,
+								CraftItemStack.asNMSCopy(((MagicItemMaterial)mat).toItemStack()));
+					}
+				}
 			}
+		}
+
+		try {
+			packet63Fields[0].setFloat(packet, (float)location.getX());
+			packet63Fields[1].setFloat(packet, (float)location.getY() + yOffset);
+			packet63Fields[2].setFloat(packet, (float)location.getZ());
+			packet63Fields[3].setFloat(packet, spreadX);
+			packet63Fields[4].setFloat(packet, spreadY);
+			packet63Fields[5].setFloat(packet, spreadZ);
+			packet63Fields[6].setFloat(packet, speed);
+			packet63Fields[7].setInt(packet, count);
+			packet63Fields[8].setBoolean(packet, radius >= 30);
+			packet63Fields[9].set(packet, particle);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return packet;
+	}
+	
+	private float[] getRGBO(String data) {
+		float[] rgbo = {255, 0, 0, 1};
+
+		String[] split = null;
+		for (String str : data.split(",")) {
+			split = str.split(":");
+			try {
+				if (split[0].equals("red") || split[0].equals("r")) {
+					rgbo[0] = Float.parseFloat(split[1]);
+					
+				} else if (split[0].equals("blue") || split[0].equals("b")) {
+					rgbo[1] = Float.parseFloat(split[1]);
+					
+				} else if (split[0].equals("green") || split[0].equals("g")) {
+					rgbo[2] = Float.parseFloat(split[1]);
+					
+				} else if (split[0].equals("opacity") || split[0].equals("o")) {
+					rgbo[3] = Float.parseFloat(split[1]);
+				}
+			} catch (NumberFormatException e) {};
+		}
+		
+		return rgbo;
 	}
 
 	@Override
