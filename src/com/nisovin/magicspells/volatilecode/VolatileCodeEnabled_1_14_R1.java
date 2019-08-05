@@ -128,7 +128,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				particleMap.put(field.getName().toUpperCase(), particle);
+				particleMap.put(field.getName(), particle);
 			}
 		}
 				
@@ -380,8 +380,17 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	
 	// Handy for getting particle names
 	/*public static void main(String[] args) {
-		for (EnumParticle particle : EnumParticle.values()) {
-			System.out.println(particle.b());
+		
+		Object particle = null;
+		for (Field field : Particles.class.getFields()) {
+			if (field != null) {
+				try {
+					particle = field.get(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				System.out.println(field.getName());
+			}
 		}
 	}*/
 
@@ -448,7 +457,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 		String name = matcher.group(1);
 		String data = matcher.group(2);
 
-		Object particle = particleMap.get(name);
+		Object particle = particleMap.get(name.toUpperCase());
 		
 		if (particle == null) {
 			MagicSpells.error("Invalid particle: " + name);
