@@ -748,7 +748,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				//list.add(packetinfo.new PlayerInfoData(profile, 0, EnumGamemode.SURVIVAL, new ChatComponentText(disguised.getName())));
 				
 				refPacketPlayerInfo.set(packetinfo, "b", list); disguised.getWorld().getEnvironment();
-				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(IRegistry.DIMENSION_TYPE.get(new MinecraftKey(disguised.getWorld().getEnvironment().name())), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
+				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(IRegistry.DIMENSION_TYPE.get(new MinecraftKey(disguised.getWorld().getEnvironment().name().toLowerCase() )), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
 				List<AttributeInstance> l = new ArrayList<AttributeInstance>();
 				AttributeInstance a = ((CraftPlayer)disguised).getHandle().getAttributeInstance(GenericAttributes.MAX_HEALTH);
 				if (a != null) {
