@@ -84,7 +84,7 @@ public class Util {
 					for (int i = 0; i < split.length; i++) {
 						String[] enchantData = split[i].split("-");
 						Enchantment ench;
-						ench = Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toUpperCase()));
+						ench = Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toLowerCase()));
 						if (ench != null && enchantData[1].matches("[0-9]+")) {
 							enchants.put(ench, Integer.parseInt(enchantData[1]));
 						}
@@ -179,7 +179,7 @@ public class Util {
 				for (String enchant : enchants) {
 					String[] data = enchant.split(" ");
 					Enchantment e = null;
-					e = Enchantment.getByKey(NamespacedKey.minecraft(data[0].toUpperCase()));
+					e = Enchantment.getByKey(NamespacedKey.minecraft(data[0].toLowerCase()));
 					if (e != null) {
 						int level = 0;
 						if (data.length > 1) {
@@ -469,7 +469,7 @@ public class Util {
 	}
 	
 	public static Enchantment getEnchantmentType(String type) {
-		return Enchantment.getByKey(NamespacedKey.minecraft(type.toUpperCase()));
+		return Enchantment.getByKey(NamespacedKey.minecraft(type.toLowerCase()));
 	}
 	
 	public static void sendFakeBlockChange(Player player, Block block, MagicMaterial mat) {

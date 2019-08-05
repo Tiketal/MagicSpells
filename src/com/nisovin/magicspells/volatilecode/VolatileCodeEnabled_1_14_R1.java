@@ -107,7 +107,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 			packet63Fields[7] = PacketPlayOutWorldParticles.class.getDeclaredField("h");
 			packet63Fields[8] = PacketPlayOutWorldParticles.class.getDeclaredField("i");
 			packet63Fields[9] = PacketPlayOutWorldParticles.class.getDeclaredField("j");
-			packet63Fields[10] = PacketPlayOutWorldParticles.class.getDeclaredField("k");
+//			packet63Fields[10] = PacketPlayOutWorldParticles.class.getDeclaredField("k");
 			for (int i = 0; i <= 10; i++) {
 				packet63Fields[i].setAccessible(true);
 			}

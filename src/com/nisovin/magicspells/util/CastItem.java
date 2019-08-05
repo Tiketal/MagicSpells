@@ -84,7 +84,7 @@ public class CastItem {
 				for (int i = 0; i < split.length; i++) {
 					String[] enchantData = split[i].split("-");
 					enchants.put(
-							Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0])),
+							Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toLowerCase())),
 							Integer.parseInt(enchantData[1]));
 				}
 			}

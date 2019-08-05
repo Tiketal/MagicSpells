@@ -121,28 +121,24 @@ public class BlockUtils {
 	public static void setBlockFromFallingBlock(Block block, FallingBlock fallingBlock, boolean physics) {
 		// block.setTypeIdAndData(fallingBlock.getBlockId(), fallingBlock.getBlockData(), physics);
 		block.setType(fallingBlock.getBlockData().getMaterial());
-		block.setBlockData(fallingBlock.getBlockData().getMaterial().createBlockData(), physics); // TODO: not correct
+		block.setBlockData(fallingBlock.getBlockData().clone(), physics);
 	}
 	
 	public static int getWaterLevel(Block block) {
-		// return block.getData();
 		return block.getBlockData() instanceof Levelled?
 				((Levelled)block.getBlockData()).getLevel() : 1;
 	}
 	
 	public static int getGrowthLevel(Block block) {
-		// return block.getData();
 		return block.getBlockData() instanceof Ageable?
 				((Ageable)block.getBlockData()).getAge() : 0;
 	}
 	
 	public static void setGrowthLevel(Block block, int level) {
-		//block.setData((byte)level);
 		((Ageable)block.getBlockData()).setAge(level);
 	}
 	
 	public static int getWaterLevel(BlockState blockState) {
-		//return blockState.getRawData();
 		return ((Levelled)blockState.getBlockData()).getLevel();
 	}
 	
@@ -162,63 +158,23 @@ public class BlockUtils {
 	}
 
 	public static boolean isSign(Material type) {
-		return type == Material.ACACIA_SIGN ||
-				type == Material.BIRCH_SIGN ||
-				type == Material.DARK_OAK_SIGN ||
-				type == Material.JUNGLE_SIGN ||
-				type == Material.OAK_SIGN ||
-				type == Material.SPRUCE_SIGN ||
-				type == Material.ACACIA_WALL_SIGN ||
-				type == Material.BIRCH_WALL_SIGN ||
-				type == Material.DARK_OAK_WALL_SIGN ||
-				type == Material.JUNGLE_WALL_SIGN ||
-				type == Material.OAK_WALL_SIGN ||
-				type == Material.SPRUCE_WALL_SIGN;
+		return type.name().toUpperCase().endsWith("SIGN");
 	}
 	
 	public static boolean isWood(Material type) {
-		return type == Material.ACACIA_WOOD ||
-				type == Material.BIRCH_WOOD ||
-				type == Material.DARK_OAK_WOOD ||
-				type == Material.JUNGLE_WOOD ||
-				type == Material.OAK_WOOD ||
-				type == Material.SPRUCE_WOOD ||
-				type == Material.ACACIA_LOG ||
-				type == Material.BIRCH_LOG ||
-				type == Material.DARK_OAK_LOG ||
-				type == Material.JUNGLE_LOG ||
-				type == Material.OAK_LOG ||
-				type == Material.SPRUCE_LOG;
+		return (type.name().toUpperCase().endsWith("WOOD")
+				|| type.name().toUpperCase().endsWith("LOG"));
 	}
 	
 	public static boolean isWoodStairs(Material type) {
-		return type == Material.ACACIA_STAIRS ||
-				type == Material.BIRCH_STAIRS ||
-				type == Material.DARK_OAK_STAIRS ||
-				type == Material.JUNGLE_STAIRS ||
-				type == Material.OAK_STAIRS ||
-				type == Material.SPRUCE_STAIRS;
+		return type.name().toUpperCase().endsWith("STAIRS");
 	}
 	
 	public static boolean isPressurePlate(Material type) {
-		return type == Material.STONE_PRESSURE_PLATE ||
-				type == Material.ACACIA_PRESSURE_PLATE ||
-				type == Material.BIRCH_PRESSURE_PLATE ||
-				type == Material.DARK_OAK_PRESSURE_PLATE ||
-				type == Material.JUNGLE_PRESSURE_PLATE ||
-				type == Material.OAK_PRESSURE_PLATE ||
-				type == Material.SPRUCE_PRESSURE_PLATE ||
-				type == Material.HEAVY_WEIGHTED_PRESSURE_PLATE ||
-				type == Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+		return type.name().toUpperCase().endsWith("PRESSURE_PLATE");
 	}
 
 	public static boolean isButton(Material type) {
-		return  type == Material.STONE_BUTTON ||
-				type == Material.ACACIA_BUTTON ||
-				type == Material.BIRCH_BUTTON ||
-				type == Material.DARK_OAK_BUTTON ||
-				type == Material.JUNGLE_BUTTON ||
-				type == Material.OAK_BUTTON ||
-				type == Material.SPRUCE_BUTTON;
+		return type.name().toUpperCase().endsWith("BUTTON");
 	}
 }

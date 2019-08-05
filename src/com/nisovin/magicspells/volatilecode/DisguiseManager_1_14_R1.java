@@ -1,14 +1,13 @@
 package com.nisovin.magicspells.volatilecode;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.server.v1_14_R1.*;
 import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.*;
-import net.minecraft.server.v1_14_R1.PlayerChunkMap.EntityTracker;
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntity.*;
 
 import org.bukkit.Bukkit;
@@ -637,17 +636,9 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 		}
 		PacketPlayOutEntityDestroy packet29 = new PacketPlayOutEntityDestroy(entityId);
-		
+
 //		final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
-		Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)disguised.getWorld()).getHandle());
-		EntityTracker tracker = null;
-		try {
-			tracker = (EntityTracker)field.get(((CraftWorld)disguised.getWorld()).getHandle());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		tracker.broadcast(packet29);
+		volatileSendViaTracker(disguised, packet29);
 //		tracker.a(((CraftPlayer)disguised).getHandle(), packet29);
 	}
 	
@@ -707,10 +698,16 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			List<Packet<?>> packets = getPacketsToSend(disguised, disguise, entity);
 			if (packets != null && packets.size() > 0) {
 //				final EntityTracker tracker = ((CraftWorld)disguised.getWorld()).getHandle().tracker;
-				Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)disguised.getWorld()).getHandle());
-				EntityTracker tracker = null;
+				
+				PlayerChunkMap tracker = null;
+				Method broadcast = null;
 				try {
-					tracker = (EntityTracker)field.get(((CraftWorld)disguised.getWorld()).getHandle());
+					tracker = 
+							((CraftWorld)disguised.getWorld()).getHandle()
+							.getChunkProvider().playerChunkMap;
+					broadcast = PlayerChunkMap.class
+							.getDeclaredMethod("broadcast", Entity.class, Packet.class);
+					broadcast.setAccessible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -725,7 +722,11 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 						broadcastPacketDisguised(disguised, PacketType.Play.Server.SPAWN_ENTITY_LIVING, packet);
 					} else {
 //						tracker.a(((CraftPlayer)disguised).getHandle(), packet);
-						tracker.broadcast(packet);
+						try {
+							broadcast.invoke(tracker, ((CraftPlayer)disguised).getHandle(), packet);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -973,23 +974,22 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	@Override
 	protected void sendPlayerSpawnPackets(Player player) {
 		PacketPlayOutNamedEntitySpawn packet20 = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-		/*try {
-			for (Player viewer : Bukkit.getOnlinePlayers()) {
-				protocolManager.sendServerPacket(viewer, new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN, packet), false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 //		final EntityTracker tracker = ((CraftWorld)player.getWorld()).getHandle().tracker;
-		Field field = ReflectionHelper.getFieldByType(EntityTracker.class, ((CraftWorld)player.getWorld()).getHandle());
-		EntityTracker tracker = null;
+		volatileSendViaTracker(player, packet20);
+//		tracker.a(((CraftPlayer)player).getHandle(), packet20);
+	}
+	
+	private void volatileSendViaTracker(Player player, Packet<?> packet) {
 		try {
-			tracker = (EntityTracker)field.get(((CraftWorld)player.getWorld()).getHandle());
+			final PlayerChunkMap tracker = 
+					((CraftWorld)player.getWorld()).getHandle()
+					.getChunkProvider().playerChunkMap;
+			Method broadcast = PlayerChunkMap.class
+					.getDeclaredMethod("broadcast", Entity.class, Packet.class);
+			broadcast.setAccessible(true);
+			broadcast.invoke(tracker, ((CraftPlayer)player).getHandle(), packet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		tracker.broadcast(packet20);
-//		tracker.a(((CraftPlayer)player).getHandle(), packet20);*/
 	}
 }
