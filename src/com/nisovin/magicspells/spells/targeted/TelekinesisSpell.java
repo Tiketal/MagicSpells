@@ -76,12 +76,12 @@ public class TelekinesisSpell extends TargetedSpell implements TargetedLocationS
 	}
 	
 	private boolean activate(Player caster, Block target) {
-		if (target.getType() == Material.LEVER || BlockUtils.isButton(target.getType())) {
+		if (target.getType() == Material.LEVER || BlockUtils.isGeneralType(target.getType(), "button")) {
 			if (checkPlugins(caster, target)) {
 				MagicSpells.getVolatileCodeHandler().toggleLeverOrButton(target);
 				return true;
 			}
-		} else if (BlockUtils.isPressurePlate(target.getType())) {
+		} else if (BlockUtils.isGeneralType(target.getType(), "pressure_plate")) {
 			if (checkPlugins(caster, target)) {
 				MagicSpells.getVolatileCodeHandler().pressPressurePlate(target);
 				return true;

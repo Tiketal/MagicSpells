@@ -157,24 +157,8 @@ public class BlockUtils {
 				(!isPathable(location.subtract(0, 2, 0).getBlock()) || !isPathable(location.subtract(0, 1, 0).getBlock()));
 	}
 
-	public static boolean isSign(Material type) {
-		return type.name().toUpperCase().endsWith("SIGN");
+	public static boolean isGeneralType(Material type, String endsWith) {
+		return type.name().toUpperCase().endsWith(endsWith.toUpperCase());
 	}
 	
-	public static boolean isWood(Material type) {
-		return (type.name().toUpperCase().endsWith("WOOD")
-				|| type.name().toUpperCase().endsWith("LOG"));
-	}
-	
-	public static boolean isWoodStairs(Material type) {
-		return type.name().toUpperCase().endsWith("STAIRS");
-	}
-	
-	public static boolean isPressurePlate(Material type) {
-		return type.name().toUpperCase().endsWith("PRESSURE_PLATE");
-	}
-
-	public static boolean isButton(Material type) {
-		return type.name().toUpperCase().endsWith("BUTTON");
-	}
 }

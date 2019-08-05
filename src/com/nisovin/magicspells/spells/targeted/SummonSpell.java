@@ -64,7 +64,7 @@ public class SummonSpell extends TargetedSpell implements TargetedEntitySpell, T
 				landLoc = player.getLocation().add(0, .25, 0);
 			} else {
 				Block block = getTargetedBlock(player, 10);
-				if (block != null && (BlockUtils.isSign(block.getType()))) {
+				if (block != null && (BlockUtils.isGeneralType(block.getType(), "sign"))) {
 					Sign sign = (Sign)block.getState();
 					targetName = sign.getLine(0);
 					landLoc = block.getLocation().add(.5, .25, .5);

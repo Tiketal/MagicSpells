@@ -197,7 +197,7 @@ public class WalkwaySpell extends BuffSpell {
 				if (origin.getType() == Material.AIR) {
 					// check for weird stair positioning
 					Block up = origin.getRelative(0,1,0);
-					if (up != null && ((BlockUtils.isWood(material) && BlockUtils.isWoodStairs(up.getType())) || (material == Material.COBBLESTONE && up.getType() == Material.COBBLESTONE_STAIRS))) {
+					if (up != null && (((BlockUtils.isGeneralType(material, "wood") || BlockUtils.isGeneralType(material, "log")) && isWoodStairs(up.getType())) || (material == Material.COBBLESTONE && up.getType() == Material.COBBLESTONE_STAIRS))) {
 						origin = up;
 					} else {					
 						// allow down movement when stepping out over an edge
@@ -222,6 +222,15 @@ public class WalkwaySpell extends BuffSpell {
 			return false;
 		}
 		
+		private boolean isWoodStairs(Material type) {
+			return type == Material.ACACIA_STAIRS ||
+					type == Material.BIRCH_STAIRS ||
+					type == Material.DARK_OAK_STAIRS ||
+					type == Material.JUNGLE_STAIRS ||
+					type == Material.OAK_STAIRS ||
+					type == Material.SPRUCE_STAIRS;
+		}
+		
 		public boolean blockInPlatform(Block block) {
 			return platform.contains(block);
 		}
@@ -236,7 +245,7 @@ public class WalkwaySpell extends BuffSpell {
 			// determine block type and maybe stair direction TODO
 			Material mat = material;
 			byte data = 0;
-			if ((BlockUtils.isWood(mat) || material == Material.COBBLESTONE) && dirY != 0) {
+			if (((BlockUtils.isGeneralType(mat, "wood") || BlockUtils.isGeneralType(mat, "log")) || material == Material.COBBLESTONE) && dirY != 0) {
 				boolean changed = false;
 				if (dirY == -1) {
 					if (dirX == -1 && dirZ == 0) {
@@ -269,7 +278,7 @@ public class WalkwaySpell extends BuffSpell {
 				}
 				if (changed) {
 					// TODO: different wood
-					if (BlockUtils.isWood(material)) {
+					if (BlockUtils.isGeneralType(material, "wood") || BlockUtils.isGeneralType(material, "log")) {
 						mat = Material.OAK_STAIRS;
 					} else if (material == Material.COBBLESTONE) {
 						mat = Material.COBBLESTONE_STAIRS;

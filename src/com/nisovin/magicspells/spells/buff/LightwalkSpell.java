@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.nisovin.magicspells.materials.MagicBlockMaterial;
 import com.nisovin.magicspells.materials.MagicMaterial;
 import com.nisovin.magicspells.spells.BuffSpell;
+import com.nisovin.magicspells.util.BlockUtils;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.Util;
 
@@ -62,17 +63,18 @@ public class LightwalkSpell extends BuffSpell {
 			mat == Material.GRAVEL ||
 			mat == Material.STONE ||
 			mat == Material.COBBLESTONE ||
-			// TODO mat == Material.WOOD || 
-			//TODO mat == Material.LOG || 
 			mat == Material.NETHERRACK ||
 			mat == Material.SOUL_SAND ||
 			mat == Material.SAND ||
 			mat == Material.SANDSTONE ||
 			mat == Material.GLASS ||
-			//TODO mat == Material.WOOL ||
 			//mat == Material.DOUBLE_STEP ||
 			mat == Material.BRICK ||
-			mat == Material.OBSIDIAN;
+			mat == Material.OBSIDIAN ||
+			BlockUtils.isGeneralType(mat, "wood") ||
+			BlockUtils.isGeneralType(mat, "log") ||
+			BlockUtils.isGeneralType(mat, "planks") ||
+			BlockUtils.isGeneralType(mat, "wool");
 	}
 	
 	@Override

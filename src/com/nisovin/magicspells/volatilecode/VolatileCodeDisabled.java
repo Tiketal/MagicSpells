@@ -43,7 +43,7 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	
 	@Override
 	public void toggleLeverOrButton(Block block) {
-		if (BlockUtils.isButton(block.getType()) || block.getType() == Material.LEVER) {
+		if (BlockUtils.isGeneralType(block.getType(), "button") || block.getType() == Material.LEVER) {
 			((Powerable)block.getBlockData()).setPowered(true);
 			BlockState state = block.getState();
 			state.update();

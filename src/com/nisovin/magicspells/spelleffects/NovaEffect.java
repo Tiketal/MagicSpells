@@ -46,7 +46,7 @@ class NovaEffect extends SpellEffect {
 				} catch (NumberFormatException e) {
 				}
 			}*/
-			mat = new MagicBlockMaterial(type); // TODO add data for orientation
+			mat = new MagicBlockMaterial(type);
 			if (params.length >= 3) {
 				try {
 					radius = Integer.parseInt(params[2]);

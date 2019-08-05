@@ -39,6 +39,7 @@ import org.bukkit.util.Vector;
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.Spell;
 import com.nisovin.magicspells.Spellbook;
+import com.nisovin.magicspells.materials.MagicBlockMaterial;
 import com.nisovin.magicspells.materials.MagicMaterial;
 
 public class Util {
@@ -473,7 +474,7 @@ public class Util {
 	}
 	
 	public static void sendFakeBlockChange(Player player, Block block, MagicMaterial mat) {
-		player.sendBlockChange(block.getLocation(), mat.getMaterial().createBlockData());
+		player.sendBlockChange(block.getLocation(), ((MagicBlockMaterial)mat).getBlockData());
 	}
 	
 	public static void restoreFakeBlockChange(Player player, Block block) {

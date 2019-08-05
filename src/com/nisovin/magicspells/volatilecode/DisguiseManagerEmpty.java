@@ -9,7 +9,6 @@ public class DisguiseManagerEmpty extends DisguiseManager {
 
 	public DisguiseManagerEmpty(MagicConfig config) {
 		super(config);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
