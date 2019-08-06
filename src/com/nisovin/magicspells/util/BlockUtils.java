@@ -124,7 +124,7 @@ public class BlockUtils {
 	public static void setBlockFromFallingBlock(Block block, FallingBlock fallingBlock, boolean physics) {
 		// block.setTypeIdAndData(fallingBlock.getBlockId(), fallingBlock.getBlockData(), physics);
 		block.setType(fallingBlock.getBlockData().getMaterial());
-		block.setBlockData(fallingBlock.getBlockData().clone(), physics);
+		block.setBlockData(fallingBlock.getBlockData(), physics);
 	}
 	
 	public static int getWaterLevel(Block block) {
@@ -138,7 +138,9 @@ public class BlockUtils {
 	}
 	
 	public static void setGrowthLevel(Block block, int level) {
-		((Ageable)block.getBlockData()).setAge(level);
+		BlockData bd = block.getBlockData();
+		((Ageable)bd).setAge(level);
+		block.setBlockData(bd, true);
 	}
 	
 	public static int getWaterLevel(BlockState blockState) {

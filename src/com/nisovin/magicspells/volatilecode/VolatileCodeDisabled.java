@@ -7,7 +7,7 @@ import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
@@ -44,17 +44,17 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	@Override
 	public void toggleLeverOrButton(Block block) {
 		if (BlockUtils.isGeneralType(block.getType(), "button") || block.getType() == Material.LEVER) {
-			((Powerable)block.getBlockData()).setPowered(true);
-			BlockState state = block.getState();
-			state.update();
+			BlockData bd = block.getBlockData();
+			((Powerable)bd).setPowered(true);
+			block.setBlockData(bd, true);
 		}
 	}
 
 	@Override
 	public void pressPressurePlate(Block block) {
-		((Powerable)block.getBlockData()).setPowered(true);
-		block.getState().update();
-//		block.setData((byte) (block.getData() ^ 0x1));
+		BlockData bd = block.getBlockData();
+		((Powerable)bd).setPowered(true);
+		block.setBlockData(bd, true);
 	}
 
 	@Override

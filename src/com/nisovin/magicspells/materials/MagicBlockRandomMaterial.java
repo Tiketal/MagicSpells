@@ -9,7 +9,7 @@ public class MagicBlockRandomMaterial extends MagicBlockMaterial {
 	MagicMaterial[] materials;
 	
 	public MagicBlockRandomMaterial(MagicMaterial[] materials) {
-		super(null);
+		super((BlockData)null);
 		this.materials = materials;
 	}
 	
