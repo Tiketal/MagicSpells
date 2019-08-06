@@ -312,6 +312,11 @@ public class Util {
 				}
 			}
 			
+			// custom model data
+			if (config.contains("custom-model")) {
+				meta.setCustomModelData(config.getInt("custom-model"));
+			}
+			
 			// set meta
 			item.setItemMeta(meta);
 			
