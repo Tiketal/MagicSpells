@@ -110,11 +110,20 @@ public class MagicItemNameResolver implements ItemNameResolver {
 //TODO			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
 			
 			// items with durability/data values
-			short durability = 0;
-			try {
-				durability = Short.parseShort(sdata);
-			} catch (NumberFormatException e) {}
-			return new MagicItemMaterial(type, durability);
+			short damage = 0;
+			if (sdata != null) {
+				sdata = sdata.replaceAll("[\\[\\]]", "");
+				String[] split;
+				for (String tag : sdata.split(",")) {
+					split = tag.split("=");
+					if (split[0].equalsIgnoreCase("damage") || split[0].startsWith("dura")) {
+						try {
+							damage = Short.parseShort(split[1]);
+						} catch (NumberFormatException e) {}
+					}
+				}
+			}
+			return new MagicItemMaterial(type, damage);
 		}
 	}
 	
@@ -173,19 +182,4 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		}
 		return new MagicBlockRandomMaterial(materials.toArray(new MagicMaterial[materials.size()]));
 	}
-	
-	/*private MagicMaterial resolveUnknown(String stype, String sdata) {
-		try {
-			int type = Integer.parseInt(stype);
-			if (sdata.equals("*")) {
-				return new MagicUnknownAnyDataMaterial(type);
-			} else {
-				short data = ((sdata == null || sdata.isEmpty()) ? 0 : Short.parseShort(sdata));
-				return new MagicUnknownMaterial(type, data);
-			}
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}*/
-
 }

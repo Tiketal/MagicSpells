@@ -292,12 +292,12 @@ public class DisguiseSpell extends TargetedSpell implements TargetedEntitySpell 
 		private boolean flag;
 		private String var1;
 		private String var2;
-		private int var3;
+		private String var3;
 		private DisguiseSpell spell;
 		
 		private int taskId;
 		
-		public Disguise(Player player, EntityType entityType, String nameplateText, PlayerDisguiseData playerDisguiseData, boolean alwaysShowNameplate, boolean disguiseSelf, boolean ridingBoat, boolean flag, String var1, String var2, int var3, int duration, DisguiseSpell spell) {
+		public Disguise(Player player, EntityType entityType, String nameplateText, PlayerDisguiseData playerDisguiseData, boolean alwaysShowNameplate, boolean disguiseSelf, boolean ridingBoat, boolean flag, String var1, String var2, String var3, int duration, DisguiseSpell spell) {
 			this.player = player;
 			this.entityType = entityType;
 			this.nameplateText = nameplateText;
@@ -355,7 +355,7 @@ public class DisguiseSpell extends TargetedSpell implements TargetedEntitySpell 
 			return var2;
 		}
 		
-		public int getVar3() {
+		public String getVar3() {
 			return var3;
 		}
 			

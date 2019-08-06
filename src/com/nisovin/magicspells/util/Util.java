@@ -338,6 +338,7 @@ public class Util {
 				String[] attrTypes = new String[attrs.size()];
 				double[] attrAmounts = new double[attrs.size()];
 				int[] attrOperations = new int[attrs.size()];
+				String[] attrSlots = new String[attrs.size()];
 				int i = 0;
 				for (String attrName : attrs) {
 					String[] attrData = config.getString("attributes." + attrName).split(" ");
@@ -354,15 +355,20 @@ public class Util {
 							attrOp = 2; // add percent
 						}
 					}
+					String attrSlot = null;
+					if (attrData.length > 3) {
+						attrSlot = attrData[3];
+					}
 					if (attrType != null) {
 						attrNames[i] = attrName;
 						attrTypes[i] = attrType;
 						attrAmounts[i] = attrAmt;
 						attrOperations[i] = attrOp;
+						attrSlots[i] = attrSlot;
 					}
 					i++;
 				}
-				item = MagicSpells.getVolatileCodeHandler().addAttributes(item, attrNames, attrTypes, attrAmounts, attrOperations);
+				item = MagicSpells.getVolatileCodeHandler().addAttributes(item, attrNames, attrTypes, attrAmounts, attrOperations, attrSlots);
 			}
 			
 			return item;

@@ -578,7 +578,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	}
 
 	@Override
-	public ItemStack addAttributes(ItemStack item, String[] names, String[] types, double[] amounts, int[] operations) {
+	public ItemStack addAttributes(ItemStack item, String[] names, String[] types, double[] amounts, int[] operations, String[] slots) {
 		if (!(item instanceof CraftItemStack)) {
 			item = CraftItemStack.asCraftCopy(item);
 		}
@@ -592,6 +592,9 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 				attr.setString("AttributeName", types[i]);
 				attr.setDouble("Amount", amounts[i]);
 				attr.setInt("Operation", operations[i]);
+				if (slots[i] != null) {
+					attr.setString("Slot", slots[i]);
+				}
 				UUID uuid = UUID.randomUUID();
 				attr.setLong("UUIDLeast", uuid.getLeastSignificantBits());
 				attr.setLong("UUIDMost", uuid.getMostSignificantBits());

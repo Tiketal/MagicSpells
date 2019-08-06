@@ -18,6 +18,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -39,6 +40,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.materials.MagicMaterial;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell;
 import com.nisovin.magicspells.spells.targeted.DisguiseSpell.PlayerDisguiseData;
 import com.nisovin.magicspells.util.MagicConfig;
@@ -344,14 +346,17 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			entity = new EntityEnderDragon(EntityTypes.ENDER_DRAGON, world);
 						
 		} else if (entityType == EntityType.FALLING_BLOCK) {
-			String type = disguise.getVar1();
-			entity = new EntityFallingBlock(world, 0, 0, 0, IRegistry.BLOCK.get(new MinecraftKey(type)).getBlockData());
-			
+			String data = disguise.getVar1();
+			MagicMaterial mat = MagicSpells.getItemNameResolver().resolveBlock(data);
+			if (mat != null) {
+				entity = new EntityFallingBlock(world, 0, 0, 0, ((CraftBlockData)mat.getBlockData()).getState());
+			}
 		} else if (entityType == EntityType.DROPPED_ITEM) {
-			String type = disguise.getVar1();
+			String data = disguise.getVar1();
+			MagicMaterial mat = MagicSpells.getItemNameResolver().resolveItem(data);
 			entity = new EntityItem(EntityTypes.ITEM, world);
-			((EntityItem)entity).setItemStack(new net.minecraft.server.v1_14_R1.ItemStack(IRegistry.ITEM.get(new MinecraftKey(type)), 1));
-			IRegistry.ITEM.get(new MinecraftKey(type));
+			
+			((EntityItem)entity).setItemStack(CraftItemStack.asNMSCopy(mat.toItemStack()));
 		}
 		
 		if (entity != null) {
