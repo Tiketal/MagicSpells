@@ -9,11 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 public abstract class MagicMaterial {
-	Material type;
+	public abstract Material getMaterial();
 	
-	public Material getMaterial() {
-		return type;
-	}
+	public abstract BlockData getBlockData();
 	
 	public final void setBlock(Block block) {
 		setBlock(block, true);
@@ -30,30 +28,27 @@ public abstract class MagicMaterial {
 	public abstract ItemStack toItemStack(int quantity);
 	
 	public final boolean equals(Block block) {
-		return getMaterial() == block.getType() && equals(block.getState().getBlockData());
+		return equals(block.getState().getBlockData());
 	}
 	
 	public boolean equals(BlockData data) {
-		return (this instanceof MagicBlockMaterial)
-				? ((MagicBlockMaterial)this).getBlockData().equals(data)
-				: false;
+		BlockData d = getBlockData();
+		if (d != null) {
+			return d.equals(data);
+		} else {
+			return false;
+		}
 	}
 	
-	public boolean equals(ItemStack itemStack) {
-		boolean result = itemStack.getType() == type;
-		if (itemStack.getItemMeta() instanceof Damageable) {
-			result = result 
-					&& (((Damageable)itemStack.getItemMeta()).getDamage() 
-							== ((MagicItemMaterial)this).getDurability());
-		}
-		return result;
-	}
+	public abstract boolean equals(ItemStack itemStack);
 	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof MagicMaterial) {
 			MagicMaterial m = (MagicMaterial)o;
-			return m.getMaterial() == getMaterial();
+			return m.getMaterial() == getMaterial() && ((getBlockData() != null)
+					? getBlockData().equals(m.getBlockData())
+					: m.getBlockData() == null);
 		}
 		return false;
 	}
@@ -65,15 +60,15 @@ public abstract class MagicMaterial {
 	
 	public static MagicMaterial fromItemStack(ItemStack item) {
 		if (item.getType().isBlock()) {
-			return new MagicBlockMaterial(item.getType());
+			return new MagicBlockMaterial(item.getType().createBlockData());
 		}
 		return new MagicItemMaterial(item.getType(), 
-				(item.getItemMeta() instanceof Damageable)
+				((item.getItemMeta() instanceof Damageable)
 					? (short)((Damageable)item.getItemMeta()).getDamage()
-					: null);
+					: 0));
 	}
 	
 	public static MagicMaterial fromBlock(Block block) {
-		return new MagicBlockMaterial(block.getType(), block.getBlockData());
+		return new MagicBlockMaterial(block.getBlockData());
 	}
 }

@@ -1,10 +1,12 @@
 package com.nisovin.magicspells.materials;
 
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 public class MagicItemMaterial extends MagicMaterial {
+	Material type;
 	short duraData;
 
 	public MagicItemMaterial(Material type, short data) {
@@ -14,6 +16,16 @@ public class MagicItemMaterial extends MagicMaterial {
 	
 	public short getDurability() {
 		return duraData;
+	}
+	
+	@Override
+	public Material getMaterial() {
+		return type;
+	}
+
+	@Override
+	public BlockData getBlockData() {
+		return null;
 	}
 
 	@Override
@@ -27,9 +39,9 @@ public class MagicItemMaterial extends MagicMaterial {
 
 	@Override
 	public boolean equals(ItemStack item) {
-		return type == item.getType() && (item.getItemMeta() instanceof Damageable) 
-				? duraData == ((Damageable)item.getItemMeta()).getDamage()
-				: true;
+		return type == item.getType() && ((item.getItemMeta() instanceof Damageable) 
+				? duraData == (short)((Damageable)item.getItemMeta()).getDamage()
+				: true);
 	}
 	
 }

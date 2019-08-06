@@ -246,45 +246,48 @@ public class WalkwaySpell extends BuffSpell {
 		public void drawCarpet(Block origin, int dirX, int dirY, int dirZ) {
 			// determine block type and maybe stair direction TODO
 			Material mat = material;
-			Directional data = null;
+			Directional bd = null;
 			if ((material == Material.OAK_PLANKS || material == Material.COBBLESTONE) && dirY != 0) {
-				data = (Directional)Material.OAK_STAIRS.createBlockData();
 				boolean changed = false;
+				BlockFace data = BlockFace.EAST;
 				if (dirY == -1) {
 					if (dirX == -1 && dirZ == 0) {
-						data.setFacing(BlockFace.EAST); // 0
+						data = BlockFace.EAST; // 0
 						changed = true;
 					} else if (dirX == 1 && dirZ == 0) {
-						data.setFacing(BlockFace.WEST); // 1
+						data = BlockFace.WEST; // 1
 						changed = true;
 					} else if (dirZ == -1 && dirX == 0) {
-						data.setFacing(BlockFace.SOUTH); // 2
+						data = BlockFace.SOUTH; // 2
 						changed = true;
 					} else if (dirZ == 1 && dirX == 0) {
-						data.setFacing(BlockFace.NORTH); // 3
+						data = BlockFace.NORTH; // 3
 						changed = true;
 					}
 				} else if (dirY == 1) {
 					if (dirX == -1 && dirZ == 0) {
-						data.setFacing(BlockFace.WEST);
+						data = BlockFace.WEST;
 						changed = true;
 					} else if (dirX == 1 && dirZ == 0) {
-						data.setFacing(BlockFace.EAST);
+						data = BlockFace.EAST;
 						changed = true;
 					} else if (dirZ == -1 && dirX == 0) {
-						data.setFacing(BlockFace.NORTH);
+						data = BlockFace.NORTH;
 						changed = true;
 					} else if (dirZ == 1 && dirX == 0) {
-						data.setFacing(BlockFace.SOUTH);
+						data = BlockFace.SOUTH;
 						changed = true;
 					}
 				}
 				if (changed) {
 					if (material == Material.OAK_PLANKS) {
 						mat = Material.OAK_STAIRS;
+						bd = (Directional)Material.OAK_STAIRS.createBlockData();
 					} else if (material == Material.COBBLESTONE) {
 						mat = Material.COBBLESTONE_STAIRS;
+						bd = (Directional)Material.COBBLESTONE_STAIRS.createBlockData();
 					}
+					if (bd != null) bd.setFacing(data);
 				}
 			}
 			
@@ -311,7 +314,7 @@ public class WalkwaySpell extends BuffSpell {
 			// set new blocks
 			for (Block b : blocks) {
 				if (platform.contains(b) || b.getType() == Material.AIR) {
-					BlockUtils.setTypeAndData(b, mat, data, false);
+					BlockUtils.setTypeAndData(b, mat, bd, false);
 					platform.add(b);
 				}
 			}

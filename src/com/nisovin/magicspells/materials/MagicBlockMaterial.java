@@ -11,15 +11,16 @@ import org.bukkit.inventory.ItemStack;
 public class MagicBlockMaterial extends MagicMaterial {
 	BlockData data;
 	
-	public MagicBlockMaterial(Material type, BlockData data) {
-		this.type = type;
-		this.data = data.clone();
+	public MagicBlockMaterial(BlockData data) {
+		this.data = data;
 	}
 	
-	public MagicBlockMaterial(Material type) {
-		this(type, type.createBlockData());
+	@Override
+	public Material getMaterial() {
+		return data.getMaterial();
 	}
 	
+	@Override
 	public BlockData getBlockData() {
 		return data;
 	}
@@ -39,20 +40,11 @@ public class MagicBlockMaterial extends MagicMaterial {
 
 	@Override
 	public ItemStack toItemStack(int quantity) {
-		return new ItemStack(type, quantity);
+		return new ItemStack(data.getMaterial(), quantity);
 	}
-	
-	public boolean equals(BlockData data) {
-		return this.data.equals(data);
-	}
-	
+
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof MagicBlockMaterial) {
-			MagicBlockMaterial m = (MagicBlockMaterial)o;
-			return this.getMaterial() == m.getMaterial() && this.data.equals(data);
-		} else {
-			return false;
-		}
+	public boolean equals(ItemStack itemStack) {
+		return itemStack.getType() == data.getMaterial();
 	}
 }

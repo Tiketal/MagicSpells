@@ -99,12 +99,12 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		if (type.isBlock()) {
 			if (sdata != null) {
 				try {
-					return new MagicBlockMaterial(type, type.createBlockData(sdata));
+					return new MagicBlockMaterial(type.createBlockData(sdata));
 				} catch (IllegalArgumentException e) {
 					MagicSpells.error("Invalid block data: " + sdata);
 				}
 			}
-			return new MagicBlockMaterial(type, type.createBlockData());
+			return new MagicBlockMaterial(type.createBlockData());
 		} else {
 			
 //TODO			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
@@ -140,9 +140,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		String stype = matcher.group(1).toLowerCase();
 		String sdata = matcher.group(2);
 		
-		// wildcards ex: *_log or *_wood TODO
-		
-		
 		// check for correct material
 		Material type = materialMap.get(stype);
 		if (type == null) {
@@ -153,12 +150,12 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		if (type.isBlock()) {
 			if (sdata != null) {
 				try {
-					return new MagicBlockMaterial(type, type.createBlockData(sdata));
+					return new MagicBlockMaterial(type.createBlockData(sdata));
 				} catch (IllegalArgumentException e) {
 					MagicSpells.error("Invalid block data: " + sdata);
 				}
 			}
-			return new MagicBlockMaterial(type, type.createBlockData());
+			return new MagicBlockMaterial(type.createBlockData());
 		} else {
 			return null;
 		}

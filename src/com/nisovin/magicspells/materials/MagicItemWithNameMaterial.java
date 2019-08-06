@@ -21,10 +21,9 @@ public class MagicItemWithNameMaterial extends MagicMaterial {
 		return material.getMaterial();
 	}
 	
+	@Override
 	public BlockData getBlockData() {
-		return (material instanceof MagicBlockMaterial)
-				? ((MagicBlockMaterial)material).getBlockData()
-				: null;
+		return material.getBlockData();
 	}
 
 	@Override
@@ -49,9 +48,9 @@ public class MagicItemWithNameMaterial extends MagicMaterial {
 		if (o instanceof MagicItemWithNameMaterial) {
 			MagicItemWithNameMaterial m = (MagicItemWithNameMaterial)o;
 			return m.getMaterial() == getMaterial() && m.name.equals(name)
-					&& (m.getBlockData() == null) 
-					? getBlockData() == null
-					: m.getBlockData().equals(getBlockData());
+					&& ((m.getBlockData() == null) 
+						? getBlockData() == null
+						: m.getBlockData().equals(getBlockData()));
 		}
 		return false;
 	}

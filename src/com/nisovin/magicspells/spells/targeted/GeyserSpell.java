@@ -45,9 +45,9 @@ public class GeyserSpell extends TargetedSpell implements TargetedEntitySpell {
 		geyserHeight = getConfigInt("geyser-height", 4);
 		String s = getConfigString("geyser-type", "water");
 		if (s.equalsIgnoreCase("lava")) {
-			geyserType = new MagicBlockMaterial(Material.LAVA);
+			geyserType = new MagicBlockMaterial(Material.LAVA.createBlockData());
 		} else if (s.equalsIgnoreCase("water")) {
-			geyserType = new MagicBlockMaterial(Material.WATER);
+			geyserType = new MagicBlockMaterial(Material.WATER.createBlockData());
 		} else {
 			geyserType = MagicSpells.getItemNameResolver().resolveBlock(s);
 		}

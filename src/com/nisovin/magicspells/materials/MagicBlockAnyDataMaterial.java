@@ -6,9 +6,11 @@ import org.bukkit.block.data.BlockData;
 // TODO
 @Deprecated
 public class MagicBlockAnyDataMaterial extends MagicBlockMaterial {
-
-	public MagicBlockAnyDataMaterial(Material type) {
-		super(type);
+	private String suffix;
+	
+	public MagicBlockAnyDataMaterial(Material type, String suffix) {
+		super(type.createBlockData());
+		this.suffix = suffix;
 	}
 	
 	@Override
@@ -23,6 +25,6 @@ public class MagicBlockAnyDataMaterial extends MagicBlockMaterial {
 	
 	@Override
 	public boolean equals(BlockData data) {
-		return this.type == data.getMaterial();
+		return data.getMaterial().name().endsWith(suffix.toUpperCase());
 	}
 }
