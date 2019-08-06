@@ -87,7 +87,7 @@ public class WallSpell extends InstantSpell {
 					wallMaterial.setBlock(target, false);
 					BlockPlaceEvent event = new BlockPlaceEvent(target, eventBlockState, target, player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
 					Bukkit.getPluginManager().callEvent(event);
-					BlockUtils.setTypeAndData(target, Material.AIR, (byte)0, false);
+					BlockUtils.setTypeAndData(target, Material.AIR, null, false);
 					if (event.isCancelled()) {
 						sendMessage(player, strNoTarget);
 						return PostCastAction.ALREADY_HANDLED;

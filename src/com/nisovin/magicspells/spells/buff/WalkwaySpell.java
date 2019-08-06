@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,7 +36,7 @@ public class WalkwaySpell extends BuffSpell {
 	public WalkwaySpell(MagicConfig config, String spellName) {
 		super(config, spellName);
 		
-		material = MagicSpells.getItemNameResolver().resolveBlock(getConfigString("platform-type", "wood")).getMaterial();
+		material = MagicSpells.getItemNameResolver().resolveBlock(getConfigString("platform-type", "oak_planks")).getMaterial();
 		size = getConfigInt("size", 6);
 		cancelOnTeleport = getConfigBoolean("cancel-on-teleport", true);
 		
@@ -153,14 +155,14 @@ public class WalkwaySpell extends BuffSpell {
 		}
 		
 		public boolean move() {
-			Block origin = player.getLocation().subtract(0,1,0).getBlock();
+			Block origin = player.getLocation().clone().subtract(0,1,0).getBlock();
 			int x = origin.getX();
 			int z = origin.getZ();
 			int dirX = 0;
 			int dirY = 0;
 			int dirZ = 0;
 			
-			Vector dir = player.getLocation().getDirection().setY(0).normalize();
+			Vector dir = player.getLocation().getDirection().clone().setY(0).normalize();
 			if (dir.getX() > .7) {
 				dirX = 1;
 			} else if (dir.getX() < -.7) {
@@ -244,41 +246,41 @@ public class WalkwaySpell extends BuffSpell {
 		public void drawCarpet(Block origin, int dirX, int dirY, int dirZ) {
 			// determine block type and maybe stair direction TODO
 			Material mat = material;
-			byte data = 0;
-			if (((BlockUtils.isGeneralType(mat, "wood") || BlockUtils.isGeneralType(mat, "log")) || material == Material.COBBLESTONE) && dirY != 0) {
+			Directional data = null;
+			if ((material == Material.OAK_PLANKS || material == Material.COBBLESTONE) && dirY != 0) {
+				data = (Directional)Material.OAK_STAIRS.createBlockData();
 				boolean changed = false;
 				if (dirY == -1) {
 					if (dirX == -1 && dirZ == 0) {
-						data = 0;
+						data.setFacing(BlockFace.EAST); // 0
 						changed = true;
 					} else if (dirX == 1 && dirZ == 0) {
-						data = 1;
+						data.setFacing(BlockFace.WEST); // 1
 						changed = true;
 					} else if (dirZ == -1 && dirX == 0) {
-						data = 2;
+						data.setFacing(BlockFace.SOUTH); // 2
 						changed = true;
 					} else if (dirZ == 1 && dirX == 0) {
-						data = 3;
+						data.setFacing(BlockFace.NORTH); // 3
 						changed = true;
 					}
 				} else if (dirY == 1) {
 					if (dirX == -1 && dirZ == 0) {
-						data = 1;
+						data.setFacing(BlockFace.WEST);
 						changed = true;
 					} else if (dirX == 1 && dirZ == 0) {
-						data = 0;
+						data.setFacing(BlockFace.EAST);
 						changed = true;
 					} else if (dirZ == -1 && dirX == 0) {
-						data = 3;
+						data.setFacing(BlockFace.NORTH);
 						changed = true;
 					} else if (dirZ == 1 && dirX == 0) {
-						data = 2;
+						data.setFacing(BlockFace.SOUTH);
 						changed = true;
 					}
 				}
 				if (changed) {
-					// TODO: different wood
-					if (BlockUtils.isGeneralType(material, "wood") || BlockUtils.isGeneralType(material, "log")) {
+					if (material == Material.OAK_PLANKS) {
 						mat = Material.OAK_STAIRS;
 					} else if (material == Material.COBBLESTONE) {
 						mat = Material.COBBLESTONE_STAIRS;

@@ -9,20 +9,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Axis;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Ageable;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.Levelled;
-import org.bukkit.block.data.Lightable;
-import org.bukkit.block.data.Orientable;
-import org.bukkit.block.data.Powerable;
-import org.bukkit.block.data.Rail;
-import org.bukkit.block.data.Waterlogged;
-import org.bukkit.block.data.type.Farmland;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -68,13 +55,13 @@ public class MagicItemNameResolver implements ItemNameResolver {
 	}
 	
 	private static Pattern pattern = Pattern.compile(
-			"([\\w|\\*]+)(?:\\((\\w+:\\w+(?:,\\w+:\\w+)*)\\))*", // ([\w|\*]+)(?:\((\w+:\w+(?:,\w+:\w+)*)\))*
+			"([\\w|\\*]+)(?:(\\[\\w+=\\w+(?:,\\w+=\\w+)*\\]))*", // ([\w|\*]+)(?:(\[\w+=\w+(?:,\w+=\w+)*\]))*
 			Pattern.CASE_INSENSITIVE
 			);
 	
 	/**
 	 * Parses and resolves strings of the form 
-	 * {@literal <material name>}{(state:data{,state:data}*)}?
+	 * {@literal <material name>}{[state=data{,state=data}*]}?
 	 * @param string
 	 * @return MagicMaterial equivalent
 	 */
@@ -104,12 +91,20 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		// check for correct material
 		Material type = materialMap.get(stype);
 		if (type == null) {
+			MagicSpells.error("Invalid type: " + stype);
 			return null;
 		}
 		
 		// create MagicMaterial equivalent
 		if (type.isBlock()) {
-			return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
+			if (sdata != null) {
+				try {
+					return new MagicBlockMaterial(type, type.createBlockData(sdata));
+				} catch (IllegalArgumentException e) {
+					MagicSpells.error("Invalid block data: " + sdata);
+				}
+			}
+			return new MagicBlockMaterial(type, type.createBlockData());
 		} else {
 			
 //TODO			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
@@ -125,7 +120,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 	
 	/**
 	 * Parses and resolves strings of the form
-	 * {@literal <material name>}{(state:data{,state:data}*)}?
+	 * {@literal <material name>}{[state=data{,state=data}*]}?
 	 * @param string
 	 * @return MagicMaterial equivalent
 	 */
@@ -143,8 +138,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		
 		// split type and data
 		String stype = matcher.group(1).toLowerCase();
-		String sdata = matcher.group(2); // can be null if empty
-		if (sdata == null) sdata = "";
+		String sdata = matcher.group(2);
 		
 		// wildcards ex: *_log or *_wood TODO
 		
@@ -157,7 +151,14 @@ public class MagicItemNameResolver implements ItemNameResolver {
 
 		// create MagicMaterial
 		if (type.isBlock()) {
-			return new MagicBlockMaterial(type, resolveBlockData(type, sdata));
+			if (sdata != null) {
+				try {
+					return new MagicBlockMaterial(type, type.createBlockData(sdata));
+				} catch (IllegalArgumentException e) {
+					MagicSpells.error("Invalid block data: " + sdata);
+				}
+			}
+			return new MagicBlockMaterial(type, type.createBlockData());
 		} else {
 			return null;
 		}
@@ -174,100 +175,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			}
 		}
 		return new MagicBlockRandomMaterial(materials.toArray(new MagicMaterial[materials.size()]));
-	}
-	
-	/**
-	 * Parse block data if applicable
-	 * @param type
-	 * @param data in the form: state:data{,state:data}*
-	 * @return
-	 */
-	private BlockData resolveBlockData(Material type, String data) {
-		BlockData bd = type.createBlockData();
-		if (data.isEmpty()) return bd;
-		
-		// parse data
-		String[] split = data.split(",");
-		String[] args = null;
-		
-		for (String tag : split) {
-			args = tag.split(":");
-			
-			try {
-				if (args[0].equalsIgnoreCase("age") 
-						&& bd instanceof Ageable) {
-					
-					int arg1 = Integer.parseInt(split[1]);
-					((Ageable)bd).setAge(arg1);
-					
-				} else if ((args[0].equalsIgnoreCase("orientation") 
-						|| args[0].equalsIgnoreCase("orient") 
-						|| args[0].equalsIgnoreCase("direction")
-						|| args[0].equalsIgnoreCase("dir"))) {
-					
-					BlockFace dir = BlockFace.valueOf(args[1].toUpperCase());
-					if (bd instanceof Directional) {
-						((Directional)bd).setFacing(dir);
-						
-					} else if (bd instanceof Orientable) {
-						if (dir == BlockFace.UP || dir == BlockFace.DOWN) {
-							((Orientable)bd).setAxis(Axis.Y);
-							
-						} else if (dir == BlockFace.EAST || dir == BlockFace.WEST) {
-							((Orientable)bd).setAxis(Axis.X);
-							
-						} else if (dir == BlockFace.NORTH || dir == BlockFace.SOUTH) {
-							((Orientable)bd).setAxis(Axis.Z);
-							
-						}
-					}
-					
-				} else if (args[0].equalsIgnoreCase("level")
-						&& bd instanceof Levelled) {
-					int lvl = Integer.parseInt(args[1]);
-					((Levelled)bd).setLevel(lvl);
-					
-				} else if ((args[0].equalsIgnoreCase("lit") || args[0].equalsIgnoreCase("light"))
-						&& bd instanceof Lightable) {
-					boolean lit = Boolean.parseBoolean(args[1]);
-					((Lightable)bd).setLit(lit);
-					
-				} else if ((args[0].equalsIgnoreCase("water") || args[0].equalsIgnoreCase("waterlogged"))
-						&& bd instanceof Waterlogged) {
-					boolean water = Boolean.parseBoolean(args[1]);
-					((Waterlogged)bd).setWaterlogged(water);;
-				
-				} else if (args[0].equalsIgnoreCase("moisture")
-						&& bd instanceof Farmland) {
-					int moisture = Integer.parseInt(args[1]);
-					((Farmland)bd).setMoisture(moisture);
-					
-				} else if ((args[0].equalsIgnoreCase("powered") || args[0].equalsIgnoreCase("power"))
-						&& bd instanceof Powerable) {
-					boolean powered = Boolean.parseBoolean(args[1]);
-					((Powerable)bd).setPowered(powered);
-					
-				} else if ((args[0].equalsIgnoreCase("type"))
-						&& bd instanceof Slab) {
-					Slab.Type slabType = Slab.Type.valueOf(args[1].toUpperCase());
-					((Slab)bd).setType(slabType);
-					
-				} else if ((args[0].equalsIgnoreCase("shape"))
-						&& bd instanceof Rail) {
-					Rail.Shape shape = Rail.Shape.valueOf(args[1].toUpperCase());
-					((Rail)bd).setShape(shape);
-					
-				} else {
-					// error message: invalid tag
-					MagicSpells.error("Invalid block data: " + tag);
-				}
-			} catch (Exception e) {
-				// error message: invalid tag
-				MagicSpells.error("Invalid block data: " + tag);
-			}
-		}
-		
-		return bd;
 	}
 	
 	/*private MagicMaterial resolveUnknown(String stype, String sdata) {

@@ -443,7 +443,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	}
 	
 	private static Pattern pattern = Pattern.compile(
-			"(\\w+)(?:\\(([a-z0-9:\\(\\),\\._]+)\\))?", // (\w+)(?:\(([a-z0-9:\(\),\._]+)\))?
+			"(\\w+)(?:\\(([a-z0-9,\\._=\\[\\]]+)\\))?", // (\w+)(?:\(([a-z0-9,\._=\[\]]+)\))?
 			Pattern.CASE_INSENSITIVE);
 	
 	private PacketPlayOutWorldParticles createParticlesPacket(Location location, String particleRaw, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
@@ -473,7 +473,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 				particle = new ParticleParamRedstone(rgbo[0], rgbo[1], rgbo[2], rgbo[3]);
 			
 			} else {
-				MagicMaterial mat = MagicSpells.getItemNameResolver().resolveBlock(data);;
+				MagicMaterial mat = MagicSpells.getItemNameResolver().resolveBlock(data);
 				if (name.equals("block")) {
 					particle = new ParticleParamBlock(Particles.BLOCK,
 							((CraftBlockData)((MagicBlockMaterial)mat).getBlockData()).getState());
@@ -513,7 +513,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 
 		String[] split = null;
 		for (String str : data.split(",")) {
-			split = str.split(":");
+			split = str.split("=");
 			try {
 				if (split[0].equals("red") || split[0].equals("r")) {
 					rgbo[0] = Float.parseFloat(split[1]);

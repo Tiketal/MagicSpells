@@ -41,7 +41,7 @@ public class TemporaryBlockSet implements Runnable {
 				BlockPlaceEvent event = new BlockPlaceEvent(block, state, block, player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
 				Bukkit.getPluginManager().callEvent(event);
 				if (event.isCancelled()) {
-					BlockUtils.setTypeAndData(block, original, (byte)0, false);
+					BlockUtils.setTypeAndData(block, original, null, false);
 				} else {
 					blocks.add(block);
 				}

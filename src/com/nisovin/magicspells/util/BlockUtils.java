@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
@@ -113,9 +114,11 @@ public class BlockUtils {
 		}
 	}
 	
-	public static void setTypeAndData(Block block, Material material, byte data, boolean physics) {
+	public static void setTypeAndData(Block block, Material material, BlockData data, boolean physics) {
 		block.setType(material);
-		block.setBlockData(material.createBlockData(), physics); // TODO: not correct
+		if (data != null) {
+			block.setBlockData(data, physics);
+		}
 	}
 	
 	public static void setBlockFromFallingBlock(Block block, FallingBlock fallingBlock, boolean physics) {
