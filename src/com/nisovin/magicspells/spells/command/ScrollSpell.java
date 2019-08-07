@@ -14,7 +14,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -173,9 +172,7 @@ public class ScrollSpell extends CommandSpell {
 		if (item == null) {
 			item = itemType.toItemStack(1);
 		}
-		if (item.getItemMeta() instanceof Damageable) {
-			((Damageable)item.getItemMeta()).setDamage(0);
-		}
+		Util.setItemDamage(item, 0);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', strScrollName.replace("%s", spell.getName()).replace("%u", (uses>=0?uses+"":"many"))));
 		if (strScrollSubtext != null && !strScrollSubtext.isEmpty()) {
@@ -221,12 +218,10 @@ public class ScrollSpell extends CommandSpell {
 			if (itemType.getMaterial() != inHand.getType() || inHand.getAmount() > 1) return;
 			
 			// check for predefined scroll
-			if (((inHand.getItemMeta() instanceof Damageable) 
-					? ((Damageable)inHand.getItemMeta()).getDamage() > 0 
-					: false) && predefinedScrollSpells != null) {
-				Spell spell = predefinedScrollSpells.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
+			if (Util.getItemDamage(inHand) > 0 && predefinedScrollSpells != null) {
+				Spell spell = predefinedScrollSpells.get(Integer.valueOf(Util.getItemDamage(inHand)));
 				if (spell != null) {
-					int uses = predefinedScrollUses.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
+					int uses = predefinedScrollUses.get(Integer.valueOf(Util.getItemDamage(inHand)));
 					inHand = createScroll(spell, uses, inHand);
 					player.getInventory().setItemInMainHand(inHand);
 				}
@@ -300,12 +295,10 @@ public class ScrollSpell extends CommandSpell {
 		if (inHand == null || inHand.getType() != itemType.getMaterial()) return;
 		
 		// check for predefined scroll
-		if (((inHand.getItemMeta() instanceof Damageable) 
-				? ((Damageable)inHand.getItemMeta()).getDamage() > 0 
-				: false) && predefinedScrollSpells != null) {
-			Spell spell = predefinedScrollSpells.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
+		if (Util.getItemDamage(inHand) > 0 && predefinedScrollSpells != null) {
+			Spell spell = predefinedScrollSpells.get(Integer.valueOf(Util.getItemDamage(inHand)));
 			if (spell != null) {
-				int uses = predefinedScrollUses.get(Integer.valueOf(((Damageable)inHand.getItemMeta()).getDamage()));
+				int uses = predefinedScrollUses.get(Integer.valueOf(Util.getItemDamage(inHand)));
 				inHand = createScroll(spell, uses, inHand);
 				player.getInventory().setItem(event.getNewSlot(), inHand);
 			}

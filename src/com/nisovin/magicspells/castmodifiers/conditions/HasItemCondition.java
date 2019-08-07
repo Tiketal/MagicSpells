@@ -6,9 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.castmodifiers.Condition;
+import com.nisovin.magicspells.util.Util;
 
 public class HasItemCondition extends Condition {
 
@@ -62,7 +62,7 @@ public class HasItemCondition extends Condition {
 							thisname = item.getItemMeta().getDisplayName();
 						}
 					} catch (Exception e) {}
-					if (item.getType() == mat && (!checkData || ((Damageable)item.getItemMeta()).getDamage() == data) && (!checkName || strEquals(thisname, name))) {
+					if (item.getType() == mat && (!checkData || Util.getItemDamage(item) == data) && (!checkName || strEquals(thisname, name))) {
 						return true;
 					}
 				}

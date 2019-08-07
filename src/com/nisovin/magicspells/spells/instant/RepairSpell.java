@@ -10,13 +10,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.materials.MagicMaterial;
 import com.nisovin.magicspells.spelleffects.EffectPosition;
 import com.nisovin.magicspells.spells.InstantSpell;
 import com.nisovin.magicspells.util.MagicConfig;
+import com.nisovin.magicspells.util.Util;
 
 public class RepairSpell extends InstantSpell {
 
@@ -82,8 +82,8 @@ public class RepairSpell extends InstantSpell {
 			for (String s : toRepair) {
 				if (s.equals("held")) {
 					ItemStack item = player.getInventory().getItemInMainHand();
-					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
-						((Damageable)item.getItemMeta()).setDamage(newDura(item));
+					if (item != null && isRepairable(item.getType()) && Util.getItemDamage(item) > 0) {
+						Util.setItemDamage(item, newDura(item));;
 						player.getInventory().setItemInMainHand(item);
 						repaired++;
 					}
@@ -99,8 +99,8 @@ public class RepairSpell extends InstantSpell {
 					}
 					for (int i = start; i < end; i++) {
 						ItemStack item = items[i];
-						if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
-							((Damageable)item.getItemMeta()).setDamage(newDura(item));
+						if (item != null && isRepairable(item.getType()) && Util.getItemDamage(item) > 0) {
+							Util.setItemDamage(item, newDura(item));;
 							items[i] = item;
 							repaired++;
 						}
@@ -108,29 +108,29 @@ public class RepairSpell extends InstantSpell {
 					player.getInventory().setContents(items);
 				} else if (s.equals("helmet")) {
 					ItemStack item = player.getInventory().getHelmet();
-					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
-						((Damageable)item.getItemMeta()).setDamage(newDura(item));
+					if (item != null && isRepairable(item.getType()) && Util.getItemDamage(item) > 0) {
+						Util.setItemDamage(item, newDura(item));;
 						player.getInventory().setHelmet(item);
 						repaired++;
 					}
 				} else if (s.equals("chestplate")) {
 					ItemStack item = player.getInventory().getChestplate();
-					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
-						((Damageable)item.getItemMeta()).setDamage(newDura(item));
+					if (item != null && isRepairable(item.getType()) && Util.getItemDamage(item) > 0) {
+						Util.setItemDamage(item, newDura(item));;
 						player.getInventory().setChestplate(item);
 						repaired++;
 					}
 				} else if (s.equals("leggings")) {
 					ItemStack item = player.getInventory().getLeggings();
-					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
-						((Damageable)item.getItemMeta()).setDamage(newDura(item));
+					if (item != null && isRepairable(item.getType()) && Util.getItemDamage(item) > 0) {
+						Util.setItemDamage(item, newDura(item));;
 						player.getInventory().setLeggings(item);
 						repaired++;
 					}
 				} else if (s.equals("boots")) {
 					ItemStack item = player.getInventory().getBoots();
-					if (item != null && isRepairable(item.getType()) && ((Damageable)item.getItemMeta()).getDamage() > 0) {
-						((Damageable)item.getItemMeta()).setDamage(newDura(item));
+					if (item != null && isRepairable(item.getType()) && Util.getItemDamage(item) > 0) {
+						Util.setItemDamage(item, newDura(item));;
 						player.getInventory().setBoots(item);
 						repaired++;
 					}
@@ -147,7 +147,7 @@ public class RepairSpell extends InstantSpell {
 	}
 	
 	private short newDura(ItemStack item) {
-		short dura = (short)((Damageable)item.getItemMeta()).getDamage();
+		short dura = (short)Util.getItemDamage(item);
 		dura -= repairAmt;
 		if (dura < 0) dura = 0;
 		return dura;

@@ -4,9 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.castmodifiers.Condition;
+import com.nisovin.magicspells.util.Util;
 
 public class DurabilityLessThanCondition extends Condition {
 
@@ -56,7 +56,7 @@ public class DurabilityLessThanCondition extends Condition {
 		if (item != null) {
 			int max = item.getType().getMaxDurability();
 			if (max > 0) {
-				return max - ((Damageable)item.getItemMeta()).getDamage() < durability;
+				return max - Util.getItemDamage(item) < durability;
 			}
 		} else {
 			return true;

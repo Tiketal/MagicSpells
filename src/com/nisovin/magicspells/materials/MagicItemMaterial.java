@@ -3,7 +3,8 @@ package com.nisovin.magicspells.materials;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
+
+import com.nisovin.magicspells.util.Util;
 
 public class MagicItemMaterial extends MagicMaterial {
 	Material type;
@@ -31,17 +32,13 @@ public class MagicItemMaterial extends MagicMaterial {
 	@Override
 	public ItemStack toItemStack(int quantity) {
 		ItemStack item = new ItemStack(getMaterial(), quantity);
-		if (item.getItemMeta() instanceof Damageable) {
-			((Damageable)item.getItemMeta()).setDamage(getDurability());
-		}
+		Util.setItemDamage(item, getDurability());
 		return item;
 	}
 
 	@Override
 	public boolean equals(ItemStack item) {
-		return type == item.getType() && ((item.getItemMeta() instanceof Damageable) 
-				? duraData == (short)((Damageable)item.getItemMeta()).getDamage()
-				: true);
+		return type == item.getType() && duraData == (short)Util.getItemDamage(item);
 	}
 	
 }

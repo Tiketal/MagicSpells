@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -15,9 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.spells.BuffSpell;
@@ -73,14 +69,6 @@ public class SeeHealthSpell extends BuffSpell {
 	}
 	
 	private void showHealthBar(Player player, LivingEntity entity) {
-		int slot = player.getInventory().getHeldItemSlot();
-		// get item
-		ItemStack item = player.getInventory().getItemInMainHand();
-		if (item == null || item.getType() == Material.AIR) {
-			item = new ItemStack(Material.BARRIER, 0); // TODO PISTON_MOVING_PIECE
-		} else {
-			item = item.clone();
-		}
 		// get pct health
 		double pct = (double)entity.getHealth() / (double)entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		// get bar color
@@ -110,29 +98,9 @@ public class SeeHealthSpell extends BuffSpell {
 				sb.append(symbol);
 			}
 		}
-		// set health bar string
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(sb.toString());
-		item.setItemMeta(meta);
-		// send update
-		MagicSpells.getVolatileCodeHandler().sendFakeSlotUpdate(player, slot, item);
+		// send action bar message
+		MagicSpells.getVolatileCodeHandler().sendActionBarMessage(player, sb.toString());
 	}
-	
-	//private void resetHealthBar(Player player) {
-	//	resetHealthBar(player, player.getInventory().getHeldItemSlot());
-	//}
-	
-	private void resetHealthBar(Player player, int slot) {
-		MagicSpells.getVolatileCodeHandler().sendFakeSlotUpdate(player, slot, player.getInventory().getItemInMainHand());
-	}
-	
-	@EventHandler
-	public void onItemHeldChange(PlayerItemHeldEvent event) {
-		if (isActive(event.getPlayer())) {
-			resetHealthBar(event.getPlayer(), event.getPreviousSlot());
-		}
-	}
-
 
 	@Override
 	public void turnOffBuff(Player player) {
@@ -197,8 +165,6 @@ public class SeeHealthSpell extends BuffSpell {
 					TargetInfo<LivingEntity> target = getTargetedEntity(player, 1F);
 					if (target != null) {
 						showHealthBar(player, target.getTarget());
-					} else {
-						//resetHealthBar(player);
 					}
 				}
 			}

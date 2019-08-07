@@ -29,7 +29,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -1114,7 +1113,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		}
 		if (durabilityCost > 0) {
 			ItemStack inHand = player.getInventory().getItemInMainHand();
-			if (inHand == null || ((Damageable)inHand.getItemMeta()).getDamage() >= inHand.getType().getMaxDurability()) {
+			if (inHand == null || Util.getItemDamage(inHand) >= inHand.getType().getMaxDurability()) {
 				return false;
 			}
 		}
@@ -1208,12 +1207,12 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 		if (durabilityCost != 0) {
 			ItemStack inHand = player.getInventory().getItemInMainHand();
 			if (inHand != null && inHand.getType().getMaxDurability() > 0) {
-				short newDura = (short) (((Damageable)inHand.getItemMeta()).getDamage() + durabilityCost);
+				short newDura = (short) (Util.getItemDamage(inHand) + durabilityCost);
 				if (newDura < 0) newDura = 0;
 				if (newDura >= inHand.getType().getMaxDurability()) {
 					player.getInventory().setItemInMainHand(null);
 				} else {
-					((Damageable)inHand).setDamage(newDura);
+					Util.setItemDamage(inHand, newDura);;
 					player.getInventory().setItemInMainHand(inHand);
 				}
 			}

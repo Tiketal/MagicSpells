@@ -105,15 +105,7 @@ public class Util {
 			} else {
 				return null;
 			}
-			/*ItemTypeAndData itemTypeAndData = MagicSpells.getItemNameResolver().resolve(s);
-			if (itemTypeAndData != null) {
-				item = new ItemStack(itemTypeAndData.type, 1);
-				if (item.getItemMeta() instanceof Damageable) {
-					((Damageable)item.getItemMeta()).setDamage(itemTypeAndData.data);
-				}
-			} else {
-				return null;
-			}*/
+			
 			if (name != null || lore != null || color >= 0) {
 				try {
 					ItemMeta meta = item.getItemMeta();
@@ -801,6 +793,22 @@ public class Util {
 			return getUniqueId(player);
 		}
 		return null;
+	}
+	
+	public static void setItemDamage(ItemStack item, int damage) {
+		ItemMeta meta = item.getItemMeta();
+		if (meta instanceof Damageable) {
+			((Damageable)item).setDamage(damage);
+		}
+		item.setItemMeta(meta);
+	}
+	
+	public static int getItemDamage(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
+		if (meta instanceof Damageable) {
+			return ((Damageable)item).getDamage();
+		}
+		return 0;
 	}
 	
 }

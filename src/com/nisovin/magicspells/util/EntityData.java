@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.nisovin.magicspells.MagicSpells;
 
-// TODO add 1.9+ mobs
 public class EntityData {
 
 	private EntityType entityType;

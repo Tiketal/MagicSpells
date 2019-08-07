@@ -540,7 +540,7 @@ public class Spellbook {
 		if (bindings != null) {
 			removed = bindings.remove(castItem);
 			if (bindings.size() == 0) {
-				bindings.add(new CastItem()); // TODO new CastItem(-1)
+				bindings.add(new CastItem((Material)null));
 			}
 		}
 		

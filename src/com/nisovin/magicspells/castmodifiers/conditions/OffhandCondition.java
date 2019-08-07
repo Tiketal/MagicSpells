@@ -6,10 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.castmodifiers.Condition;
+import com.nisovin.magicspells.util.Util;
 
 public class OffhandCondition extends Condition {
 
@@ -84,7 +84,7 @@ public class OffhandCondition extends Condition {
 	private boolean check(ItemStack item) {
 		if (item == null) return false;
 		Material thismat = item == null ? Material.AIR : item.getType();
-		short thisdata = item == null ? 0 : (short)((Damageable)item.getItemMeta()).getDamage();
+		short thisdata = item == null ? 0 : (short)Util.getItemDamage(item);
 		String thisname = null;
 		try {
 			if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
