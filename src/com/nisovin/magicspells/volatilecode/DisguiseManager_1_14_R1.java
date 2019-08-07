@@ -11,6 +11,7 @@ import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.*;
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntity.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,9 +19,11 @@ import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_14_R1.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -131,7 +134,9 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	private Entity getEntity(Player player, DisguiseSpell.Disguise disguise) {
 		EntityType entityType = disguise.getEntityType();
 		boolean flag = disguise.getFlag();
-		String var = disguise.getVar1();
+		String var1 = disguise.getVar1();
+		String var2 = disguise.getVar2();
+		String var3 = disguise.getVar3();
 		Location location = player.getLocation();
 		Entity entity = null;
 		float yOffset = 0;
@@ -158,22 +163,84 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			};
 			// TODO: entity.getDataWatcher().watch(10, (Byte)(byte)255);
 			yOffset = -1.5F;
+			
+		// zombie variants
 		} else if (entityType == EntityType.ZOMBIE) {
 			entity = new EntityZombie(world);
 			if (flag) {
 				((EntityZombie)entity).setBaby(true);
 			}
-		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
-				String biome = disguise.getVar2();
-				entity = new EntityZombieVillager(EntityTypes.ZOMBIE_VILLAGER, world);
-				((EntityZombieVillager)entity).setVillagerData(new VillagerData(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(biome)), IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var)), 0));
-				// biome, profession, level (master, apprentice, etc) 
+		
+		} else if (entityType == EntityType.HUSK) {
+			entity = new EntityZombieHusk(EntityTypes.HUSK, world);
+			if (flag) {
+				((EntityZombieHusk)entity).setBaby(true);
+			}
+		
+		} else if (entityType == EntityType.DROWNED) {
+			entity = new EntityDrowned(EntityTypes.DROWNED, world);
+			if (flag) {
+				((EntityDrowned)entity).setBaby(true);
+			}
 			
+		} else if (entityType == EntityType.ZOMBIE_VILLAGER) {
+				entity = new EntityZombieVillager(EntityTypes.ZOMBIE_VILLAGER, world);
+				if (flag) {
+					((EntityZombieVillager)entity).setBaby(true);
+				}
+				VillagerData data = ((EntityZombieVillager)entity).getVillagerData();
+				if (var1 != null) { // profession
+					if (var1.equals("random")) {
+						data = data.withProfession(IRegistry.VILLAGER_PROFESSION.a(random));
+					} else {
+						data = data.withProfession(IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var1)));
+					}
+				}
+				if (var2 != null) { // biome
+					if (var2.equals("random")) {
+						data = data.withType(IRegistry.VILLAGER_TYPE.a(random));
+					} else {
+						data = data.withType(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(var2)));
+					}
+				}
+				((EntityZombieVillager)entity).setVillagerData(data);
+				// biome, profession, level (master, apprentice, etc) 
+		
+		// villager
+		} else if (entityType == EntityType.VILLAGER) {
+			entity = new EntityVillager(EntityTypes.VILLAGER, world);
+			if (flag) {
+				((EntityVillager)entity).setAge(-24000);
+			}
+			VillagerData data = ((EntityVillager)entity).getVillagerData();
+			if (var1 != null) { // profession
+				if (var1.equals("random")) {
+					data = data.withProfession(IRegistry.VILLAGER_PROFESSION.a(random));
+				} else {
+					data = data.withProfession(IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var1)));
+				}
+			}
+			if (var2 != null) { // biome
+				if (var2.equals("random")) {
+					data = data.withType(IRegistry.VILLAGER_TYPE.a(random));
+				} else {
+					data = data.withType(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(var2)));
+				}
+			}
+			((EntityVillager)entity).setVillagerData(data);
+			
+		} else if (entityType == EntityType.WANDERING_TRADER) {
+			entity = new EntityVillagerTrader(EntityTypes.WANDERING_TRADER, world);
+			
+		// skeleton variants
 		} else if (entityType == EntityType.SKELETON) {
 			entity = new EntitySkeleton(EntityTypes.SKELETON, world);
-			if (flag) {
-				entity = new EntitySkeletonWither(EntityTypes.WITHER_SKELETON,world);
-			}
+			
+		} else if (entityType == EntityType.WITHER_SKELETON) {
+			entity = new EntitySkeletonWither(EntityTypes.WITHER_SKELETON,world);
+			
+		} else if (entityType == EntityType.STRAY) {
+			entity = new EntitySkeletonStray(EntityTypes.STRAY, world);
 			
 		} else if (entityType == EntityType.IRON_GOLEM) {
 			entity = new EntityIronGolem(EntityTypes.IRON_GOLEM, world);
@@ -187,6 +254,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				((EntityCreeper)entity).setPowered(true);
 			}
 			
+		// spider variants
 		} else if (entityType == EntityType.SPIDER) {
 			entity = new EntitySpider(EntityTypes.SPIDER, world);
 			
@@ -196,12 +264,21 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.WOLF) {
 			entity = new EntityWolf(EntityTypes.WOLF, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (!(var.equals("angry") || var.isEmpty())) {
+			if (var1 != null && !var1.equals("angry")) {
 				((EntityWolf)entity).setTamed(true);
 				((EntityWolf)entity).setOwnerUUID(player.getUniqueId());
-				((EntityWolf)entity).setCollarColor(EnumColor.valueOf(var.toUpperCase()));
+				if (var1.equals("random")) {
+					((EntityWolf)entity).setCollarColor(
+							EnumColor.fromColorIndex(random.nextInt(16))
+							);
+				} else {
+					((EntityWolf)entity).setCollarColor(
+							EnumColor.valueOf(var1.toUpperCase())
+							);
+				}
 			}
 			
+		// catlike variants
 		} else if (entityType == EntityType.OCELOT) {
 			entity = new EntityOcelot(EntityTypes.OCELOT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
@@ -209,11 +286,20 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.CAT) {
 			entity = new EntityCat(EntityTypes.CAT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-
-			if (var.equalsIgnoreCase("random")) {
-				((EntityCat)entity).setCatType(random.nextInt(4));
-			} else {
-				((EntityCat)entity).setCatType(getCatType(var));
+			
+			if (var1 != null && !var1.equals("random")) {
+				((EntityCat)entity).setCatType(getCatType(var1));
+			}
+			if (var2 != null) {
+				if (var2.equals("random")) {
+					((EntityWolf)entity).setCollarColor(
+							EnumColor.fromColorIndex(random.nextInt(16))
+							);
+				} else {
+					((EntityCat)entity).setCollarColor(
+							EnumColor.valueOf(var1.toUpperCase())
+							);
+				}
 			}
 			
 		} else if (entityType == EntityType.BLAZE) {
@@ -231,14 +317,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.WITCH) {
 			entity = new EntityWitch(EntityTypes.WITCH, world);
 			
-		} else if (entityType == EntityType.VILLAGER) {
-			entity = new EntityVillager(EntityTypes.VILLAGER, world);
-			if (flag) {
-				((EntityVillager)entity).setAge(-24000);
-			}
-			String biome = disguise.getVar2();
-			((EntityVillager)entity).setVillagerData(new VillagerData(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(biome)), IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(var)), 0));
-			
 		} else if (entityType == EntityType.PIG_ZOMBIE) {
 			entity = new EntityPigZombie(EntityTypes.ZOMBIE_PIGMAN, world);
 			if (flag) {
@@ -253,6 +331,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			entity = new EntityMagmaCube(EntityTypes.MAGMA_CUBE, world);
 			((EntitySlime)entity).setSize(2, false);
 			
+		// land animals
 		} else if (entityType == EntityType.BAT) {
 			entity = new EntityBat(EntityTypes.BAT, world);
 			((EntityBat)entity).setAsleep(false);
@@ -269,24 +348,93 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			entity = new EntityMushroomCow(EntityTypes.MOOSHROOM, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			
+			if (var1 != null) {
+				if (var1.equals("random")) {
+					((EntityMushroomCow)entity).setVariant(
+							EntityMushroomCow.Type.values()[random.nextInt(2)]
+							);
+				} else {
+					((EntityMushroomCow)entity).setVariant(
+							EntityMushroomCow.Type.valueOf(var1.toUpperCase())
+							);
+				}
+			}
+			
 		} else if (entityType == EntityType.PIG) {
 			entity = new EntityPig(EntityTypes.PIG, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (var.equals("saddled")) {
+			if (var1.equals("saddled")) {
 				((EntityPig)entity).setSaddle(true);
 			}
 			
 		} else if (entityType == EntityType.SHEEP) {
 			entity = new EntitySheep(EntityTypes.SHEEP, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			if (var.equals("random")) {
-				((EntitySheep)entity).setColor(EnumColor.fromColorIndex(random.nextInt(16)));
-			} else {
-				((EntitySheep)entity).setColor(EnumColor.valueOf(var.toUpperCase()));
+			if (var1 != null) {
+				if (var1.equals("random")) {
+					((EntitySheep)entity).setColor(
+							EnumColor.fromColorIndex(random.nextInt(16))
+							);
+				} else {
+					((EntitySheep)entity).setColor(
+							EnumColor.valueOf(var1.toUpperCase())
+							);
+				}
 			}
 			
+		} else if (entityType == EntityType.FOX) {
+			entity = new EntityFox(EntityTypes.FOX, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			if (var1 != null) {
+				if (var1.equals("random")) {
+					((EntityFox)entity).setFoxType(
+							EntityFox.Type.values()[random.nextInt(2)]
+							);
+				} else {
+					((EntityFox)entity).setFoxType(
+							EntityFox.Type.valueOf(var1.toUpperCase())
+							);
+				}
+			}
+			
+		} else if (entityType == EntityType.PANDA) {
+			entity = new EntityPanda(EntityTypes.PANDA, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			if (var1 != null) {
+				((EntityPanda)entity).setMainGene(
+						EntityPanda.Gene.valueOf(var1.toUpperCase())
+						);
+			}
+			
+		} else if (entityType == EntityType.PARROT) {
+			entity = new EntityParrot(EntityTypes.PARROT, world);
+			if (var1 != null) {
+				((EntityParrot)entity).setVariant(getParrotType(var1));
+			}
+			
+		// underwater
 		} else if (entityType == EntityType.SQUID) {
 			entity = new EntitySquid(EntityTypes.SQUID, world);
+			
+		} else if (entityType == EntityType.COD) {
+			entity = new EntityCod(EntityTypes.COD, world);
+			
+		} else if (entityType == EntityType.SALMON) {
+			entity = new EntitySalmon(EntityTypes.SALMON, world);
+			
+		} else if (entityType == EntityType.PUFFERFISH) {
+			entity = new EntityPufferFish(EntityTypes.PUFFERFISH, world);
+			
+		} else if (entityType == EntityType.TROPICAL_FISH) {
+			entity = new EntityTropicalFish(EntityTypes.TROPICAL_FISH, world);
+			// TODO?
+			
+		} else if (entityType == EntityType.DOLPHIN) {
+			entity = new EntityDolphin(EntityTypes.DOLPHIN, world);
+			
+		} else if (entityType == EntityType.TURTLE) {
+			entity = new EntityTurtle(EntityTypes.TURTLE, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
 			
 		} else if (entityType == EntityType.GHAST) {
 			entity = new EntityGhast(EntityTypes.GHAST, world);
@@ -294,7 +442,16 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.RABBIT) {
 			entity = new EntityRabbit(EntityTypes.RABBIT, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			((EntityRabbit)entity).setRabbitType(getRabbitType(var));
+			
+			if (var1 != null) {
+				if (var1.equals("random")) {
+					int t = random.nextInt();
+					if (t == 7) t = 99;
+					((EntityRabbit)entity).setRabbitType(t);
+				} else {
+					((EntityRabbit)entity).setRabbitType(getRabbitType(var1));
+				}
+			}
 			
 		} else if (entityType == EntityType.POLAR_BEAR) {
 			entity = new EntityPolarBear(EntityTypes.POLAR_BEAR, world);
@@ -310,6 +467,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.ENDERMITE) {
 			entity = new EntityEndermite(EntityTypes.ENDERMITE, world);
 			
+		// illagers
 		} else if (entityType == EntityType.VINDICATOR) {
 			entity = new EntityVindicator(EntityTypes.VINDICATOR, world);
 			
@@ -318,20 +476,30 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			
 		} else if (entityType == EntityType.EVOKER) {
 			entity = new EntityEvoker(EntityTypes.EVOKER, world);
+		
+		} else if (entityType == EntityType.PILLAGER) {
+			entity = new EntityPillager(EntityTypes.PILLAGER, world);
+
+		} else if (entityType == EntityType.RAVAGER) {
+			entity = new EntityRavager(EntityTypes.RAVAGER, world);
 			
-		} else if (entityType == EntityType.HUSK) {
-			entity = new EntityZombieHusk(EntityTypes.HUSK, world);
-			
-		} else if (entityType == EntityType.STRAY) {
-			entity = new EntitySkeletonStray(EntityTypes.STRAY, world);
+		} else if (entityType == EntityType.ILLUSIONER) {
+			entity = new EntityIllagerIllusioner(EntityTypes.ILLUSIONER, world);
 			
 		} else if (entityType == EntityType.WITHER) {
 			entity = new EntityWither(EntityTypes.WITHER, world);
 			
 		} else if (entityType == EntityType.LLAMA) {
 			entity = new EntityLlama(EntityTypes.LLAMA, world);
-			((EntityLlama)entity).setVariant(getLlamaType(var));
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			((EntityLlama)entity).setVariant(getLlamaType(var1));
+
+		} else if (entityType == EntityType.TRADER_LLAMA) {
+			entity = new EntityLlamaTrader(EntityTypes.TRADER_LLAMA, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			((EntityLlamaTrader)entity).setVariant(getLlamaType(var1));
 			
+		// horse variants
 		} else if (entityType == EntityType.HORSE) {
 			entity = new EntityHorse(EntityTypes.HORSE, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
@@ -341,6 +509,29 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			//if (disguise.getVar3() > 0) {
 			//	((EntityHorse)entity).getDataWatcher().watch(22, Integer.valueOf(disguise.getVar3()));
 			//}
+			
+		} else if (entityType == EntityType.DONKEY) {
+			entity = new EntityHorseDonkey(EntityTypes.DONKEY, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			
+		} else if (entityType == EntityType.MULE) {
+			entity = new EntityHorseMule(EntityTypes.MULE, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			
+		} else if (entityType == EntityType.SKELETON_HORSE) {
+			entity = new EntityHorseSkeleton(EntityTypes.SKELETON_HORSE, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			
+		} else if (entityType == EntityType.ZOMBIE_HORSE) {
+			entity = new EntityHorseZombie(EntityTypes.ZOMBIE_HORSE, world);
+			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
+			
+		} else if (entityType == EntityType.SHULKER) {
+			entity = new EntityShulker(EntityTypes.SHULKER, world);
+			
+		} else if (entityType == EntityType.PHANTOM) {
+			entity = new EntityPhantom(EntityTypes.PHANTOM, world);
+			((EntityPhantom)entity).setSize(Integer.parseInt(var1));
 			
 		} else if (entityType == EntityType.ENDER_DRAGON) {
 			entity = new EntityEnderDragon(EntityTypes.ENDER_DRAGON, world);
@@ -756,8 +947,8 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				refPacketPlayerInfo.set(packetinfo, "b", list); disguised.getWorld().getEnvironment();
 				PacketPlayOutRespawn packetrespawn = new PacketPlayOutRespawn(IRegistry.DIMENSION_TYPE.get(new MinecraftKey(
 						disguised.getWorld().getEnvironment() == Environment.NORMAL
-						? "overworld" 
-						: disguised.getWorld().getEnvironment().name().toLowerCase())), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
+							? "overworld" 
+							: disguised.getWorld().getEnvironment().name().toLowerCase())), WorldType.NORMAL, EnumGamemode.valueOf(disguised.getGameMode().name().toUpperCase()));
 				List<AttributeInstance> l = new ArrayList<AttributeInstance>();
 				AttributeInstance a = ((CraftPlayer)disguised).getHandle().getAttributeInstance(GenericAttributes.MAX_HEALTH);
 				if (a != null) {
@@ -782,6 +973,24 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					}
 				}, 20);
 			}
+		}
+	}
+	private int getParrotType(String str) {
+		switch (str) {
+			case "red":
+				return 0;
+			case "blue":
+				return 1;
+			case "green":
+				return 2;
+			case "black_and_white":
+				return 3;
+			case "cyan":
+				return 4;
+			case "gray":
+				return 5;
+			default:
+				return 0;
 		}
 	}
 	

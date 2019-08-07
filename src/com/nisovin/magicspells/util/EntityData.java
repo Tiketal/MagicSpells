@@ -263,15 +263,11 @@ public class EntityData {
 		} else if (type.endsWith(" parrot")) {
 			String color = type.replaceAll(" parrot", "");
 			
-			if (color.equals("random")) {
-				var1 = "random";
-			} else {
-				try {
-					Parrot.Variant.valueOf(color.toUpperCase());
-					var1 = color;
-				} catch (IllegalArgumentException e) {
-					MagicSpells.error("Invalid parrot color: " + color);
-				}
+			try {
+				Parrot.Variant.valueOf(color.toUpperCase());
+				var1 = color;
+			} catch (IllegalArgumentException e) {
+				MagicSpells.error("Invalid parrot color: " + color);
 			}
 			
 			type = "parrot";
@@ -570,7 +566,11 @@ public class EntityData {
 			((Pig)entity).setSaddle(var1.equals("saddled"));
 		} else if (entityType == EntityType.SHEEP) {
 			if (var1 != null) {
-				((Sheep)entity).setColor(DyeColor.valueOf(var1.toUpperCase()));
+				if (var1.equals("random")) {
+					((Sheep)entity).setColor(DyeColor.values()[Util.getRandomInt(DyeColor.values().length)]);
+				} else {
+					((Sheep)entity).setColor(DyeColor.valueOf(var1.toUpperCase()));
+				}
 			}
 			
 		} else if (entityType == EntityType.RABBIT) {
