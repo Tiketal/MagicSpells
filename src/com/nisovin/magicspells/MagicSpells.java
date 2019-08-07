@@ -87,8 +87,8 @@ public class MagicSpells extends JavaPlugin {
 	boolean castWithRightClick;
 	boolean ignoreDefaultBindings;
 	boolean showStrCostOnMissingReagents;
-	HashSet<Material> losTransparentBlocks; // TODO: fix
-	List<Material> ignoreCastItemDurability; // TODO: fix
+	HashSet<Material> losTransparentBlocks;
+	List<Material> ignoreCastItemDurability;
 	HashMap<EntityType, String> entityNames;
 	int globalCooldown;
 	boolean castOnAnimate;

@@ -244,7 +244,7 @@ public class WalkwaySpell extends BuffSpell {
 		}
 		
 		public void drawCarpet(Block origin, int dirX, int dirY, int dirZ) {
-			// determine block type and maybe stair direction TODO
+			// determine block type and maybe stair direction
 			Material mat = material;
 			Directional bd = null;
 			if ((material == Material.OAK_PLANKS || material == Material.COBBLESTONE) && dirY != 0) {

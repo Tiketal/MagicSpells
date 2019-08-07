@@ -95,7 +95,7 @@ public class CastItem {
 				this.data = 0;
 			} else {
 				this.data = Short.parseShort(split[1]);
-			} // TODO: Durability data
+			}
 		} else {
 			this.type = Material.getMaterial(s);
 			this.data = 0;
