@@ -639,24 +639,30 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		DisguiseSpell.Disguise disguise = getDisguise(event.getPlayer());
 		if (disguise == null) return;
 		EntityType entityType = disguise.getEntityType();
-//		EntityPlayer entityPlayer = ((CraftPlayer)event.getPlayer()).getHandle();
+		EntityPlayer entityPlayer = ((CraftPlayer)event.getPlayer()).getHandle();
 		Player p = event.getPlayer();
-//		int entityId = p.getEntityId();
-		/*if (entityType == EntityType.WOLF) {
+		int entityId = p.getEntityId();
+		if (entityType == EntityType.WOLF) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)1));
+				dw.set(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.set(DataWatcherRegistry.b.a(1), Integer.valueOf(300)); // varint
+				dw.set(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)1));
+//				dw.a(0, Byte.valueOf((byte) 0));
+//				dw.a(1, Short.valueOf((short) 300));
+//				dw.a(16, Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)0));
+				dw.set(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.set(DataWatcherRegistry.b.a(1), Integer.valueOf(300)); // varint
+				dw.set(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)1));				
+//				dw.a(0, Byte.valueOf((byte) 0));
+//				dw.a(1, Short.valueOf((short) 300));
+//				dw.a(16, Byte.valueOf((byte)0));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
-		} else if (entityType == EntityType.ENDERMAN) {
+		} else /*if (entityType == EntityType.ENDERMAN) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
 				dw.a(0, Byte.valueOf((byte) 0));
@@ -1210,4 +1216,5 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			e.printStackTrace();
 		}
 	}
+	
 }
