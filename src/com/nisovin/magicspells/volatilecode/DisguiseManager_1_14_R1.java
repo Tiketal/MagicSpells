@@ -11,7 +11,6 @@ import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.*;
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntity.*;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,11 +18,9 @@ import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_14_R1.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -644,7 +641,8 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		int entityId = p.getEntityId();
 		if (entityType == EntityType.WOLF) {
 			if (event.isSneaking()) {
-				final DataWatcher dw = new DataWatcher(null);
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				volatileDisableRegistrationLock(dw);
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
 				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)1));
@@ -654,6 +652,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(null);
+				volatileDisableRegistrationLock(dw);
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300)); // varint
 				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)0));				
@@ -692,6 +691,14 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			}
 		} else */if (entityType == EntityType.SHEEP && event.isSneaking()) {
 			p.playEffect(EntityEffect.SHEEP_EAT);
+		}
+	}
+	
+	private void volatileDisableRegistrationLock(DataWatcher dw) {
+		try {
+			DataWatcher.class.getField("registrationLocked").setBoolean(dw, false);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
