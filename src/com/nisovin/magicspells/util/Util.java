@@ -798,7 +798,7 @@ public class Util {
 	public static void setItemDamage(ItemStack item, int damage) {
 		ItemMeta meta = item.getItemMeta();
 		if (meta instanceof Damageable) {
-			((Damageable)item).setDamage(damage);
+			((Damageable)meta).setDamage(damage);
 		}
 		item.setItemMeta(meta);
 	}
@@ -806,7 +806,7 @@ public class Util {
 	public static int getItemDamage(ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
 		if (meta instanceof Damageable) {
-			return ((Damageable)item).getDamage();
+			return ((Damageable)meta).getDamage();
 		}
 		return 0;
 	}
