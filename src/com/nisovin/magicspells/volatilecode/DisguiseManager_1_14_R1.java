@@ -653,7 +653,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 //				dw.a(16, Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
-				final DataWatcher dw = entityPlayer.getDataWatcher();//new DataWatcher(entityPlayer);
+				final DataWatcher dw = new DataWatcher(null);
 				dw.set(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.set(DataWatcherRegistry.b.a(1), Integer.valueOf(300)); // varint
 				dw.set(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)0));				
