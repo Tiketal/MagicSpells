@@ -55,7 +55,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 	}
 	
 	private static Pattern pattern = Pattern.compile(
-			"([\\w|\\*]+)(?:(\\[\\w+=\\w+(?:,\\w+=\\w+)*\\]))*", // ([\w|\*]+)(?:(\[\w+=\w+(?:,\w+=\w+)*\]))*
+			"([\\w|\\*]+)(?:(\\[(?:\\*|\\w+=\\w+(?:,\\w+=\\w+)*)\\]))*", // ([\w|\*]+)(?:(\[(?:\*|\w+=\w+(?:,\w+=\w+)*)\]))*
 			Pattern.CASE_INSENSITIVE
 			);
 	
@@ -107,8 +107,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			return new MagicBlockMaterial(type.createBlockData());
 		} else {
 			
-//TODO			if (sdata.equals("*")) return new MagicItemAnyDataMaterial(type);
-			
 			// items with durability/data values
 			short damage = 0;
 			if (sdata != null) {
@@ -158,10 +156,14 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		// create MagicMaterial
 		if (type.isBlock()) {
 			if (sdata != null) {
-				try {
-					return new MagicBlockMaterial(type.createBlockData(sdata));
-				} catch (IllegalArgumentException e) {
-					MagicSpells.error("Invalid block data: " + sdata);
+				if (sdata.equals("[*]")) {
+					return new MagicBlockAnyDataMaterial(type.createBlockData());
+				} else {
+					try {
+						return new MagicBlockMaterial(type.createBlockData(sdata));
+					} catch (IllegalArgumentException e) {
+						MagicSpells.error("Invalid block data: " + sdata);
+					}
 				}
 			}
 			return new MagicBlockMaterial(type.createBlockData());
