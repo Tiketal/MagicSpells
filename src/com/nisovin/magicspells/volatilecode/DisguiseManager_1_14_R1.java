@@ -1,7 +1,6 @@
 package com.nisovin.magicspells.volatilecode;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -568,70 +567,83 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onArmSwing(PlayerAnimationEvent event) {
 		final Player p = event.getPlayer();
-//		final int entityId = p.getEntityId();
+		final int entityId = p.getEntityId();
 		if (isDisguised(p)) {
 			DisguiseSpell.Disguise disguise = getDisguise(p);
 			EntityType entityType = disguise.getEntityType();
-//			EntityPlayer entityPlayer = ((CraftPlayer)p).getHandle(); 
+			EntityPlayer entityPlayer = ((CraftPlayer)p).getHandle(); 
 			if (entityType == EntityType.IRON_GOLEM) {
 				((CraftWorld)p.getWorld()).getHandle().broadcastEntityEffect(((CraftEntity)p).getHandle(), (byte) 4);
 			} else if (entityType == EntityType.WITCH) {
 				((CraftWorld)p.getWorld()).getHandle().broadcastEntityEffect(((CraftEntity)p).getHandle(), (byte) 15);
 			} else if (entityType == EntityType.VILLAGER) {
 				((CraftWorld)p.getWorld()).getHandle().broadcastEntityEffect(((CraftEntity)p).getHandle(), (byte) 13);
+			} else if (entityType == EntityType.RAVAGER) {
+				((CraftWorld)p.getWorld()).getHandle().broadcastEntityEffect(((CraftEntity)p).getHandle(), (byte) 4);
 			} else if (entityType == EntityType.BLAZE || entityType == EntityType.SPIDER || entityType == EntityType.GHAST) {
-				/*final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)1));
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.a.a(14), Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MagicSpells.plugin, new Runnable() {
 					public void run() {
-						dw.watch(16, Byte.valueOf((byte)0));
+						dw.set(DataWatcherRegistry.a.a(14), Byte.valueOf((byte)0));
 						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 					}
 				}, 10);
 			} else if (entityType == EntityType.WITCH) {
-				/*final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(21, Byte.valueOf((byte)1));
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(true));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MagicSpells.plugin, new Runnable() {
 					public void run() {
-						dw.watch(21, Byte.valueOf((byte)0));
+						dw.set(DataWatcherRegistry.i.a(15), Boolean.valueOf(false));
 						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 					}
-				}, 10);*/
+				}, 10);
 			} else if (entityType == EntityType.WOLF) {
-				/*final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)(p.isSneaking() ? 3 : 2)));
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)(p.isSneaking() ? 3 : 2)));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MagicSpells.plugin, new Runnable() {
 					public void run() {
-						dw.watch(16, Byte.valueOf((byte)(p.isSneaking() ? 1 : 0)));
+						dw.set(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)(p.isSneaking() ? 1 : 0)));
 						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 					}
-				}, 10);*/
+				}, 10);
 			} else if (entityType == EntityType.SLIME || entityType == EntityType.MAGMA_CUBE) {
-				/*final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)(p.isSneaking() ? 2 : 3)));
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.b.a(14), Integer.valueOf((p.isSneaking() ? 2 : 3)));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MagicSpells.plugin, new Runnable() {
 					public void run() {
-						dw.watch(16, Byte.valueOf((byte)(p.isSneaking() ? 1 : 2)));
+						dw.set(DataWatcherRegistry.b.a(14), Integer.valueOf((p.isSneaking() ? 1 : 2)));
 						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 					}
-				}, 10);*/
+				}, 10);
+			} else if (entityType == EntityType.POLAR_BEAR) {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(true));
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+				Bukkit.getScheduler().scheduleSyncDelayedTask(MagicSpells.plugin, new Runnable() {
+					public void run() {
+						dw.set(DataWatcherRegistry.i.a(15), Boolean.valueOf(false));
+						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+					}
+				}, 10);
 			}
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onSneak(PlayerToggleSneakEvent event) {
 		DisguiseSpell.Disguise disguise = getDisguise(event.getPlayer());
@@ -643,23 +655,15 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		if (entityType == EntityType.WOLF) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				volatileDisableRegistrationLock(dw);
-				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0x04));
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
 				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)1));
-//				dw.a(0, Byte.valueOf((byte) 0));
-//				dw.a(1, Short.valueOf((short) 300));
-//				dw.a(16, Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				volatileDisableRegistrationLock(dw);
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
-				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300)); // varint
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
 				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)0));				
-//				dw.a(0, Byte.valueOf((byte) 0));
-//				dw.a(1, Short.valueOf((short) 300));
-//				dw.a(16, Byte.valueOf((byte)0));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
 		} else if (entityType == EntityType.ENDERMAN) {
@@ -668,9 +672,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
 				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(true));
-//				dw.a(0, Byte.valueOf((byte) 0));
-//				dw.a(1, Short.valueOf((short) 300));
-//				dw.a(18, Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
@@ -679,32 +680,50 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(false));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
-		} else /*if (entityType == EntityType.SLIME || entityType == EntityType.MAGMA_CUBE) {
+		} else if (entityType == EntityType.SLIME || entityType == EntityType.MAGMA_CUBE) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)1));
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.b.a(14), Integer.valueOf(1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(16, Byte.valueOf((byte)2));
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.b.a(14), Integer.valueOf(2));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
-		} else */if (entityType == EntityType.SHEEP && event.isSneaking()) {
-			p.playEffect(EntityEffect.SHEEP_EAT);
-		}
-	}
-	
-	private void volatileDisableRegistrationLock(DataWatcher dw) {
-		try {
-			Field lock = DataWatcher.class.getDeclaredField("registrationLocked");
-			lock.setAccessible(true);
-			lock.setBoolean(dw, false);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} else if (entityType == EntityType.SHEEP && event.isSneaking()) {
+			((CraftWorld)p.getWorld()).getHandle().broadcastEntityEffect(((CraftEntity)p).getHandle(), (byte) 10);
+		} else if (entityType == EntityType.FOX) {
+			if (event.isSneaking()) {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)1));
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			} else {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)0));				
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			}
+		} else if (entityType == EntityType.GUARDIAN || entityType == EntityType.ELDER_GUARDIAN) {
+			if (event.isSneaking()) {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(14), Boolean.valueOf(true));
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			} else {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(14), Boolean.valueOf(false));				
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			}
 		}
 	}
 	
