@@ -11,7 +11,6 @@ import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.*;
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntity.*;
 
 import org.bukkit.Bukkit;
-import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -158,7 +157,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 					return false;
 				}
 			};
-			// TODO: entity.getDataWatcher().watch(10, (Byte)(byte)255);
+			entity.getDataWatcher().set(DataWatcherRegistry.a.a(15), (Byte)(byte)255);
 			yOffset = -1.5F;
 			
 		// zombie variants
@@ -453,7 +452,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 		} else if (entityType == EntityType.POLAR_BEAR) {
 			entity = new EntityPolarBear(EntityTypes.POLAR_BEAR, world);
 			((EntityAgeable)entity).setAge(flag ? -24000 : 0);
-			// TODO: Figure out animations for attacking
 			
 		} else if (entityType == EntityType.GUARDIAN) {
 			entity = new EntityGuardian(EntityTypes.GUARDIAN, world);
@@ -628,18 +626,6 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 					}
 				}, 10);
-			} else if (entityType == EntityType.POLAR_BEAR) {
-				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
-				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
-				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(true));
-				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
-				Bukkit.getScheduler().scheduleSyncDelayedTask(MagicSpells.plugin, new Runnable() {
-					public void run() {
-						dw.set(DataWatcherRegistry.i.a(15), Boolean.valueOf(false));
-						broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
-					}
-				}, 10);
 			}
 		}
 	}
@@ -701,7 +687,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
-				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)1));
+				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)4));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
@@ -722,6 +708,34 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
 				dw.register(DataWatcherRegistry.i.a(14), Boolean.valueOf(false));				
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			}
+		} else if (entityType == EntityType.POLAR_BEAR) {
+			if (event.isSneaking()) {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(true));
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			} else {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(false));				
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			}
+		} else if (entityType == EntityType.HORSE) {
+			if (event.isSneaking()) {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)0x20));
+				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
+			} else {
+				final DataWatcher dw = new DataWatcher(entityPlayer);
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)0));				
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
 		}
