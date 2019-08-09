@@ -466,7 +466,15 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 		
 		// for block, item, falling_dust, and dust
 		// parameterized particle
-		if (data != null) {
+		if (data == null) {
+			if (name.equals("dust")) {
+				particle = ParticleParamRedstone.a;
+			} if (name.equals("block") || name.equals("item") || name.equals("falling_dust")) {
+				MagicSpells.error("Invalid particle: " + particleRaw);
+				return null;
+			}
+			
+		} else {
 			if (name.equals("dust")) {
 				float[] rgbo = getRGBO(data.toLowerCase());
  				// r g b opacity
@@ -509,7 +517,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	}
 	
 	private float[] getRGBO(String data) {
-		float[] rgbo = {255, 0, 0, 1};
+		float[] rgbo = {0, 0, 0, 1};
 
 		String[] split = null;
 		for (String str : data.split(",")) {

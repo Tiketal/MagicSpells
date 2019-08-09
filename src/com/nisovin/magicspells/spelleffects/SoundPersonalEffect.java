@@ -13,7 +13,7 @@ public class SoundPersonalEffect extends SpellEffect {
 	float volume = 1.0F;
 	float pitch = 1.0F;
 	boolean broadcast = false;
-	String category = "MASTER";
+	String category = "master";
 
 	@Override
 	public void loadFromString(String string) {
@@ -27,11 +27,6 @@ public class SoundPersonalEffect extends SpellEffect {
 				pitch = Float.parseFloat(data[2]);
 			}
 		}
-		if (sound.equals("random.wood_click")) {
-			sound = "random.wood click";
-		} else if (sound.equals("mob.ghast.affectionate_scream")) {
-			sound = "mob.ghast.affectionate scream";
-		}
 	}
 
 	@Override
@@ -40,7 +35,7 @@ public class SoundPersonalEffect extends SpellEffect {
 		volume = (float)config.getDouble("volume", volume);
 		pitch = (float)config.getDouble("pitch", pitch);
 		broadcast = config.getBoolean("broadcast", broadcast);
-		category = config.getString("category", category).toUpperCase();
+		category = config.getString("category", category);
 	}
 
 	@Override

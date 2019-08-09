@@ -10,7 +10,7 @@ public class SoundEffect extends SpellEffect {
 	String sound = "random.pop";
 	float volume = 1.0F;
 	float pitch = 1.0F;
-	String category = "MASTER";
+	String category = "master";
 
 	@Override
 	public void loadFromString(String string) {
@@ -22,11 +22,6 @@ public class SoundEffect extends SpellEffect {
 			}
 			if (data.length > 2) {
 				pitch = Float.parseFloat(data[2]);
-			}
-			if (sound.equals("random.wood_click")) {
-				sound = "random.wood click";
-			} else if (sound.equals("mob.ghast.affectionate_scream")) {
-				sound = "mob.ghast.affectionate scream";
 			}
 		}
 	}
