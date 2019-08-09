@@ -1,6 +1,7 @@
 package com.nisovin.magicspells.volatilecode;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -643,39 +644,42 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
 				volatileDisableRegistrationLock(dw);
-				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0x04));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
-				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)1));
+				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)1));
 //				dw.a(0, Byte.valueOf((byte) 0));
 //				dw.a(1, Short.valueOf((short) 300));
 //				dw.a(16, Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
-				final DataWatcher dw = new DataWatcher(null);
+				final DataWatcher dw = new DataWatcher(entityPlayer);
 				volatileDisableRegistrationLock(dw);
 				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
 				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300)); // varint
-				dw.register(DataWatcherRegistry.a.a(16), Byte.valueOf((byte)0));				
+				dw.register(DataWatcherRegistry.a.a(15), Byte.valueOf((byte)0));				
 //				dw.a(0, Byte.valueOf((byte) 0));
 //				dw.a(1, Short.valueOf((short) 300));
 //				dw.a(16, Byte.valueOf((byte)0));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
-		} else /*if (entityType == EntityType.ENDERMAN) {
+		} else if (entityType == EntityType.ENDERMAN) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(18, Byte.valueOf((byte)1));
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(true));
+//				dw.a(0, Byte.valueOf((byte) 0));
+//				dw.a(1, Short.valueOf((short) 300));
+//				dw.a(18, Byte.valueOf((byte)1));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			} else {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
-				dw.a(0, Byte.valueOf((byte) 0));
-				dw.a(1, Short.valueOf((short) 300));
-				dw.a(18, Byte.valueOf((byte)0));
+				dw.register(DataWatcherRegistry.a.a(0), Byte.valueOf((byte) 0));
+				dw.register(DataWatcherRegistry.b.a(1), Integer.valueOf(300));
+				dw.register(DataWatcherRegistry.i.a(15), Boolean.valueOf(false));
 				broadcastPacketDisguised(p, PacketType.Play.Server.ENTITY_METADATA, new PacketPlayOutEntityMetadata(entityId, dw, true));
 			}
-		} else if (entityType == EntityType.SLIME || entityType == EntityType.MAGMA_CUBE) {
+		} else /*if (entityType == EntityType.SLIME || entityType == EntityType.MAGMA_CUBE) {
 			if (event.isSneaking()) {
 				final DataWatcher dw = new DataWatcher(entityPlayer);
 				dw.a(0, Byte.valueOf((byte) 0));
@@ -696,7 +700,9 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 	
 	private void volatileDisableRegistrationLock(DataWatcher dw) {
 		try {
-			DataWatcher.class.getField("registrationLocked").setBoolean(dw, false);
+			Field lock = DataWatcher.class.getDeclaredField("registrationLocked");
+			lock.setAccessible(true);
+			lock.setBoolean(dw, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
