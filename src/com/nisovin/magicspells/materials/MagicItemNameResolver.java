@@ -111,7 +111,24 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			}
 			return new MagicBlockMaterial(type.createBlockData());
 		} else {
-			return new MagicItemMaterial(type);
+			if (sdata.equals("[*]")) return new MagicItemAnyDataMaterial(type);
+			
+			// items with durability/data values
+			short damage = 0;
+			if (sdata != null) {
+				sdata = sdata.replaceAll("[\\[\\]]", "");
+				String[] split;
+				for (String tag : sdata.split(",")) {
+					split = tag.split("=");
+					if (split[0].equalsIgnoreCase("damage") || split[0].startsWith("dura")) {
+						if (split[1].equals("[*]")) return new MagicItemAnyDataMaterial(type);
+						try {
+							damage = Short.parseShort(split[1]);
+						} catch (NumberFormatException e) {}
+					}
+				}
+			}
+			return new MagicItemMaterial(type, damage);
 		}
 	}
 	

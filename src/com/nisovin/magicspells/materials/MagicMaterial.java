@@ -7,6 +7,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 
+import com.nisovin.magicspells.util.Util;
+
 public abstract class MagicMaterial {
 	public abstract Material getMaterial();
 	
@@ -65,7 +67,7 @@ public abstract class MagicMaterial {
 		if (item.getType().isBlock()) {
 			return new MagicBlockMaterial(item.getType().createBlockData());
 		}
-		return new MagicItemMaterial(item.getType());
+		return new MagicItemMaterial(item.getType(), (short)Util.getItemDamage(item));
 	}
 	
 	public static MagicMaterial fromBlock(Block block) {
