@@ -668,7 +668,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	public void resetEntityAttributes(LivingEntity entity) {
 		try {
 			EntityLiving e = ((CraftLivingEntity)entity).getHandle();
-			Field field = EntityLiving.class.getDeclaredField("bp");
+			Field field = EntityLiving.class.getDeclaredField("attributeMap");
 			field.setAccessible(true);
 			field.set(e, null);
 			e.getAttributeMap();
