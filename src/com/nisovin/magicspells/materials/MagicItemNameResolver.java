@@ -87,12 +87,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		String sdata = matcher.group(2); // can be null if empty
 		if (sdata == null) sdata = "";
 		
-		// very general type; use with caution
-		if (stype.contains("*")) {
-			String regex = stype.replace("*", "\\w+");
-			return new MagicAnyMaterial(Material.AIR.createBlockData(), regex);
-		}
-		
 		// check for correct material
 		Material type = materialMap.get(stype);
 		if (type == null) {
@@ -153,12 +147,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		// split type and data
 		String stype = matcher.group(1).toLowerCase();
 		String sdata = matcher.group(2);
-		
-		// very general type; use with caution
-		if (stype.contains("*")) {
-			String regex = stype.replace("*", "\\w+");
-			return new MagicAnyMaterial(Material.AIR.createBlockData(), regex);
-		}
 		
 		// check for correct material
 		Material type = materialMap.get(stype);

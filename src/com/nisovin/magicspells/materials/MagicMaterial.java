@@ -45,11 +45,7 @@ public abstract class MagicMaterial {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof MagicAnyMaterial) {
-			MagicAnyMaterial m = (MagicAnyMaterial)o;
-			return m.equals(this);
-			
-		} else if (o instanceof MagicMaterial) {
+		if (o instanceof MagicMaterial) {
 			MagicMaterial m = (MagicMaterial)o;
 			return m.getMaterial() == getMaterial() && ((getBlockData() != null)
 					? getBlockData().equals(m.getBlockData())
