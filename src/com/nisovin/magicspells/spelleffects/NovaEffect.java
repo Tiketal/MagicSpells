@@ -36,7 +36,7 @@ class NovaEffect extends SpellEffect {
 //			byte data = 0;
 			if (params.length >= 1) {
 				try {
-					type = Material.getMaterial(params[0]);
+					type = Material.getMaterial(params[0].toUpperCase());
 				} catch (NumberFormatException e) {					
 				}
 			}

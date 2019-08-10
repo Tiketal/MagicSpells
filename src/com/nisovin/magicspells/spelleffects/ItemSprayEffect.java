@@ -29,7 +29,7 @@ class ItemSprayEffect extends SpellEffect {
 				if (data[0].contains(":")) {
 					try {
 						String[] typeData = data[0].split(":");
-						type = Material.getMaterial(typeData[0]);
+						type = Material.getMaterial(typeData[0].toUpperCase());
 						dura = Short.parseShort(typeData[1]);
 					} catch (NumberFormatException e) {						
 					}

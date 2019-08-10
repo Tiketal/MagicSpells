@@ -33,7 +33,7 @@ public class HasItemCondition extends Condition {
 			}
 			if (var.contains(":")) {
 				String[] vardata = var.split(":");
-				mat = Material.getMaterial(vardata[0]);
+				mat = Material.getMaterial(vardata[0].toUpperCase());
 				if (vardata[1].equals("*")) {
 					data = 0;
 					checkData = false;
@@ -42,7 +42,7 @@ public class HasItemCondition extends Condition {
 					checkData = true;
 				}
 			} else {
-				mat = Material.getMaterial(var);
+				mat = Material.getMaterial(var.toUpperCase());
 				checkData = false;
 			}
 			return true;

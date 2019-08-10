@@ -41,7 +41,7 @@ public class HoldingCondition extends Condition {
 				}
 				if (vardata[i].contains(":")) {
 					String[] subvardata = vardata[i].split(":");
-					materials[i] = Material.getMaterial(subvardata[0]);
+					materials[i] = Material.getMaterial(subvardata[0].toUpperCase());
 					if (subvardata[1].equals("*")) {
 						datas[i] = 0;
 						checkData[i] = false;
@@ -50,7 +50,7 @@ public class HoldingCondition extends Condition {
 						checkData[i] = true;
 					}
 				} else {
-					materials[i] = Material.getMaterial(vardata[i]);
+					materials[i] = Material.getMaterial(vardata[i].toUpperCase());
 					datas[i] = 0;
 					checkData[i] = false;
 				}

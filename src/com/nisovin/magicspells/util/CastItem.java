@@ -90,14 +90,14 @@ public class CastItem {
 		}
 		if (s.contains(":")) {
 			String[] split = s.split(":");
-			this.type = Material.getMaterial(split[0]);
+			this.type = Material.getMaterial(split[0].toUpperCase());
 			if (MagicSpells.ignoreCastItemDurability(type)) {
 				this.data = 0;
 			} else {
 				this.data = Short.parseShort(split[1]);
 			}
 		} else {
-			this.type = Material.getMaterial(s);
+			this.type = Material.getMaterial(s.toUpperCase());
 			this.data = 0;
 		}
 	}
