@@ -24,10 +24,23 @@ class ItemSprayEffect extends SpellEffect {
 		if (string != null) {
 			String[] data = string.split(" ");
 			Material type = Material.REDSTONE;
+			short dura = 0;
 			if (data.length >= 1) {
-				type = Material.getMaterial(data[0]);
+				if (data[0].contains(":")) {
+					try {
+						String[] typeData = data[0].split(":");
+						type = Material.getMaterial(typeData[0]);
+						dura = Short.parseShort(typeData[1]);
+					} catch (NumberFormatException e) {						
+					}
+				} else {
+					try {
+						type = Material.getMaterial(data[0]);
+					} catch (NumberFormatException e) {
+					}
+				}
 			}
-			mat = new MagicItemMaterial(type);
+			mat = new MagicItemMaterial(type, dura);
 			if (data.length >= 2) {
 				try {
 					num = Integer.parseInt(data[1]);
