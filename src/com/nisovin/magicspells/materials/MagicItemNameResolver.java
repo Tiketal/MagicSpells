@@ -55,7 +55,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 	}
 	
 	private static Pattern pattern = Pattern.compile(
-			"([\\w|\\*]+)(?:(\\[(?:\\*|\\w+=\\w+(?:,\\w+=\\w+)*)\\]))*", // ([\w|\*]+)(?:(\[(?:\*|\w+=\w+(?:,\w+=\w+)*)\]))*
+			"((?:\\w*\\*(?:\\w+\\*?)*|[\\w]+))(?:(\\[(?:\\*|\\w+=\\w+(?:,\\w+=\\w+)*)\\]))*", // ((?:\w*\*(?:\w+\*?)*|[\w]+))(?:(\[(?:\*|\w+=\w+(?:,\w+=\w+)*)\]))*
 			Pattern.CASE_INSENSITIVE
 			);
 	
@@ -68,7 +68,6 @@ public class MagicItemNameResolver implements ItemNameResolver {
 	@Override
 	public MagicMaterial resolveItem(String string) {
 		if (string == null || string.isEmpty()) return null;
-		
 		
 		// first check for predefined material datas - UNUSED
 		/*MaterialData matData = materialDataMap.get(string.toLowerCase());
@@ -88,6 +87,12 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		String sdata = matcher.group(2); // can be null if empty
 		if (sdata == null) sdata = "";
 		
+		// very general type; use with caution
+		if (stype.contains("*")) {
+			String regex = stype.replace("*", "\\w+");
+			return new MagicAnyMaterial(Material.AIR.createBlockData(), regex);
+		}
+		
 		// check for correct material
 		Material type = materialMap.get(stype);
 		if (type == null) {
@@ -106,22 +111,7 @@ public class MagicItemNameResolver implements ItemNameResolver {
 			}
 			return new MagicBlockMaterial(type.createBlockData());
 		} else {
-			
-			// items with durability/data values
-			short damage = 0;
-			if (sdata != null) {
-				sdata = sdata.replaceAll("[\\[\\]]", "");
-				String[] split;
-				for (String tag : sdata.split(",")) {
-					split = tag.split("=");
-					if (split[0].equalsIgnoreCase("damage") || split[0].startsWith("dura")) {
-						try {
-							damage = Short.parseShort(split[1]);
-						} catch (NumberFormatException e) {}
-					}
-				}
-			}
-			return new MagicItemMaterial(type, damage);
+			return new MagicItemMaterial(type);
 		}
 	}
 	
@@ -146,6 +136,12 @@ public class MagicItemNameResolver implements ItemNameResolver {
 		// split type and data
 		String stype = matcher.group(1).toLowerCase();
 		String sdata = matcher.group(2);
+		
+		// very general type; use with caution
+		if (stype.contains("*")) {
+			String regex = stype.replace("*", "\\w+");
+			return new MagicAnyMaterial(Material.AIR.createBlockData(), regex);
+		}
 		
 		// check for correct material
 		Material type = materialMap.get(stype);
