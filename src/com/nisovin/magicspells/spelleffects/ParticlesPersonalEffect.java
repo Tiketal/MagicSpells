@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 
 import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.events.SpellCastEvent;
-import com.nisovin.magicspells.util.ParticleNameUtil;
 
 public class ParticlesPersonalEffect extends SpellEffect {
 	
@@ -56,7 +55,7 @@ public class ParticlesPersonalEffect extends SpellEffect {
 
 	@Override
 	public void loadFromConfig(ConfigurationSection config) {
-		name = ParticleNameUtil.toMinecraftParticle(config.getString("particle-name", name));
+		name = config.getString("particle-name", name);
 		xSpread = (float)config.getDouble("horiz-spread", xSpread);
 		ySpread = (float)config.getDouble("vert-spread", ySpread);
 		zSpread = xSpread;

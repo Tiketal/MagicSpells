@@ -23,7 +23,6 @@ import com.nisovin.magicspells.spells.InstantSpell;
 import com.nisovin.magicspells.spells.TargetedLocationSpell;
 import com.nisovin.magicspells.util.BlockUtils;
 import com.nisovin.magicspells.util.BoundingBox;
-import com.nisovin.magicspells.util.ParticleNameUtil;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.Util;
 
@@ -101,7 +100,7 @@ public class ParticleProjectileSpell extends InstantSpell implements TargetedLoc
 		specialEffectInterval = getConfigInt("special-effect-interval", 0);
 		spellInterval = getConfigInt("spell-interval", 20);
 		
-		particleName = ParticleNameUtil.toMinecraftParticle(getConfigString("particle-name", "dust"));
+		particleName = getConfigString("particle-name", "dust");
 		particleSpeed = getConfigFloat("particle-speed", 0.3F);
 		particleCount = getConfigInt("particle-count", 15);
 		particleXSpread = getConfigFloat("particle-horizontal-spread", 0.3F);

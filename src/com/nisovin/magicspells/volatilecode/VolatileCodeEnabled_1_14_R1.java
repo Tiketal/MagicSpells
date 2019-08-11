@@ -52,6 +52,7 @@ import com.nisovin.magicspells.materials.MagicItemMaterial;
 import com.nisovin.magicspells.materials.MagicMaterial;
 import com.nisovin.magicspells.util.BoundingBox;
 import com.nisovin.magicspells.util.MagicConfig;
+import com.nisovin.magicspells.util.ParticleNameUtil;
 
 public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 
@@ -456,7 +457,13 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 		
 		String name = matcher.group(1);
 		String data = matcher.group(2);
-
+		
+		// translate into minecraft namespace
+		String convert = ParticleNameUtil.toMinecraftParticle(name);
+		if (convert != null) {
+			name = convert;
+		}
+		
 		Object particle = particleMap.get(name.toUpperCase());
 		
 		if (particle == null) {

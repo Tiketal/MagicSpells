@@ -64,42 +64,83 @@ public class ParticleNameUtil {
 		// TODO: add other particles
 	}
 	
+	static Map<String, String> minecraftParticleMap = new HashMap<>();
+	
+	static {
+		minecraftParticleMap.put("angryVillager", "angry_villager");
+		minecraftParticleMap.put("villager_angry", "angry_villager");
+		minecraftParticleMap.put("villagerangry", "angry_villager");
+		minecraftParticleMap.put("block_crack", "block");
+		minecraftParticleMap.put("block_dust", "block");
+		minecraftParticleMap.put("blockcrack", "block");
+		minecraftParticleMap.put("blockdust", "block");
+		minecraftParticleMap.put("damageIndicator", "damage_indicator");
+		minecraftParticleMap.put("drip_lava", "dripping_lava");
+		minecraftParticleMap.put("dripLava", "dripping_lava");
+		minecraftParticleMap.put("drip_water", "dripping_water");
+		minecraftParticleMap.put("dripWater", "dripping_water");
+		minecraftParticleMap.put("dragonbreath", "dragon_breath");
+		minecraftParticleMap.put("droplet", "rain");
+		minecraftParticleMap.put("water_drop", "rain");
+		minecraftParticleMap.put("droplet", "rain");
+		minecraftParticleMap.put("enchantment_table", "enchant");
+		minecraftParticleMap.put("enchantementtable", "enchant");
+		minecraftParticleMap.put("endRod", "end_rod");
+		minecraftParticleMap.put("explode", "poof");
+		minecraftParticleMap.put("snowshovel", "poof");
+		minecraftParticleMap.put("explosion_normal", "poof");
+		minecraftParticleMap.put("fallingdust", "falling_dust");
+		minecraftParticleMap.put("fireworksSpark", "firework");
+		minecraftParticleMap.put("fireworks_spark", "firework");
+		minecraftParticleMap.put("happyVillager", "happy_villager");
+		minecraftParticleMap.put("villager_happy", "happy_villager");
+		minecraftParticleMap.put("hugeexplosion", "explosion_emitter");
+		minecraftParticleMap.put("explosion_huge", "explosion_emitter");
+		minecraftParticleMap.put("icon_crack", "item");
+		minecraftParticleMap.put("iconcrack", "item");
+		minecraftParticleMap.put("instantSpell", "instant_effect");
+		minecraftParticleMap.put("spell_instant", "instant_effect");
+		minecraftParticleMap.put("largeexplode", "explosion");
+		minecraftParticleMap.put("largeexplosion", "explosion");
+		minecraftParticleMap.put("explosion_large", "explosion");
+		minecraftParticleMap.put("largesmoke", "large_smoke");
+		minecraftParticleMap.put("smoke_large", "large_smoke");
+		minecraftParticleMap.put("crit_magic", "enchanted_hit");
+		minecraftParticleMap.put("magiccrit", "enchanted_hit");
+		minecraftParticleMap.put("mobappearance", "elder_guardian");
+		minecraftParticleMap.put("mob_appearance", "elder_guardian");
+		minecraftParticleMap.put("mobSpell", "entity_effect");
+		minecraftParticleMap.put("spell_mob", "entity_effect");
+		minecraftParticleMap.put("mobSpellAmbient", "ambient_entity_effect");
+		minecraftParticleMap.put("spell_mob_ambient", "ambient_entity_effect");
+		minecraftParticleMap.put("reddust", "dust");
+		minecraftParticleMap.put("redstone", "dust");
+		minecraftParticleMap.put("slime", "item_slime");
+		minecraftParticleMap.put("snowballpoof", "item_snowball");
+		minecraftParticleMap.put("snowball", "item_snowball");
+		minecraftParticleMap.put("spell", "effect");
+		minecraftParticleMap.put("suspend", "underwater");
+		minecraftParticleMap.put("suspended", "underwater");
+		minecraftParticleMap.put("sweepattack", "sweep_attack");
+		minecraftParticleMap.put("totem", "totem_of_undying");
+		minecraftParticleMap.put("townaura", "mycelium");
+		minecraftParticleMap.put("town_aura", "mycelium");
+		minecraftParticleMap.put("wake", "fishing");
+		minecraftParticleMap.put("water_wake", "fishing");
+		minecraftParticleMap.put("witchMagic", "witch");
+		minecraftParticleMap.put("spell_witch", "witch");
+		minecraftParticleMap.put("water_splash", "splash");
+		minecraftParticleMap.put("water_bubble", "bubble");
+	}
+	
+	/**
+	 * Attempts to translate the name into the Minecraft
+	 * namespace equivalent. Returns null if unnecessary.
+	 * @param raw
+	 * @return the Minecraft namespace equivalent or null if unnecessary
+	 */
 	public static String toMinecraftParticle(String raw) {
-		raw = raw.toLowerCase();
-		return raw.replaceAll("angryVillager|villager_angry|villagerangry", "angry_villager")
-				.replaceAll("block_crack|block_dust|blockcrack|blockdust", "block")
-				.replaceAll("damageIndicator", "damage_indicator")
-				.replaceAll("drip_lava|dripLava", "dripping_lava")
-				.replaceAll("drip_water|dripWater", "dripping_water")
-				.replaceAll("dragonbreath", "dragon_breath")
-				.replaceAll("droplet|water_drop|waterdrop", "rain")
-				.replaceAll("enchantment_table|enchantementtable", "enchant")
-				.replaceAll("endRod", "end_rod")
-				.replaceAll("explode|snowshovel|explosion_normal", "poof")
-				.replaceAll("fallingdust", "falling_dust")
-				.replaceAll("fireworksSpark|fireworks_spark", "firework")
-				.replaceAll("happyVillager|villager_happy", "happy_villager")
-				.replaceAll("hugeexplosion|explosion_huge", "explosion_emitter")
-				.replaceAll("icon_crack|iconcrack", "item")
-				.replaceAll("instantSpell|spell_instant", "instant_effect")
-				.replaceAll("largeexplode|largeexplosion|explosion_large", "explosion")
-				.replaceAll("largesmoke|smoke_large", "large_smoke")
-				.replaceAll("crit_magic|magiccrit", "enchanted_hit")
-				.replaceAll("mobappearance|mob_appearance", "elder_guardian")
-				.replaceAll("mobSpell|spell_mob", "entity_effect")
-				.replaceAll("mobSpellAmbient|spell_mob_ambient", "ambient_entity_effect")
-				.replaceAll("reddust|redstone", "dust")
-				.replaceAll("slime", "item_slime")
-				.replaceAll("snowballpoof|snowball", "item_snowball")
-				.replaceAll("spell", "effect")
-				.replaceAll("suspend|suspended", "underwater")
-				.replaceAll("sweepattack", "sweep_attack")
-				.replaceAll("totem", "totem_of_undying")
-				.replaceAll("townaura|town_aura", "mycelium")
-				.replaceAll("wake|water_wake", "fishing")
-				.replaceAll("witchMagic|spell_witch", "witch")
-				.replaceAll("water_splash", "splash")
-				.replaceAll("water_bubble", "bubble");
+		return minecraftParticleMap.get(raw.toLowerCase());
 	}
 	
 }
