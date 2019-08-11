@@ -137,21 +137,21 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	
 	@Override
 	public void addPotionGraphicalEffect(LivingEntity entity, int color, int duration) {
-		/*final EntityLiving el = ((CraftLivingEntity)entity).getHandle();
+		final EntityLiving el = ((CraftLivingEntity)entity).getHandle();
 		final DataWatcher dw = el.getDataWatcher();
-		dw.watch(7, Integer.valueOf(color));
+		dw.set(DataWatcherRegistry.b.a(9), Integer.valueOf(color));
 		
 		if (duration > 0) {
 			MagicSpells.scheduleDelayedTask(new Runnable() {
 				public void run() {
 					int c = 0;
 					if (!el.effects.isEmpty()) {
-						c = net.minecraft.server.v1_9_R1.PotionBrewer.a(el.effects.values());
+						c = net.minecraft.server.v1_14_R1.PotionUtil.a(el.effects.values());
 					}
-					dw.watch(7, Integer.valueOf(c));
+					dw.set(DataWatcherRegistry.b.a(9), Integer.valueOf(c));
 				}
 			}, duration);
-		}*/
+		}
 	}
 
 	@Override
@@ -741,58 +741,13 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	}
 	
 	@Override
-	public void setBossBar(Player player, String title, double percent) {
-		/*updateBossBarEntity(player, title, percent);
-		
-		PacketPlayOutEntityDestroy packetDestroy = new PacketPlayOutEntityDestroy(bossBarEntity.getId());
-		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetDestroy);
-		
-		PacketPlayOutSpawnEntityLiving packetSpawn = new PacketPlayOutSpawnEntityLiving(bossBarEntity);
-		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetSpawn);
-		
-		PacketPlayOutEntityTeleport packetTeleport = new PacketPlayOutEntityTeleport(bossBarEntity);
-		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetTeleport);*/
-		
-		//PacketPlayOutEntityVelocity packetVelocity = new PacketPlayOutEntityVelocity(bossBarEntity.getId(), 1, 0, 1);		
-		//((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetVelocity);
-	}
+	public void setBossBar(Player player, String title, double percent) {}
 	
 	@Override
-	public void updateBossBar(Player player, String title, double percent) {
-		/*updateBossBarEntity(player, title, percent);
-		
-		if (title != null) {
-			PacketPlayOutEntityMetadata packetData = new PacketPlayOutEntityMetadata(bossBarEntity.getId(), bossBarEntity.getDataWatcher(), true);
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetData);
-		}
-		
-		PacketPlayOutEntityTeleport packetTeleport = new PacketPlayOutEntityTeleport(bossBarEntity);
-		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetTeleport);*/
-		
-		//PacketPlayOutEntityVelocity packetVelocity = new PacketPlayOutEntityVelocity(bossBarEntity.getId(), 1, 0, 1);
-		//((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetVelocity);
-	}
-	
-	/*private void updateBossBarEntity(Player player, String title, double percent) {
-		if (title != null) {
-			if (percent <= 0.01) percent = 0.01D;
-			bossBarEntity.setCustomName(ChatColor.translateAlternateColorCodes('&', title));
-			bossBarEntity.getDataWatcher().watch(6, (float)(percent * 300f));
-		}
-		
-		Location l = player.getLocation();
-		l.setPitch(l.getPitch() + 10);
-		Vector v = l.getDirection().multiply(20);
-		Util.rotateVector(v, 15);
-		l.add(v);
-		bossBarEntity.setLocation(l.getX(), l.getY(), l.getZ(), 0, 0);
-	}*/
+	public void updateBossBar(Player player, String title, double percent) {}
 	
 	@Override
-	public void removeBossBar(Player player) {
-		//PacketPlayOutEntityDestroy packetDestroy = new PacketPlayOutEntityDestroy(bossBarEntity.getId());
-		//((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetDestroy);
-	}
+	public void removeBossBar(Player player) {}
 	
 	@Override
 	public void saveSkinData(Player player, String name) {
