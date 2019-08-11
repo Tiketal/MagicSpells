@@ -26,10 +26,10 @@ armor:
     cast-item: book
     duration: 30
     num-uses: 15
-    helmet: gold_helmet protection_explosions:1 oxygen:1
-    chestplate: gold_chestplate protection_projectile:1
-    leggings: gold_leggings protection_fire:1
-    boots: gold_boots protection_fall:1
+    helmet: golden_helmet protection_explosions:1 oxygen:1
+    chestplate: golden_chestplate protection_projectile:1
+    leggings: golden_leggings protection_fire:1
+    boots: golden_boots protection_fall:1
     cost:
         - mana 25
         - gold_nugget 1
@@ -39,7 +39,7 @@ armor:
 blind:
     spell-class: ".targeted.PotionEffectSpell"
     name: blind
-    spell-icon: ink_sack:0
+    spell-icon: ink_sac
     description: Blind your target.
     cast-item: blaze_rod
     cooldown: 15
@@ -87,7 +87,7 @@ build:
     effects:
         - target blockbreak
     check-plugins: true
-    allowed-types: 1,2,3,4,5,12,13,17,20,22,24,35,41,42,43,44,45,47,48,49,50,53,57,65,67,80,85,87,88,89,91,92
+    allowed-types: stone,grass,dirt,cobblestone,oak_planks,sand,gravel,oak_log,glass,lapis_lazuli_block,sandstone,white_wool,gold_block,iron_block,smooth_stone_slab[*],bricks,bookshelf,mossy_cobblestone,obsidian,torch, wall_torch[*],oak_stairs[*],diamond_block,ladder[*],cobblestone_stairs[*],snow,oak_fence[*],netherrack,soul_sand,glowstone,jack_o_lantern,cake[*]
     cost:
         - mana 5
     str-cost: 5 mana
@@ -96,7 +96,7 @@ build:
 carpet:
     spell-class: ".buff.CarpetSpell"
     name: carpet
-    spell-icon: thin_glass
+    spell-icon: glass_pane
     description: Lets you walk on a platform of glass.
     cast-item: book
     cooldown: 30
@@ -137,9 +137,9 @@ cleanse:
     cooldown: 60
     remove:
       - fire
-      - 17
-      - 19
-      - 20
+      - hunger
+      - poison
+      - wither
     target-self: true
     beneficial: true
     cost:
@@ -167,7 +167,7 @@ combust:
 confusion:
     spell-class: ".instant.ConfusionSpell"
     name: confusion
-    spell-icon: eye_of_ender
+    spell-icon: ender_eye
     description: Cause nearby monsters to attack each other.
     cast-item: bone
     cooldown: 30
@@ -191,7 +191,7 @@ conjure:
     auto-equip: false
     items:
         - redstone 1-2 25%
-        - speckled_melon 1 25%
+        - glistering_melon_slice 1 25%
         - magma_cream 1-2 25%
         - spider_eye 1-2 25%
     add-to-inventory: false
@@ -200,7 +200,7 @@ conjure:
 cripple:
     spell-class: ".targeted.CrippleSpell"
     name: cripple
-    spell-icon: web
+    spell-icon: cobweb
     description: Slow down a targeted enemy.
     cast-item: blaze_rod
     cooldown: 15
@@ -216,7 +216,7 @@ cripple:
 disarm:
     spell-class: ".targeted.DisarmSpell"
     name: disarm
-    spell-icon: stone_sword:130
+    spell-icon: stone_sword[damage=130]
     description: Disarm your opponent.
     cast-item: blaze_rod
     cooldown: 15
@@ -226,7 +226,7 @@ disarm:
         - stick
         - book
         - bone
-        - wood_sword
+        - wooden_sword
         - stone_sword
         - iron_sword
         - diamond_sword
@@ -344,7 +344,7 @@ explode:
     ignore-canceled: false
     cost:
         - mana 40
-        - sulphur 1
+        - gunpowder 1
     str-cost: 40 mana and 1 gunpowder
     str-no-target: You cannot create an explosion there.
     str-cast-self: Boom!
@@ -365,14 +365,14 @@ explosivearrow:
     spells: [explode]
     cost:
         - mana 25
-        - sulphur 1
+        - gunpowder 1
         - arrow 1
     str-cost: 25 mana, 1 gunpowder, and 1 arrow
     str-cast-self: You fire an explosive arrow.
 farm:
     spell-class: ".targeted.FarmSpell"
     name: farm
-    spell-icon: seeds
+    spell-icon: wheat_seeds
     cast-item: book
     description: Make crops grow nearby.
     cooldown: 10
@@ -381,14 +381,14 @@ farm:
     targeted: false
     cost:
         - mana 75
-        - seeds 2
+        - wheat_seeds 2
     str-cost: 75 mana and 2 seeds
     str-cast-self: The crops around you grow quickly.
     str-no-target: There are no crops nearby.
 fireball:
     spell-class: ".targeted.FireballSpell"
     name: fireball
-    spell-icon: fireball
+    spell-icon: fire_charge
     description: Throw a fiery ball of destruction.
     cast-item: blaze_rod
     cooldown: 5
@@ -439,7 +439,7 @@ flamewalk:
     duration: 120
     cost:
         - mana 25
-        - 263 2
+        - coal 2
     use-cost:
         - mana 10
     use-cost-interval: 10
@@ -462,7 +462,7 @@ food:
 forcebomb:
     spell-class: ".targeted.ForcebombSpell"
     name: forcebomb
-    spell-icon: record_4
+    spell-icon: music_disc_chirp
     description: Push back your enemies.
     cast-item: blaze_rod
     cooldown: 8
@@ -480,7 +480,7 @@ forcebomb:
 forcepush:
     spell-class: ".instant.ForcepushSpell"
     name: forcepush
-    spell-icon: record_3
+    spell-icon: music_disc_blocks
     description: Push back your enemies.
     cast-item: bone
     cooldown: 8
@@ -497,7 +497,7 @@ forcepush:
 forcetoss:
     spell-class: ".targeted.ForcetossSpell"
     name: forcetoss
-    spell-icon: piston_base
+    spell-icon: piston
     description: Magically throw an enemy into the air.
     cast-item: blaze_rod
     cooldown: 5
@@ -516,7 +516,7 @@ forcetoss:
 freeze:
     spell-class: ".instant.FreezeSpell"
     name: freeze
-    spell-icon: snow_ball
+    spell-icon: snowball
     description: Spray your enemies with cold snowballs.
     cast-item: blaze_rod
     snowballs: 25
@@ -529,7 +529,7 @@ freeze:
     cooldown: 5
     cost:
         - mana 10
-        - snow_ball 1
+        - snowball 1
     str-cost: 10 mana and 1 snowball
 frostwalk:
     spell-class: ".buff.FrostwalkSpell"
@@ -543,7 +543,7 @@ frostwalk:
     cost:
         - mana 50
     use-cost:
-        - snow_ball 1
+        - snowball 1
     use-cost-interval: 25
     str-cost: 50 mana, plus 1 snowball every 25 blocks
     str-cast-self: You can now walk on water!
@@ -552,7 +552,7 @@ frostwalk:
 gate:
     spell-class: ".instant.GateSpell"
     name: gate
-    spell-icon: portal
+    spell-icon: nether_portal
     description: Teleport to spawn.
     can-cast-with-item: false
     world: CURRENT
@@ -590,7 +590,7 @@ geyser:
 gills:
     spell-class: ".buff.GillsSpell"
     name: gills
-    spell-icon: gold_helmet
+    spell-icon: golden_helmet
     description: Allows you to breath underwater.
     cast-item: book
     glass-head-effect: true
@@ -609,7 +609,7 @@ gills:
 haste:
     spell-class: ".buff.HasteSpell"
     name: haste
-    spell-icon: gold_boots
+    spell-icon: golden_boots
     description: Sprint faster for a time.
     cast-item: book
     effect-strength: 3
@@ -643,7 +643,7 @@ haze:
 heal:
     spell-class: ".targeted.HealSpell"
     name: heal
-    spell-icon: red_rose
+    spell-icon: poppy
     description: Heals a target player.
     cast-item: stick
     heal-amount: 10
@@ -664,7 +664,7 @@ heal:
 invisibility:
     spell-class: ".buff.InvisibilitySpell"
     name: invisibility
-    spell-icon: record_11
+    spell-icon: music_disc_11
     description: Makes you invisible to players and monsters.
     cast-item: bone
     cooldown: 60
@@ -688,7 +688,7 @@ invisibility:
 invulnerability:
     spell-class: ".buff.InvulnerabilitySpell"
     name: invulnerability
-    spell-icon: gold_chestplate
+    spell-icon: golden_chestplate
     description: Makes you invulnerable to damage.
     cast-item: book
     damage-causes:
@@ -759,7 +759,7 @@ levitate:
 lifewalk:
     spell-class: ".buff.LifewalkSpell"
     name: lifewalk
-    spell-icon: sapling:2
+    spell-icon: birch_sapling
     description: Flowers grow in your footsteps!
     cast-item: book
     tick-interval: 15
@@ -770,10 +770,10 @@ lifewalk:
     fern-chance: 15
     cost:
         - mana 25
-        - red_rose 1
-        - yellow_flower 1
+        - poppy 1
+        - dandelion 1
     use-cost:
-        - yellow_flower 1
+        - dandelion 1
     use-cost-interval: 25
     str-cost: 25 mana, 1 rose, 1 yellow flower, plus 1 flower every so often
     str-cast-self: Flowers grow in your footsteps!
@@ -782,7 +782,7 @@ lifewalk:
 lightning:
     spell-class: ".targeted.LightningSpell"
     name: lightning
-    spell-icon: gold_sword
+    spell-icon: golden_sword
     description: Call down lightning.
     cast-item: blaze_rod
     cooldown: 15
@@ -815,15 +815,15 @@ lightwalk:
 lilywalk:
     spell-class: ".buff.LilywalkSpell"
     name: lilywalk
-    spell-icon: water_lily
+    spell-icon: lily_pad
     description: Lets you walk on water on lily pads.
     cast-item: book
     cooldown: 30
     cost:
         - mana 40
-        - water_lily 1
+        - lily_pad 1
     use-cost:
-        - water_lily 1
+        - lily_pad 1
     use-cost-interval: 25
     str-cost: 40 mana and 1 lilypad, plus 1 lilypad every 50 blocks
     str-cast-self: You can now walk on water!
@@ -832,7 +832,7 @@ lilywalk:
 mana:
     spell-class: ".instant.ManaSpell"
     name: lifetap
-    spell-icon: potion:8193
+    spell-icon: potion
     description: Restores mana at the cost of life.
     cast-item: bone
     cooldown: 3
@@ -858,7 +858,7 @@ mark:
 minion:
     spell-class: ".buff.MinionSpell"
     name: minion
-    spell-icon: monster_egg:54
+    spell-icon: zombie_spawn_egg
     description: Summons an undead minion to aid you.
     cast-item: bone
     cooldown: 60
@@ -927,7 +927,7 @@ poison:
 prayer:
     spell-class: ".instant.PrayerSpell"
     name: prayer
-    spell-icon: yellow_flower
+    spell-icon: dandelion
     description: Heals yourself for five hearts.
     cast-item: stick
     cooldown: 15
@@ -940,7 +940,7 @@ prayer:
 purge:
     spell-class: ".instant.PurgeSpell"
     name: purge
-    spell-icon: potion:16396
+    spell-icon: potion
     description: Kill all monsters and animals around you.
     cast-item: bone
     cooldown: 60
@@ -962,8 +962,8 @@ reach:
     range: 15
     consume-blocks: true
     drop-blocks: true
-    disallowed-break-blocks: [0,7]
-    disallowed-place-blocks: [0,7]
+    disallowed-break-blocks: [air,bedrock]
+    disallowed-place-blocks: [air,bedrock]
     cost:
         - mana 50
     str-cost: 50 mana
@@ -992,7 +992,7 @@ recall:
 reflect:
     spell-class: ".buff.ReflectSpell"
     name: reflect
-    spell-icon: thin_glass
+    spell-icon: glass_pane
     description: Reflect spells cast at you.
     cooldown: 30
     num-uses: 3
@@ -1008,7 +1008,7 @@ reflect:
 repair:
     spell-class: ".instant.RepairSpell"
     name: repair
-    spell-icon: workbench
+    spell-icon: crafting_table
     description: Repairs your gear.
     cast-item: book
     cooldown: 120
@@ -1022,8 +1022,8 @@ repair:
         - leggings
         - boots
     ignore-items:
-        - 259
-        - 346
+        - flint_and_steel
+        - fishing_rod
     cost:
         - mana 50
         - iron_ingot 2
@@ -1033,7 +1033,7 @@ repair:
 roar:
     spell-class: ".instant.RoarSpell"
     name: roar
-    spell-icon: mob_spawner
+    spell-icon: spawner
     description: Forces nearby enemies to attack you.
     cast-item: book
     cooldown: 15
@@ -1058,7 +1058,7 @@ safefall:
     cost:
         - mana 20
     use-cost:
-        - 288 1
+        - feather 1
     use-cost-interval: 1
     str-cost: 20 mana, plus 1 feather each time you fall
     str-cast-self: You feel lighter.
@@ -1081,7 +1081,7 @@ shadowstep:
 silence:
     spell-class: ".targeted.SilenceSpell"
     name: silence
-    spell-icon: raw_fish
+    spell-icon: cod
     description: Prevent a player from casting spells for a time.
     cast-item: blaze_rod
     range: 10
@@ -1102,7 +1102,7 @@ silence:
 spellhaste:
     spell-class: ".buff.SpellHasteSpell"
     name: spellhaste
-    spell-icon: ink_sack:4
+    spell-icon: lapis_lazuli
     description: Reduces the cast time and cooldown of your spells.
     cast-item: book
     cooldown: 60
@@ -1148,7 +1148,7 @@ stonevision:
 storm:
     spell-class: ".targeted.AreaEffectSpell"
     name: storm
-    spell-icon: gold_sword
+    spell-icon: golden_sword
     description: Strike lightning upon all nearby enemies.
     cast-item: bone
     horizontal-radius: 10
@@ -1202,7 +1202,7 @@ summon_helper:
 summon:
     spell-class: ".instant.RitualSpell"
     name: summon
-    spell-icon: portal
+    spell-icon: nether_portal
     description: Summon another player to your position. This ritual requires 3 participants.
     cast-item: stick
     cooldown: 300
@@ -1228,21 +1228,21 @@ summon:
 sun:
     spell-class: ".instant.TimeSpell"
     name: sun
-    spell-icon: watch
+    spell-icon: clock
     description: Changes the time to morning.
     cast-item: book
     cooldown: 1800
     cost:
         - mana 75
         - redstone 8
-        - watch 1
+        - clock 1
     str-cost: 75 mana, 5 redstone dust and a clock
     time-to-set: 0
     str-announce: The sun has suddenly appeared in the sky!
 switch:
     spell-class: ".targeted.SwitchSpell"
     name: switch
-    spell-icon: eye_of_ender
+    spell-icon: ender_eye
     description: Switch places with your target.
     cast-item: stick
     cooldown: 6
@@ -1269,14 +1269,14 @@ telekinesis:
 tree:
     spell-class: ".targeted.TreeSpell"
     name: tree
-    spell-icon: sapling
+    spell-icon: oak_sapling
     range: 15
     cooldown: 5
     tree-type: tree
     animation-speed: 20
     cost:
         - mana 10
-        - sapling 1
+        - oak_sapling 1
     str-cost: 10 mana and 1 sapling
     str-no-target: You cannot grow a tree there.
 volley:
@@ -1301,7 +1301,7 @@ volley:
 walkway:
     spell-class: ".buff.WalkwaySpell"
     name: walkway
-    spell-icon: wood_stairs
+    spell-icon: oak_stairs
     description: Summon a moving magical walkway to take you places.
     cast-item: book
     cooldown: 60
@@ -1311,10 +1311,10 @@ walkway:
     cancel-on-teleport: true
     cost:
         - mana 50
-        - wood 1
+        - oak_planks 1
     use-cost:
         - mana 15
-        - wood 1 
+        - oak_planks 1 
     use-cost-interval: 15
     str-cost: 50 mana, plus 15 mana and 1 wood every 15 blocks
     str-cast-self: You summon a magical walkway.
@@ -1329,7 +1329,7 @@ wall:
     range: 3
     wall-width: 5
     wall-height: 3
-    wall-type: brick
+    wall-type: bricks
     wall-duration: 15
     cost:
         - mana 12
@@ -1356,7 +1356,7 @@ water:
 waterwalk:
     spell-class: ".buff.WaterwalkSpell"
     name: waterwalk
-    spell-icon: boat
+    spell-icon: oak_boat
     description: Walk across the water.
     cast-item: book
     speed: 0.05
@@ -1365,9 +1365,9 @@ waterwalk:
     cancel-on-teleport: true
     cost:
         - mana 25
-        - boat 1
+        - oak_boat 1
     use-cost:
-        - water_lily 1
+        - lily_pad 1
     use-cost-interval: 50
     str-cost: 25 mana and 1 boat, plus 1 water lily every 50 blocks moved
     str-cast-self: You can now walk on water!
@@ -1400,7 +1400,7 @@ windwalk:
 zap:
     spell-class: ".targeted.ZapSpell"
     name: zap
-    spell-icon: gold_pickaxe
+    spell-icon: golden_pickaxe
     description: Instantly destroys a block.
     cast-item: stick
     cooldown: 1
@@ -1422,7 +1422,7 @@ zap:
 gianttree:
     spell-class: ".ExternalCommandSpell"
     name: gianttree
-    spell-icon: sapling:3
+    spell-icon: jungle_sapling
     enabled: false
     description: Create a giant tree!
     cooldown: 300
@@ -1440,7 +1440,7 @@ gianttree:
     range: 20
     cost:
         - mana 50
-        - sapling 5
+        - oak_sapling 5
     str-cost: 50 mana and 5 saplings
     str-cast-self: You grow a tree!
     str-cant-use-command: "&4You don't have permission to do that."
@@ -1467,7 +1467,7 @@ torcharrow:
 zeus:
     spell-class: ".MultiSpell"
     name: zeus
-    spell-icon: gold_axe
+    spell-icon: golden_axe
     cooldown: 30
     cast-item: blaze_rod
     check-individual-cooldowns: false
