@@ -9,6 +9,7 @@ import com.nisovin.magicspells.MagicSpells;
 import com.nisovin.magicspells.spelleffects.EffectPosition;
 import com.nisovin.magicspells.spells.TargetedEntitySpell;
 import com.nisovin.magicspells.spells.TargetedSpell;
+import com.nisovin.magicspells.util.EnumConvertor;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.TargetInfo;
 
@@ -42,7 +43,7 @@ public class OrbitSpell extends TargetedSpell implements TargetedEntitySpell {
 		secondsPerRevolution = getConfigFloat("seconds-per-revolution", 3);
 		counterClockwise = getConfigBoolean("counter-clockwise", false);
 		
-		particleName = getConfigString("particle-name", "reddust");
+		particleName = EnumConvertor.toMinecraftParticle(getConfigString("particle-name", "reddust"));
 		particleSpeed = getConfigFloat("particle-speed", 0.3F);
 		particleCount = getConfigInt("particle-count", 15);
 		particleHorizontalSpread = getConfigFloat("particle-horizontal-spread", 0.3F);

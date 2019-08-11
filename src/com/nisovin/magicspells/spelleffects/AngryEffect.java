@@ -17,7 +17,7 @@ class AngryEffect extends SpellEffect {
 
 	@Override
 	public void playEffectLocation(Location location) {
-		MagicSpells.getVolatileCodeHandler().playParticleEffect(location, "angryVillager", 0F, 0F, .2F, 1, 32, 2F);
+		MagicSpells.getVolatileCodeHandler().playParticleEffect(location, "angry_villager", 0F, 0F, .2F, 1, 32, 2F);
 	}
 	
 }

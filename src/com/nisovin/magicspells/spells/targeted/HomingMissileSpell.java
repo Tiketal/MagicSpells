@@ -12,6 +12,7 @@ import com.nisovin.magicspells.spells.TargetedEntityFromLocationSpell;
 import com.nisovin.magicspells.spells.TargetedEntitySpell;
 import com.nisovin.magicspells.spells.TargetedSpell;
 import com.nisovin.magicspells.util.BoundingBox;
+import com.nisovin.magicspells.util.EnumConvertor;
 import com.nisovin.magicspells.util.MagicConfig;
 import com.nisovin.magicspells.util.TargetInfo;
 
@@ -51,7 +52,7 @@ public class HomingMissileSpell extends TargetedSpell implements TargetedEntityS
 		ticksPerSecond = 20F / (float)tickInterval;
 		velocityPerTick = projectileVelocity / ticksPerSecond;
 		specialEffectInterval = getConfigInt("special-effect-interval", 0);
-		particleName = getConfigString("particle-name", "reddust");
+		particleName = EnumConvertor.toMinecraftParticle(getConfigString("particle-name", "dust"));
 		particleSpeed = getConfigFloat("particle-speed", 0.3F);
 		particleCount = getConfigInt("particle-count", 15);
 		particleHorizontalSpread = getConfigFloat("particle-horizontal-spread", 0.3F);

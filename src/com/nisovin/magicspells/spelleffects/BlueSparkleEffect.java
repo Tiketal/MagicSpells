@@ -17,7 +17,7 @@ class BlueSparkleEffect extends SpellEffect {
 
 	@Override
 	public void playEffectLocation(Location location) {
-		MagicSpells.getVolatileCodeHandler().playParticleEffect(location, "witchMagic", .2F, .2F, .1F, 20, 32, 2F);
+		MagicSpells.getVolatileCodeHandler().playParticleEffect(location, "witch", .2F, .2F, .1F, 20, 32, 2F);
 	}
 	
 }

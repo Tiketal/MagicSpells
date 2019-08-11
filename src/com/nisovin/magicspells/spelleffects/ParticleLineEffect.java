@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.util.EnumConvertor;
 
 public class ParticleLineEffect extends ParticlesEffect {
 	
@@ -16,7 +17,7 @@ public class ParticleLineEffect extends ParticlesEffect {
 				distanceBetween = Float.parseFloat(data[0]);
 			}
 			if (data.length >= 2) {
-				name = data[1];
+				name = EnumConvertor.toMinecraftParticle(data[1]);
 			}
 			if (data.length >= 3) {
 				xSpread = Float.parseFloat(data[2]);

@@ -3,10 +3,11 @@ package com.nisovin.magicspells.spelleffects;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import com.nisovin.magicspells.MagicSpells;
+import com.nisovin.magicspells.util.EnumConvertor;
 
 class ParticlesEffect extends SpellEffect {
 	
-	String name = "explode";
+	String name = "poof";
 	float xSpread = 0.2F;
 	float ySpread = 0.2F;
 	float zSpread = 0.2F;
@@ -21,7 +22,7 @@ class ParticlesEffect extends SpellEffect {
 			String[] data = string.split(" ");
 			
 			if (data.length >= 1) {
-				name = data[0];
+				name = EnumConvertor.toMinecraftParticle(data[0]);
 			}
 			if (data.length >= 2) {
 				xSpread = Float.parseFloat(data[1]);
@@ -44,7 +45,7 @@ class ParticlesEffect extends SpellEffect {
 
 	@Override
 	public void loadFromConfig(ConfigurationSection config) {
-		name = config.getString("particle-name", name);
+		name = EnumConvertor.toMinecraftParticle(config.getString("particle-name", name));
 		xSpread = (float)config.getDouble("horiz-spread", xSpread);
 		ySpread = (float)config.getDouble("vert-spread", ySpread);
 		zSpread = xSpread;
