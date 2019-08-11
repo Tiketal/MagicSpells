@@ -9,7 +9,7 @@ import com.nisovin.magicspells.MagicSpells;
 
 public class SoundPersonalEffect extends SpellEffect {
 	
-	String sound = "random.pop";
+	String sound = "entity.item.pickup";
 	float volume = 1.0F;
 	float pitch = 1.0F;
 	boolean broadcast = false;

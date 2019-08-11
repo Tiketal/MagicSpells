@@ -835,7 +835,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 			} else if (state == SpellCastState.ON_COOLDOWN) {
 				MagicSpells.sendMessage(player, formatMessage(strOnCooldown, "%c", Math.round(getCooldown(player))+""));
 				if (soundOnCooldown != null) {
-					MagicSpells.getVolatileCodeHandler().playSound(player, soundOnCooldown, 1f, 1f, "MASTER");
+					MagicSpells.getVolatileCodeHandler().playSound(player, soundOnCooldown, 1f, 1f, "master");
 				}
 			} else if (state == SpellCastState.MISSING_REAGENTS) {
 				MagicSpells.sendMessage(player, strMissingReagents);
@@ -843,7 +843,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 					MagicSpells.sendMessage(player, "    (" + strCost + ")");
 				}
 				if (soundMissingReagents != null) {
-					MagicSpells.getVolatileCodeHandler().playSound(player, soundMissingReagents, 1f, 1f, "MASTER");
+					MagicSpells.getVolatileCodeHandler().playSound(player, soundMissingReagents, 1f, 1f, "master");
 				}
 			} else if (state == SpellCastState.CANT_CAST) {
 				MagicSpells.sendMessage(player, strCantCast);
@@ -1042,7 +1042,7 @@ public abstract class Spell implements Comparable<Spell>, Listener {
 					public void run() {
 						chargesConsumed.decrement(name);
 						if (rechargeSound != null && !rechargeSound.isEmpty()) {
-							MagicSpells.getVolatileCodeHandler().playSound(player, rechargeSound, 1.0F, 1.0F, "MASTER");
+							MagicSpells.getVolatileCodeHandler().playSound(player, rechargeSound, 1.0F, 1.0F, "master");
 						}
 					}
 				}, Math.round(20F * cooldown));

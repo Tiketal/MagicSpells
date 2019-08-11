@@ -39,7 +39,7 @@ public class DanceCastListener implements Listener {
 	String startSound = null;
 	float startSoundVolume = 1;
 	float startSoundPitch = 1;
-	String startCategory = "MASTER";
+	String startCategory = "master";
 	
 	String strDanceStart;
 	String strDanceComplete;
