@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Particle;
-import org.bukkit.potion.PotionEffectType;
 
-public class EnumConvertor {
-	private EnumConvertor() {}
+public class ParticleNameUtil {
+	private ParticleNameUtil() {}
 
 	static Map<String, Particle> particleMap = new HashMap<String, Particle>();
 	
@@ -66,8 +65,8 @@ public class EnumConvertor {
 	}
 	
 	public static String toMinecraftParticle(String raw) {
-		String result = raw.toLowerCase();
-		return result.replaceAll("angryVillager|villager_angry|villagerangry", "angry_villager")
+		raw = raw.toLowerCase();
+		return raw.replaceAll("angryVillager|villager_angry|villagerangry", "angry_villager")
 				.replaceAll("block_crack|block_dust|blockcrack|blockdust", "block")
 				.replaceAll("damageIndicator", "damage_indicator")
 				.replaceAll("drip_lava|dripLava", "dripping_lava")
@@ -101,39 +100,6 @@ public class EnumConvertor {
 				.replaceAll("witchMagic|spell_witch", "witch")
 				.replaceAll("water_splash", "splash")
 				.replaceAll("water_bubble", "bubble");
-	}
-	
-	static Map<String, PotionEffectType> potionMap = new HashMap<>();
-	
-	static {
-		//TODO add potion effects with same names
-		potionMap.put("slowness", PotionEffectType.SLOW);
-		potionMap.put("haste", PotionEffectType.FAST_DIGGING);
-		potionMap.put("mining_fatigue", PotionEffectType.SLOW_DIGGING);
-		potionMap.put("miningfatigue", PotionEffectType.SLOW_DIGGING);
-		potionMap.put("strength", PotionEffectType.INCREASE_DAMAGE);
-		potionMap.put("instant_health", PotionEffectType.HEAL);
-		potionMap.put("instanthealth", PotionEffectType.HEAL);
-		potionMap.put("instant_damage", PotionEffectType.HARM);
-		potionMap.put("instantdamage", PotionEffectType.HARM);
-		potionMap.put("jump_boost", PotionEffectType.JUMP);
-		potionMap.put("jumpboost", PotionEffectType.JUMP);
-		potionMap.put("nausea", PotionEffectType.CONFUSION);
-		potionMap.put("fireresistance", PotionEffectType.FIRE_RESISTANCE);
-		potionMap.put("waterbreathing", PotionEffectType.WATER_BREATHING);
-		potionMap.put("nightvision", PotionEffectType.NIGHT_VISION);
-		potionMap.put("hunger", PotionEffectType.HUNGER);
-		potionMap.put("healthboost", PotionEffectType.HEALTH_BOOST);
-		potionMap.put("bad_luck", PotionEffectType.UNLUCK);
-		potionMap.put("badluck", PotionEffectType.UNLUCK);
-		potionMap.put("slowfalling", PotionEffectType.SLOW_FALLING);
-		potionMap.put("conduitpower", PotionEffectType.CONDUIT_POWER);
-		potionMap.put("dolphinsgrace", PotionEffectType.DOLPHINS_GRACE);
-		potionMap.put("badomen", PotionEffectType.BAD_OMEN);
-	}
-	
-	public static PotionEffectType getPotionEffectFromName(String name) {
-		return potionMap.get(name.toLowerCase());
 	}
 	
 }

@@ -84,8 +84,7 @@ public class Util {
 					String[] split = temp[1].split("\\+");
 					for (int i = 0; i < split.length; i++) {
 						String[] enchantData = split[i].split("-");
-						Enchantment ench;
-						ench = Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toLowerCase()));
+						Enchantment ench = Util.getEnchantmentType(enchantData[0]);
 						if (ench != null && enchantData[1].matches("[0-9]+")) {
 							enchants.put(ench, Integer.parseInt(enchantData[1]));
 						}
@@ -171,8 +170,7 @@ public class Util {
 				List<String> enchants = config.getStringList("enchants");
 				for (String enchant : enchants) {
 					String[] data = enchant.split(" ");
-					Enchantment e = null;
-					e = Enchantment.getByKey(NamespacedKey.minecraft(data[0].toLowerCase()));
+					Enchantment e = Util.getEnchantmentType(data[0]);
 					if (e != null) {
 						int level = 0;
 						if (data.length > 1) {
@@ -216,8 +214,7 @@ public class Util {
 				List<String> potionEffects = config.getStringList("potioneffects");
 				for (String potionEffect : potionEffects) {
 					String[] data = potionEffect.split(" ");
-					PotionEffectType t = null;
-					t = PotionEffectType.getByName(data[0].toUpperCase());
+					PotionEffectType t = Util.getPotionEffectType(data[0]);
 					if (t != null) {
 						int level = 0;
 						if (data.length > 1) {
@@ -476,12 +473,131 @@ public class Util {
 		return entityTypeMap.get(type.toLowerCase());
 	}
 	
+	static Map<String, PotionEffectType> potionMap = new HashMap<>();
+	
+	static {
+		potionMap.put("slowness", PotionEffectType.SLOW);
+		potionMap.put("haste", PotionEffectType.FAST_DIGGING);
+		potionMap.put("mining_fatigue", PotionEffectType.SLOW_DIGGING);
+		potionMap.put("miningfatigue", PotionEffectType.SLOW_DIGGING);
+		potionMap.put("strength", PotionEffectType.INCREASE_DAMAGE);
+		potionMap.put("instant_health", PotionEffectType.HEAL);
+		potionMap.put("instanthealth", PotionEffectType.HEAL);
+		potionMap.put("instant_damage", PotionEffectType.HARM);
+		potionMap.put("instantdamage", PotionEffectType.HARM);
+		potionMap.put("jump_boost", PotionEffectType.JUMP);
+		potionMap.put("jumpboost", PotionEffectType.JUMP);
+		potionMap.put("nausea", PotionEffectType.CONFUSION);
+		potionMap.put("fireresistance", PotionEffectType.FIRE_RESISTANCE);
+		potionMap.put("waterbreathing", PotionEffectType.WATER_BREATHING);
+		potionMap.put("nightvision", PotionEffectType.NIGHT_VISION);
+		potionMap.put("hunger", PotionEffectType.HUNGER);
+		potionMap.put("healthboost", PotionEffectType.HEALTH_BOOST);
+		potionMap.put("bad_luck", PotionEffectType.UNLUCK);
+		potionMap.put("badluck", PotionEffectType.UNLUCK);
+		potionMap.put("slowfalling", PotionEffectType.SLOW_FALLING);
+		potionMap.put("conduitpower", PotionEffectType.CONDUIT_POWER);
+		potionMap.put("dolphinsgrace", PotionEffectType.DOLPHINS_GRACE);
+		potionMap.put("badomen", PotionEffectType.BAD_OMEN);
+	}
+	
 	public static PotionEffectType getPotionEffectType(String type) {
-		return PotionEffectType.getByName(type);
+		if (type == null) return null;
+		
+		PotionEffectType effect = PotionEffectType.getByName(type.toUpperCase());
+		if (effect == null) {
+			effect = potionMap.get(type.toLowerCase());// minecraft/special potion effect names
+		}
+		return effect;
 	}
 	
 	public static Enchantment getEnchantmentType(String type) {
-		return Enchantment.getByKey(NamespacedKey.minecraft(type.toLowerCase()));
+		if (type == null) return null;
+		
+		// is in the Enchantment class
+		switch (type.toUpperCase()) {
+			case "ARROW_DAMAGE":
+				return Enchantment.ARROW_DAMAGE;
+			case "ARROW_FIRE":
+				return Enchantment.ARROW_FIRE;
+			case "ARROW_INFINITE":
+				return Enchantment.ARROW_INFINITE;
+			case "ARROW_KNOCKBACK":
+				return Enchantment.ARROW_KNOCKBACK;
+			case "BINDING_CURSE":
+				return Enchantment.BINDING_CURSE;
+			case "CHANNELING":
+				return Enchantment.CHANNELING;
+			case "DAMAGE_ALL":
+				return Enchantment.DAMAGE_ALL;
+			case "DAMAGE_ARTHROPODS":
+				return Enchantment.DAMAGE_ARTHROPODS;
+			case "DAMAGE_UNDEAD":
+				return Enchantment.DAMAGE_UNDEAD;
+			case "DEPTH_STRIDER":
+				return Enchantment.DEPTH_STRIDER;
+			case "DIG_SPEED":
+				return Enchantment.DIG_SPEED;
+			case "DURABILITY":
+				return Enchantment.DURABILITY;
+			case "FIRE_ASPECT":
+				return Enchantment.FIRE_ASPECT;
+			case "FROST_WALKER":
+				return Enchantment.FROST_WALKER;
+			case "IMPALING":
+				return Enchantment.IMPALING;
+			case "KNOCKBACK":
+				return Enchantment.KNOCKBACK;
+			case "LOOT_BONUS_BLOCKS":
+				return Enchantment.LOOT_BONUS_BLOCKS;
+			case "LOOT_BONUS_MOBS":
+				return Enchantment.LOOT_BONUS_MOBS;
+			case "LOYALTY":
+				return Enchantment.LOYALTY;
+			case "LUCK":
+				return Enchantment.LUCK;
+			case "LURE":
+				return Enchantment.LURE;
+			case "MENDING":
+				return Enchantment.MENDING;
+			case "MULTISHOT":
+				return Enchantment.MULTISHOT;
+			case "OXYGEN":
+				return Enchantment.OXYGEN;
+			case "PIERCING":
+				return Enchantment.PIERCING;
+			case "PROTECTION_ENVIRONMENTAL":
+				return Enchantment.PROTECTION_ENVIRONMENTAL;
+			case "PROTECTION_EXPLOSIONS":
+				return Enchantment.PROTECTION_EXPLOSIONS;
+			case "PROTECTION_FALL":
+				return Enchantment.PROTECTION_FALL;
+			case "PROTECTION_FIRE":
+				return Enchantment.PROTECTION_FIRE;
+			case "PROTECTION_PROJECTILE":
+				return Enchantment.PROTECTION_PROJECTILE;
+			case "QUICK_CHARGE":
+				return Enchantment.QUICK_CHARGE;
+			case "RIPTIDE":
+				return Enchantment.RIPTIDE;
+			case "SILK_TOUCH":
+				return Enchantment.SILK_TOUCH;
+			case "SWEEPING_EDGE":
+				return Enchantment.SWEEPING_EDGE;
+			case "THORNS":
+				return Enchantment.THORNS;
+			case "VANISHING_CURSE":
+				return Enchantment.VANISHING_CURSE;
+			case "WATER_WORKER":
+				return Enchantment.WATER_WORKER;
+		}
+		
+		// try to find in Enchantments
+		try {
+			return Enchantment.getByKey(NamespacedKey.minecraft(type.toLowerCase()));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public static void sendFakeBlockChange(Player player, Block block, MagicMaterial mat) {
