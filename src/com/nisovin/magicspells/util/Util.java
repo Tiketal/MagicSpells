@@ -193,12 +193,20 @@ public class Util {
 				}
 			}
 			
-			// armor color
-			if (config.contains("color") && config.isString("color") && meta instanceof LeatherArmorMeta) {
-				try {
-					int color = Integer.parseInt(config.getString("color").replace("#", ""), 16);
-					((LeatherArmorMeta)meta).setColor(Color.fromRGB(color));
-				} catch (NumberFormatException e) {				
+			// armor and potion color
+			if (config.contains("color") && config.isString("color")
+					&& (meta instanceof LeatherArmorMeta
+						|| meta instanceof PotionMeta)) {
+				if (meta instanceof LeatherArmorMeta) {
+					try {
+						int color = Integer.parseInt(config.getString("color").replace("#", ""), 16);
+						((LeatherArmorMeta)meta).setColor(Color.fromRGB(color));
+					} catch (NumberFormatException e) {}
+				} else {
+					try {
+						int color = Integer.parseInt(config.getString("color").replace("#", ""), 16);
+						((PotionMeta)meta).setColor(Color.fromRGB(color));
+					} catch (NumberFormatException e) {}
 				}
 			}
 			
