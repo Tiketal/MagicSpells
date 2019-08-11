@@ -129,7 +129,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				particleMap.put(field.getName(), particle);
+				particleMap.put(field.getName().toLowerCase(), particle);
 			}
 		}
 				
@@ -464,7 +464,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 			name = convert;
 		}
 		
-		Object particle = particleMap.get(name.toUpperCase());
+		Object particle = particleMap.get(name.toLowerCase());
 		
 		if (particle == null) {
 			MagicSpells.error("Invalid particle: " + name);

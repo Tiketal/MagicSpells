@@ -24,6 +24,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -455,7 +457,6 @@ public class Util {
 		}
 		entityTypeMap.put("zombiepig", EntityType.PIG_ZOMBIE);
 		entityTypeMap.put("mooshroom", EntityType.MUSHROOM_COW);
-		entityTypeMap.put("cat", EntityType.OCELOT);
 		entityTypeMap.put("golem", EntityType.IRON_GOLEM);
 		entityTypeMap.put("snowgolem", EntityType.SNOWMAN);
 		entityTypeMap.put("dragon", EntityType.ENDER_DRAGON);
@@ -474,7 +475,6 @@ public class Util {
 	}
 	
 	static Map<String, PotionEffectType> potionMap = new HashMap<>();
-	
 	static {
 		potionMap.put("slowness", PotionEffectType.SLOW);
 		potionMap.put("haste", PotionEffectType.FAST_DIGGING);
@@ -504,100 +504,79 @@ public class Util {
 	public static PotionEffectType getPotionEffectType(String type) {
 		if (type == null) return null;
 		
+		// get potion
 		PotionEffectType effect = PotionEffectType.getByName(type.toUpperCase());
 		if (effect == null) {
 			effect = potionMap.get(type.toLowerCase());// minecraft/special potion effect names
 		}
+		
+		// invalid potion effect
+		if (effect == null) {
+			MagicSpells.error("Invalid potion effect: " + type);
+		}
 		return effect;
+	}
+	
+	static Map<String, Enchantment> enchantmentMap = new HashMap<>();
+	static {
+		enchantmentMap.put("ARROW_DAMAGE", Enchantment.ARROW_DAMAGE);
+		enchantmentMap.put("ARROW_FIRE", Enchantment.ARROW_FIRE);
+		enchantmentMap.put("ARROW_INFINITE", Enchantment.ARROW_INFINITE);
+		enchantmentMap.put("ARROW_KNOCKBACK", Enchantment.ARROW_KNOCKBACK);
+		enchantmentMap.put("BINDING_CURSE", Enchantment.BINDING_CURSE);
+		enchantmentMap.put("CHANNELING", Enchantment.CHANNELING);
+		enchantmentMap.put("DAMAGE_ALL", Enchantment.DAMAGE_ALL);
+		enchantmentMap.put("DAMAGE_ARTHROPODS", Enchantment.DAMAGE_ARTHROPODS);
+		enchantmentMap.put("DAMAGE_UNDEAD", Enchantment.DAMAGE_UNDEAD);
+		enchantmentMap.put("DEPTH_STRIDER", Enchantment.DEPTH_STRIDER);
+		enchantmentMap.put("DIG_SPEED", Enchantment.DIG_SPEED);
+		enchantmentMap.put("DURABILITY", Enchantment.DURABILITY);
+		enchantmentMap.put("FIRE_ASPECT", Enchantment.FIRE_ASPECT);
+		enchantmentMap.put("FROST_WALKER", Enchantment.FROST_WALKER);
+		enchantmentMap.put("IMPALING", Enchantment.IMPALING);
+		enchantmentMap.put("KNOCKBACK", Enchantment.KNOCKBACK);
+		enchantmentMap.put("LOOT_BONUS_BLOCKS", Enchantment.LOOT_BONUS_BLOCKS);
+		enchantmentMap.put("LOOT_BONUS_MOBS", Enchantment.LOOT_BONUS_MOBS);
+		enchantmentMap.put("LOYALTY", Enchantment.LOYALTY);
+		enchantmentMap.put("LUCK", Enchantment.LUCK);
+		enchantmentMap.put("LURE", Enchantment.LURE);
+		enchantmentMap.put("MENDING", Enchantment.MENDING);
+		enchantmentMap.put("MULTISHOT", Enchantment.MULTISHOT);
+		enchantmentMap.put("OXYGEN", Enchantment.OXYGEN);
+		enchantmentMap.put("PIERCING", Enchantment.PIERCING);
+		enchantmentMap.put("PROTECTION_ENVIRONMENTAL", Enchantment.PROTECTION_ENVIRONMENTAL);
+		enchantmentMap.put("PROTECTION_EXPLOSIONS", Enchantment.PROTECTION_EXPLOSIONS);
+		enchantmentMap.put("PROTECTION_FALL", Enchantment.PROTECTION_FALL);
+		enchantmentMap.put("PROTECTION_FIRE", Enchantment.PROTECTION_FIRE);
+		enchantmentMap.put("PROTECTION_PROJECTILE", Enchantment.PROTECTION_PROJECTILE);
+		enchantmentMap.put("QUICK_CHARGE", Enchantment.QUICK_CHARGE);
+		enchantmentMap.put("RIPTIDE", Enchantment.RIPTIDE);
+		enchantmentMap.put("SILK_TOUCH", Enchantment.SILK_TOUCH);
+		enchantmentMap.put("SWEEPING_EDGE", Enchantment.SWEEPING_EDGE);
+		enchantmentMap.put("THORNS", Enchantment.THORNS);
+		enchantmentMap.put("VANISHING_CURSE", Enchantment.VANISHING_CURSE);
+		enchantmentMap.put("WATER_WORKER", Enchantment.WATER_WORKER);
 	}
 	
 	public static Enchantment getEnchantmentType(String type) {
 		if (type == null) return null;
 		
 		// is in the Enchantment class
-		switch (type.toUpperCase()) {
-			case "ARROW_DAMAGE":
-				return Enchantment.ARROW_DAMAGE;
-			case "ARROW_FIRE":
-				return Enchantment.ARROW_FIRE;
-			case "ARROW_INFINITE":
-				return Enchantment.ARROW_INFINITE;
-			case "ARROW_KNOCKBACK":
-				return Enchantment.ARROW_KNOCKBACK;
-			case "BINDING_CURSE":
-				return Enchantment.BINDING_CURSE;
-			case "CHANNELING":
-				return Enchantment.CHANNELING;
-			case "DAMAGE_ALL":
-				return Enchantment.DAMAGE_ALL;
-			case "DAMAGE_ARTHROPODS":
-				return Enchantment.DAMAGE_ARTHROPODS;
-			case "DAMAGE_UNDEAD":
-				return Enchantment.DAMAGE_UNDEAD;
-			case "DEPTH_STRIDER":
-				return Enchantment.DEPTH_STRIDER;
-			case "DIG_SPEED":
-				return Enchantment.DIG_SPEED;
-			case "DURABILITY":
-				return Enchantment.DURABILITY;
-			case "FIRE_ASPECT":
-				return Enchantment.FIRE_ASPECT;
-			case "FROST_WALKER":
-				return Enchantment.FROST_WALKER;
-			case "IMPALING":
-				return Enchantment.IMPALING;
-			case "KNOCKBACK":
-				return Enchantment.KNOCKBACK;
-			case "LOOT_BONUS_BLOCKS":
-				return Enchantment.LOOT_BONUS_BLOCKS;
-			case "LOOT_BONUS_MOBS":
-				return Enchantment.LOOT_BONUS_MOBS;
-			case "LOYALTY":
-				return Enchantment.LOYALTY;
-			case "LUCK":
-				return Enchantment.LUCK;
-			case "LURE":
-				return Enchantment.LURE;
-			case "MENDING":
-				return Enchantment.MENDING;
-			case "MULTISHOT":
-				return Enchantment.MULTISHOT;
-			case "OXYGEN":
-				return Enchantment.OXYGEN;
-			case "PIERCING":
-				return Enchantment.PIERCING;
-			case "PROTECTION_ENVIRONMENTAL":
-				return Enchantment.PROTECTION_ENVIRONMENTAL;
-			case "PROTECTION_EXPLOSIONS":
-				return Enchantment.PROTECTION_EXPLOSIONS;
-			case "PROTECTION_FALL":
-				return Enchantment.PROTECTION_FALL;
-			case "PROTECTION_FIRE":
-				return Enchantment.PROTECTION_FIRE;
-			case "PROTECTION_PROJECTILE":
-				return Enchantment.PROTECTION_PROJECTILE;
-			case "QUICK_CHARGE":
-				return Enchantment.QUICK_CHARGE;
-			case "RIPTIDE":
-				return Enchantment.RIPTIDE;
-			case "SILK_TOUCH":
-				return Enchantment.SILK_TOUCH;
-			case "SWEEPING_EDGE":
-				return Enchantment.SWEEPING_EDGE;
-			case "THORNS":
-				return Enchantment.THORNS;
-			case "VANISHING_CURSE":
-				return Enchantment.VANISHING_CURSE;
-			case "WATER_WORKER":
-				return Enchantment.WATER_WORKER;
+		Enchantment enchant = enchantmentMap.get(type.toUpperCase());
+		
+		if (enchant == null) {
+			// try to find in Enchantments as minecraft key
+			try {
+				enchant = Enchantment.getByKey(NamespacedKey.minecraft(type.toLowerCase()));
+			} catch (Exception e) {}
 		}
 		
-		// try to find in Enchantments
-		try {
-			return Enchantment.getByKey(NamespacedKey.minecraft(type.toLowerCase()));
-		} catch (Exception e) {
-			return null;
+		// invalid enchantment
+		if (enchant == null) {
+			MagicSpells.error("Invalid enchantment: " + type);
 		}
+		
+		return enchant;
 	}
 	
 	public static void sendFakeBlockChange(Player player, Block block, MagicMaterial mat) {
@@ -870,13 +849,12 @@ public class Util {
 		}
 	}
 	
-	/*
-	 @NotUsed
-	 public static void createFire(Block block, byte d) {
-		block.setTypeIdAndData(Material.FIRE.getId(), d, false);
+	public static void createFire(Block block, int age) {
 		block.setType(Material.FIRE);
-		block.setBlockData();
-	}*/
+		BlockData bd = Material.FIRE.createBlockData();
+		((Ageable)bd).setAge(age);
+		block.setBlockData(bd);
+	}
 	
 	static Map<EntityType, Material> spawnEggMap = new HashMap<>();
 	static {
