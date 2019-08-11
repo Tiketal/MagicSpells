@@ -488,6 +488,7 @@ public class Util {
 		potionMap.put("jump_boost", PotionEffectType.JUMP);
 		potionMap.put("jumpboost", PotionEffectType.JUMP);
 		potionMap.put("nausea", PotionEffectType.CONFUSION);
+		potionMap.put("resistance", PotionEffectType.DAMAGE_RESISTANCE);
 		potionMap.put("fireresistance", PotionEffectType.FIRE_RESISTANCE);
 		potionMap.put("waterbreathing", PotionEffectType.WATER_BREATHING);
 		potionMap.put("nightvision", PotionEffectType.NIGHT_VISION);

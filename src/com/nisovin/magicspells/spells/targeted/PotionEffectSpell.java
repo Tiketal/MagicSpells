@@ -29,7 +29,7 @@ public class PotionEffectSpell extends TargetedSpell implements TargetedEntitySp
 	public PotionEffectSpell(MagicConfig config, String spellName) {
 		super(config, spellName);
 		
-		type = Util.getPotionEffectType(getConfigString("type", "1"));
+		type = Util.getPotionEffectType(getConfigString("type", "speed"));
 		duration = getConfigInt("duration", 0);
 		strength = getConfigInt("strength", 0);
 		ambient = getConfigBoolean("ambient", false);
