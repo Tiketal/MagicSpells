@@ -29,7 +29,7 @@ public class FarmSpell extends TargetedSpell implements TargetedLocationSpell {
 		
 		radius = getConfigInt("radius", 3);
 		growth = getConfigInt("growth", 1);
-		newCropType = MagicSpells.getItemNameResolver().resolveBlock(getConfigString("new-crop-type", "crops"));
+		newCropType = MagicSpells.getItemNameResolver().resolveBlock(getConfigString("new-crop-type", "wheat"));
 		targeted = getConfigBoolean("targeted", false);
 	}
 

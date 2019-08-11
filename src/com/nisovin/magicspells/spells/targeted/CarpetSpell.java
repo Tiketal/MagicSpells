@@ -38,7 +38,7 @@ public class CarpetSpell extends TargetedSpell implements TargetedLocationSpell 
 		super(config, spellName);
 		
 		radius = getConfigInt("radius", 1);
-		block = MagicSpells.getItemNameResolver().resolveBlock(getConfigString("block", "carpet:0"));
+		block = MagicSpells.getItemNameResolver().resolveBlock(getConfigString("block", "white_carpet"));
 		duration = getConfigInt("duration", 0);
 		circle = getConfigBoolean("circle", false);
 		if (configKeyExists("spell-on-touch")) {

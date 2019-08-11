@@ -81,6 +81,7 @@ public class ProjectileSpell extends InstantSpell {
 			projectileClass = EnderPearl.class;
 		} else if (projectileType.equalsIgnoreCase("potion")) {
 			projectileClass = ThrownPotion.class;
+			// TODO Trident, lingering potions
 		} else {
 			ItemStack item = Util.getItemStackFromString(projectileType);
 			if (item != null) {

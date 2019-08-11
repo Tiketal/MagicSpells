@@ -35,7 +35,7 @@ public class BuildSpell extends TargetedSpell implements TargetedLocationSpell {
 		
 		slot = getConfigInt("slot", 0);
 		consumeBlock = getConfigBoolean("consume-block", true);
-		String[] allowed = getConfigString("allowed-types", "1,2,3,4,5,12,13,17,20,22,24,35,41,42,43,44,45,47,48,49,50,53,57,65,67,80,85,87,88,89,91,92").split(",");
+		String[] allowed = getConfigString("allowed-types", "stone,grass,dirt,cobblestone,oak_plank,sand,gravel,oak_log,glass,lapis_lazuli_block,sandstone,white_wool,gold_block,iron_block,smooth_stone_slab,bricks,bookshelf,mossy_cobblestone,obsidian,torch,wall_torch,oak_stairs,diamond_block,ladder,cobblestone_stairs,snow,oak_fence,netherrack,soul_sand,glowstone,jack_o_lantern,cake").split(",");
 		allowedTypes = new Material[allowed.length];
 		for (int i = 0; i < allowed.length; i++) {
 			MagicMaterial mat = MagicSpells.getItemNameResolver().resolveBlock(allowed[i]);
