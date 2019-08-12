@@ -34,8 +34,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 import com.nisovin.magicspells.MagicSpells;
@@ -208,6 +210,13 @@ public class Util {
 						((PotionMeta)meta).setColor(Color.fromRGB(color));
 					} catch (NumberFormatException e) {}
 				}
+			}
+			
+			// base minecraft potions
+			if (config.contains("base-potion") && config.isString("base-potion") && meta instanceof PotionMeta) {
+				try {
+					((PotionMeta)meta).setBasePotionData(new PotionData(PotionType.valueOf(config.getString("base-potion").toUpperCase())));
+				} catch (IllegalArgumentException e) {}
 			}
 			
 			// potion effects
