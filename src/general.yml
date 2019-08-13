@@ -34,7 +34,7 @@ ignore-default-bindings: false
 ignore-cast-item-enchants: true
 ignore-cast-item-names: false
 ignore-cast-item-durability: [ wooden_sword, wooden_pickaxe, wooden_shovel, golden_axe, golden_sword, golden_pickaxe, golden_shovel, golden_axe, wooden_hoe, golden_hoe, golden_helmet, golden_chestplate, golden_leggings, golden_boots ]
-los-transparent-blocks: [ air, powered_rail, detector_rail, dead_bush, tall_grass, *_flower, brown_mushroom, red_mushroom, torch, fire, redstone, *_sign, ladder, rail, lever, *_pressure_plate, redstone_torch, *_button, snow, repeater, vine, lily_pad ]
+los-transparent-blocks: [ air, powered_rail, detector_rail, dead_bush, tall_grass, poppy, dandelion, brown_mushroom, red_mushroom, torch, fire, redstone, oak_sign, ladder, rail, lever, stone_pressure_plate, redstone_torch, stone_button, snow, repeater, vine, lily_pad ]
 global-cooldown: 500
 check-world-pvp-flag: true
 cast-on-animate: false
