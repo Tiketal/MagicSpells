@@ -547,6 +547,44 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 		
 		return rgbo;
 	}
+	
+	@Override
+	public void playSmokeEffect(Location location, int dir) {
+		switch (dir) {
+		case 0: // south-east
+			playSmokeEffectReal(location, 1, 0, 1);
+			break;
+		case 1: // south
+			playSmokeEffectReal(location, 0, 0, 1);
+			break;
+		case 2: // south-west
+			playSmokeEffectReal(location, -1, 0, 1);
+			break;
+		case 3: // east
+			playSmokeEffectReal(location, 1, 0, 0);
+			break;
+		case 5: // west
+			playSmokeEffectReal(location, -1, 0, 0);
+			break;
+		case 6: // north-east
+			playSmokeEffectReal(location, 1, 0, -1);
+			break;
+		case 7: // north
+			playSmokeEffectReal(location, 0, 0, -1);
+			break;
+		case 8: // north-west
+			playSmokeEffectReal(location, -1, 0, -1);
+			break;
+		default: // up/middle
+			playSmokeEffectReal(location, 0, 0, 0);
+		}
+	}
+	
+	private void playSmokeEffectReal(Location location, float spreadX, float spreadY, float spreadZ) {
+		for (int i = 0; i < 10; i++) {
+			playParticleEffect(location, "smoke", spreadX, spreadY, spreadZ, .1F, 0, 64, 0F);
+		}
+	}
 
 	@Override
 	public void playDragonDeathEffect(Location location) {

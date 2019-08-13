@@ -1,6 +1,7 @@
 package com.nisovin.magicspells.volatilecode;
 
 import org.bukkit.Color;
+import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -273,5 +274,10 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	
 	@Override
 	public void spawnCosmeticArmorStand(Location location, ItemStack item, int duration) {
+	}
+	
+	@Override
+	public void playSmokeEffect(Location location, int dir) {
+		location.getWorld().playEffect(location, Effect.SMOKE, dir);
 	}
 }

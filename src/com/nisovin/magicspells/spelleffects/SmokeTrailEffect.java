@@ -2,7 +2,6 @@ package com.nisovin.magicspells.spelleffects;
 
 import java.util.ArrayList;
 
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -75,7 +74,7 @@ class SmokeTrailEffect extends SpellEffect {
 			}
 			Location loc = locationsForProjection.get(i);
 			for (int j = 0; j <= 8; j+=2) {
-				world.playEffect(loc, Effect.SMOKE, j);
+				MagicSpells.getVolatileCodeHandler().playSmokeEffect(loc, j);
 			}
 			i++;			
 		}
