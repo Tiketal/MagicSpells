@@ -276,8 +276,4 @@ public class VolatileCodeDisabled implements VolatileCodeHandle {
 	public void spawnCosmeticArmorStand(Location location, ItemStack item, int duration) {
 	}
 	
-	@Override
-	public void playSmokeEffect(Location location, int dir) {
-		location.getWorld().playEffect(location, Effect.SMOKE, dir);
-	}
 }

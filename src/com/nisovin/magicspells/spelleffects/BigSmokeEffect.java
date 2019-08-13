@@ -1,5 +1,6 @@
 package com.nisovin.magicspells.spelleffects;
 
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,9 +28,9 @@ class BigSmokeEffect extends SpellEffect {
 		for (int x = lx-1; x <= lx+1; x++) {
 			for (int y = ly; y <= ly+1; y++) {
 				for (int z = lz-1; z <= lz+1; z++) {
-					for (int i = 0; i <= 8; i+=2) {
+					for (int i = 1; i <= 5; i+=1) {
 						loc = new Location(world, x, y, z);
-						MagicSpells.getVolatileCodeHandler().playSmokeEffect(loc, i);
+						world.playEffect(loc, Effect.SMOKE, i);
 					}
 				}
 			}

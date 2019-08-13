@@ -108,6 +108,4 @@ public interface VolatileCodeHandle {
 	
 	public void spawnCosmeticArmorStand(Location location, ItemStack item, int duration);
 	
-	public void playSmokeEffect(Location location, int dir);
-	
 }

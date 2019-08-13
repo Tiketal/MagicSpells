@@ -1,6 +1,7 @@
 package com.nisovin.magicspells.spelleffects;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -76,7 +77,7 @@ class SmokeSwirlEffect extends SpellEffect {
 				} else {
 					loc = entity.getLocation();
 				}
-				MagicSpells.getVolatileCodeHandler().playSmokeEffect(loc.clone().add(x[i], 0, z[i]), v[i]);
+				loc.getWorld().playEffect(loc.clone().add(x[i], 0, z[i]), Effect.SMOKE, v[i]);
 				iteration++;
 			}
 		}
