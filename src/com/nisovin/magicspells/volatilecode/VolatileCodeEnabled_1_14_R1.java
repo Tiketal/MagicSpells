@@ -281,8 +281,8 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 		if (tag == null) {
 			tag = new NBTTagCompound();
 		}
-		if (!tag.hasKey("ench")) {
-			tag.set("ench", new NBTTagList());
+		if (!tag.hasKey("Enchantments")) {
+			tag.set("Enchantments", new NBTTagList());
 		}		
 		return setTag(item, tag);
 	}

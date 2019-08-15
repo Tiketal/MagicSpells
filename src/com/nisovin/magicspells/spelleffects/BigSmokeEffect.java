@@ -5,8 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.nisovin.magicspells.MagicSpells;
-
 class BigSmokeEffect extends SpellEffect {
 
 	@Override
