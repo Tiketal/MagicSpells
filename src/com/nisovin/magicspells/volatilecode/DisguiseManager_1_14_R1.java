@@ -49,7 +49,7 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 
 	ReflectionHelper<Packet<?>> refPacketNamedEntity = new ReflectionHelper<Packet<?>>(PacketPlayOutNamedEntitySpawn.class, "a", "b");
 	ReflectionHelper<Packet<?>> refPacketPlayerInfo = new ReflectionHelper<Packet<?>>(PacketPlayOutPlayerInfo.class, "a", "b");
-	ReflectionHelper<Packet<?>> refPacketSpawnEntityLiving = new ReflectionHelper<Packet<?>>(PacketPlayOutSpawnEntityLiving.class, "a", "i", "j", "k");
+	ReflectionHelper<Packet<?>> refPacketSpawnEntityLiving = new ReflectionHelper<Packet<?>>(PacketPlayOutSpawnEntityLiving.class, "a", "j", "k", "l");
 	ReflectionHelper<Packet<?>> refPacketSpawnEntity = new ReflectionHelper<Packet<?>>(PacketPlayOutSpawnEntity.class, "a");
 	ReflectionHelper<Packet<?>> refPacketEntityEquipment = new ReflectionHelper<Packet<?>>(PacketPlayOutEntityEquipment.class, "a", "b");
 	ReflectionHelper<Packet<?>> refPacketRelEntityMove = new ReflectionHelper<Packet<?>>(PacketPlayOutEntity.class, "a", "b", "c", "d");
