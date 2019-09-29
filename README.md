@@ -16,3 +16,7 @@ Building
 First, you will need to download the required dependencies and place them in the lib folder. You can see a list of download links
 in lib/library_urls.txt. You can then use the ant build file (build.xml) to build the plugin. It places the compiled jar file
 in the dist folder.
+
+Fork Description
+----------------
+This fork is an almost direct upgrade from Minecraft version 1.8/1.9 to version 1.14. Since this is post Flattening, all numerical ids used are **deprecated**.

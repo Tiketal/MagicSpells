@@ -1138,11 +1138,11 @@ public class DisguiseManager_1_14_R1 extends DisguiseManager {
 			PacketPlayOutSpawnEntityLiving packet24 = new PacketPlayOutSpawnEntityLiving((EntityLiving)entity);
 			refPacketSpawnEntityLiving.setInt(packet24, "a", disguised.getEntityId());
 			if (dragons.contains(disguised.getEntityId())) {
-				int dir = refPacketSpawnEntityLiving.getByte(packet24, "i") + 128;
+				int dir = refPacketSpawnEntityLiving.getByte(packet24, "j") + 128;
 				if (dir > 127) dir -= 256;
-				refPacketSpawnEntityLiving.setByte(packet24, "i", (byte)dir);
-				refPacketSpawnEntityLiving.setByte(packet24, "j", (byte)0);
-				refPacketSpawnEntityLiving.setByte(packet24, "k", (byte)1);
+				refPacketSpawnEntityLiving.setByte(packet24, "j", (byte)dir);
+				refPacketSpawnEntityLiving.setByte(packet24, "k", (byte)0);
+				refPacketSpawnEntityLiving.setByte(packet24, "l", (byte)1);
 			}
 			packets.add(packet24);
 			PacketPlayOutEntityMetadata packet40 = new PacketPlayOutEntityMetadata(disguised.getEntityId(), entity.getDataWatcher(), false);
