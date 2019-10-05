@@ -444,7 +444,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	}
 	
 	private static Pattern pattern = Pattern.compile(
-			"(\\w+)(?:\\(([a-z0-9,\\._=\\[\\]-]+)\\))?", // (\w+)(?:\(([a-z0-9,\._=\[\]-]+)\))?
+			"(\\w+)(?:\\[([a-z0-9,\\._=-]+)\\])?", // (\w+)(?:\[([a-z0-9,\._=-]+)\])?
 			Pattern.CASE_INSENSITIVE);
 	
 	private PacketPlayOutWorldParticles createParticlesPacket(Location location, String particleRaw, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
@@ -533,10 +533,10 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 				if (split[0].equals("red") || split[0].equals("r")) {
 					rgbo[0] = Float.parseFloat(split[1]);
 					
-				} else if (split[0].equals("blue") || split[0].equals("b")) {
+				} else if (split[0].equals("green") || split[0].equals("g")) {
 					rgbo[1] = Float.parseFloat(split[1]);
 					
-				} else if (split[0].equals("green") || split[0].equals("g")) {
+				} else if (split[0].equals("blue") || split[0].equals("b")) {
 					rgbo[2] = Float.parseFloat(split[1]);
 					
 				} else if (split[0].equals("opacity") || split[0].equals("o")) {
