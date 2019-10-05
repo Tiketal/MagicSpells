@@ -444,7 +444,7 @@ public class VolatileCodeEnabled_1_14_R1 implements VolatileCodeHandle {
 	}
 	
 	private static Pattern pattern = Pattern.compile(
-			"(\\w+)(?:\\(([a-z0-9,\\._=\\[\\]]+)\\))?", // (\w+)(?:\(([a-z0-9,\._=\[\]]+)\))?
+			"(\\w+)(?:\\(([a-z0-9,\\._=\\[\\]-]+)\\))?", // (\w+)(?:\(([a-z0-9,\._=\[\]-]+)\))?
 			Pattern.CASE_INSENSITIVE);
 	
 	private PacketPlayOutWorldParticles createParticlesPacket(Location location, String particleRaw, float spreadX, float spreadY, float spreadZ, float speed, int count, int radius, float yOffset) {
